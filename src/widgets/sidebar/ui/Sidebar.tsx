@@ -15,18 +15,19 @@ export function Sidebar() {
 
   return (
     <motion.nav
+      initial={false}
       animate={{ width: isExpanded ? EXPANDED_WIDTH : COLLAPSED_WIDTH }}
       transition={{ type: 'spring', stiffness: 300, damping: 30 }}
       style={{ overflow: 'hidden' }}
-      className="relative flex shrink-0 flex-col border-r border-white/5 bg-[#0d0d1a]"
+      className="relative flex shrink-0 flex-col border-r border-white/10 bg-[#0d0d1a]"
     >
       {/* Logo */}
-      <div className="flex h-14 items-center border-b border-white/5 px-3">
+      <div className="flex h-14 items-center border-b border-white/10 px-3">
         <Link href="/" className="flex items-center gap-2 overflow-hidden">
           <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-gradient-to-br from-violet-500 to-blue-500 text-[11px] font-bold text-white">
             CK
           </span>
-          <AnimatePresence>
+          <AnimatePresence initial={false}>
             {isExpanded && (
               <motion.span
                 key="wordmark"
@@ -57,13 +58,13 @@ export function Sidebar() {
                   'flex h-9 items-center gap-3 rounded-lg px-2 text-sm transition-colors',
                   isActive
                     ? 'bg-white/10 text-white'
-                    : 'text-white/40 hover:bg-white/5 hover:text-white/70'
+                    : 'text-white/50 hover:bg-white/5 hover:text-white/70'
                 )}
               >
                 <span className="flex size-5 shrink-0 items-center justify-center text-base leading-none">
                   {tool.icon}
                 </span>
-                <AnimatePresence>
+                <AnimatePresence initial={false}>
                   {isExpanded && (
                     <motion.span
                       key={`label-${tool.id}`}
@@ -84,12 +85,12 @@ export function Sidebar() {
       </ul>
 
       {/* Collapse Toggle */}
-      <div className="border-t border-white/5 p-2">
+      <div className="border-t border-white/10 p-2">
         <button
           onClick={() => setIsExpanded((prev) => !prev)}
           aria-label={isExpanded ? 'Collapse sidebar' : 'Expand sidebar'}
           className={cn(
-            'flex h-9 w-full items-center rounded-lg px-2 text-white/30 transition-colors hover:bg-white/5 hover:text-white/60',
+            'flex h-9 w-full items-center rounded-lg px-2 text-white/40 transition-colors hover:bg-white/5 hover:text-white/60',
             isExpanded ? 'justify-start gap-3' : 'justify-center'
           )}
         >
@@ -103,7 +104,7 @@ export function Sidebar() {
           >
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
           </svg>
-          <AnimatePresence>
+          <AnimatePresence initial={false}>
             {isExpanded && (
               <motion.span
                 key="collapse-label"
