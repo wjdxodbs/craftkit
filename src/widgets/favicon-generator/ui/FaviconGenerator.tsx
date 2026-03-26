@@ -76,7 +76,7 @@ export function FaviconGenerator() {
           <h2 className="mb-3 text-sm font-semibold text-slate-200">
             3. 미리보기
           </h2>
-          <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+          <div className="rounded-xl border border-white/10 bg-white/[0.08] p-4">
             <div className="flex items-end justify-center gap-4">
               {PREVIEW_SIZES.map((size) => {
                 const displaySize = Math.min(size, 48)
@@ -114,9 +114,9 @@ export function FaviconGenerator() {
           </Button>
         </motion.div>
 
-        <div className="rounded-lg border border-white/5 bg-[#0a0a14] p-3">
+        <div className="rounded-lg border border-white/10 bg-white/[0.06] p-3">
           <div className="mb-2 flex items-center justify-between">
-            <span className="text-xs text-white/30">HTML 코드 스니펫</span>
+            <span className="text-xs text-white/50">HTML 코드 스니펫</span>
             <button
               onClick={handleCopy}
               className="text-xs text-violet-400 transition-colors hover:text-violet-300"
@@ -141,9 +141,9 @@ function FileRow({
   size: string
 }) {
   return (
-    <div className="flex items-center justify-between rounded-lg border border-white/5 bg-white/5 px-3 py-2">
+    <div className="flex items-center justify-between rounded-lg border border-white/10 bg-white/[0.08] px-3 py-2">
       <span className="text-xs text-slate-200">{filename}</span>
-      <span className="text-xs text-white/30">{size}</span>
+      <span className="text-xs text-white/50">{size}</span>
     </div>
   )
 }
