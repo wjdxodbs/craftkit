@@ -12,9 +12,11 @@ export function ImageUpload({
 }: Props) {
   const inputRef = useRef<HTMLInputElement>(null)
   const [isDragging, setIsDragging] = useState(false)
+  const [fileName, setFileName] = useState<string | null>(null)
 
   const handleFile = useCallback(
     (file: File) => {
+      setFileName(file.name)
       const reader = new FileReader()
       reader.onload = (e) => {
         const dataUrl = e.target?.result as string
@@ -53,10 +55,19 @@ export function ImageUpload({
           : 'border-white/20 bg-white/[0.04] hover:border-white/30'
       }`}
     >
-      <p className="text-sm text-amber-400">클릭하거나 드래그해서 이미지 업로드</p>
-      <p className="mt-1 text-xs text-white/20">
-        PNG, JPG, SVG, WebP — 권장: 512×512 이상
-      </p>
+      {fileName ? (
+        <>
+          <p className="text-sm text-white/70">{fileName}</p>
+          <p className="mt-1 text-xs text-white/30">클릭하여 변경</p>
+        </>
+      ) : (
+        <>
+          <p className="text-sm text-amber-400">클릭하거나 드래그해서 이미지 업로드</p>
+          <p className="mt-1 text-xs text-white/20">
+            PNG, JPG, SVG, WebP — 권장: 512×512 이상
+          </p>
+        </>
+      )}
       <input
         ref={inputRef}
         type="file"
