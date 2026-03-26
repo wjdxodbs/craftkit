@@ -10,7 +10,7 @@ export function HomeView() {
     <main className="min-h-screen bg-[#111110]">
       {/* Nav */}
       <nav className="border-b border-white/10 px-6 py-4">
-        <span className="bg-gradient-to-r from-violet-500 to-blue-500 bg-clip-text text-sm font-bold tracking-[3px] text-transparent">
+        <span className="text-sm font-bold tracking-wide text-white">
           CRAFTKIT
         </span>
       </nav>
