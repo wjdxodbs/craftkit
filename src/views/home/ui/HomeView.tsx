@@ -7,7 +7,7 @@ const COMING_SOON_COUNT = 2
 
 export function HomeView() {
   return (
-    <main className="min-h-screen bg-[#0d0d1a]">
+    <main className="min-h-screen bg-[#111110]">
       {/* Nav */}
       <nav className="border-b border-white/10 px-6 py-4">
         <span className="bg-gradient-to-r from-violet-500 to-blue-500 bg-clip-text text-sm font-bold tracking-[3px] text-transparent">
@@ -25,9 +25,7 @@ export function HomeView() {
         >
           누구나 쓸 수 있는
           <br />
-          <span className="bg-gradient-to-r from-violet-400 to-blue-400 bg-clip-text text-transparent">
-            심플한 웹 도구
-          </span>
+          심플한 웹 도구
         </motion.h1>
         <motion.p
           initial={{ opacity: 0 }}
