@@ -17,6 +17,15 @@ const FONT_MAP: Record<FontFamily, string> = {
 const W = 1200
 const H = 630
 
+function isLightColor(hex: string): boolean {
+  const c = hex.replace('#', '')
+  const r = parseInt(c.substring(0, 2), 16)
+  const g = parseInt(c.substring(2, 4), 16)
+  const b = parseInt(c.substring(4, 6), 16)
+  // sRGB 상대 휘도 기준 (0.5 이상이면 밝은 색)
+  return (r * 299 + g * 587 + b * 114) / 1000 > 128
+}
+
 export async function renderOgImageToCanvas(
   canvas: HTMLCanvasElement,
   config: OgImageConfig
@@ -41,14 +50,15 @@ export async function renderOgImageToCanvas(
   }
 
   const fontFamily = FONT_MAP[config.fontFamily]
+  const light = isLightColor(config.backgroundColor)
 
   // 제목
   ctx.font = `bold 64px ${fontFamily}`
-  ctx.fillStyle = '#ffffff'
+  ctx.fillStyle = light ? '#111111' : '#ffffff'
   ctx.fillText(config.title, 80, H / 2 + 20)
 
   // 부제목
   ctx.font = `32px ${fontFamily}`
-  ctx.fillStyle = '#64748b'
+  ctx.fillStyle = light ? '#555555' : '#64748b'
   ctx.fillText(config.subtitle, 80, H / 2 + 80)
 }
