@@ -30,7 +30,7 @@ export function ToolCard({ tool }: Props) {
           <div
             className="mb-3 flex h-8 w-8 items-center justify-center rounded-lg text-base"
             style={{
-              background: `linear-gradient(135deg, ${tool.accentColor}, ${tool.accentColor}99)`,
+              background: tool.accentColor,
             }}
           >
             {tool.icon}
