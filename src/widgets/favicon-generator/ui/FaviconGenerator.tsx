@@ -119,12 +119,12 @@ export function FaviconGenerator() {
             <span className="text-xs text-white/50">HTML 코드 스니펫</span>
             <button
               onClick={handleCopy}
-              className="text-xs text-violet-400 transition-colors hover:text-violet-300"
+              className="text-xs text-amber-400 transition-colors hover:text-amber-300"
             >
               {copied ? '복사됨!' : '복사'}
             </button>
           </div>
-          <pre className="overflow-x-auto text-[10px] leading-relaxed text-violet-400">
+          <pre className="overflow-x-auto text-[10px] leading-relaxed text-amber-400">
             {HTML_SNIPPET}
           </pre>
         </div>
