@@ -10,8 +10,8 @@ interface Props {
 export function ToolCard({ tool }: Props) {
   if (!tool.available) {
     return (
-      <div className="rounded-xl border border-dashed border-white/5 p-4 opacity-40">
-        <div className="mb-3 h-8 w-8 rounded-lg bg-white/5" />
+      <div className="rounded-xl border border-dashed border-white/10 p-4 opacity-40">
+        <div className="mb-3 h-8 w-8 rounded-lg bg-white/[0.08]" />
         <p className="text-xs text-white/20">Coming soon...</p>
       </div>
     )
@@ -36,7 +36,7 @@ export function ToolCard({ tool }: Props) {
             {tool.icon}
           </div>
           <p className="text-sm font-semibold text-slate-200">{tool.name}</p>
-          <p className="mt-1 text-xs text-white/30">{tool.description}</p>
+          <p className="mt-1 text-xs text-white/50">{tool.description}</p>
           <div className="mt-3 flex flex-wrap gap-1">
             {tool.tags.map((tag) => (
               <span
