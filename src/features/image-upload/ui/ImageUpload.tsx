@@ -49,11 +49,11 @@ export function ImageUpload({
       onDrop={handleDrop}
       className={`cursor-pointer rounded-xl border-2 border-dashed p-6 text-center transition-colors ${
         isDragging
-          ? 'border-violet-400 bg-violet-950/20'
-          : 'border-violet-800/40 bg-violet-950/10 hover:border-violet-600/60'
+          ? 'border-amber-400 bg-white/[0.08]'
+          : 'border-white/20 bg-white/[0.04] hover:border-white/30'
       }`}
     >
-      <p className="text-sm text-violet-400">클릭하거나 드래그해서 이미지 업로드</p>
+      <p className="text-sm text-amber-400">클릭하거나 드래그해서 이미지 업로드</p>
       <p className="mt-1 text-xs text-white/20">
         PNG, JPG, SVG, WebP — 권장: 512×512 이상
       </p>
