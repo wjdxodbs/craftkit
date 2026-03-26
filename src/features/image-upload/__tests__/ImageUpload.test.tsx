@@ -16,7 +16,7 @@ describe('ImageUpload', () => {
     render(<ImageUpload onFileLoad={jest.fn()} />)
     const dropZone = screen.getByRole('button')
     fireEvent.dragOver(dropZone)
-    expect(dropZone.className).toContain('border-violet-400')
+    expect(dropZone.className).toContain('border-amber-400')
   })
 
   it('드래그 리브 시 스타일이 원복된다', () => {
@@ -24,6 +24,6 @@ describe('ImageUpload', () => {
     const dropZone = screen.getByRole('button')
     fireEvent.dragOver(dropZone)
     fireEvent.dragLeave(dropZone)
-    expect(dropZone.className).not.toContain('border-violet-400')
+    expect(dropZone.className).not.toContain('border-amber-400')
   })
 })
