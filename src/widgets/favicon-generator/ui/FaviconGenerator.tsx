@@ -96,7 +96,7 @@ export function FaviconGenerator() {
                         className="rounded bg-white/10"
                       />
                     )}
-                    <span className="text-[10px] text-white/30">{size}px</span>
+                    <span className="text-[10px] text-white/50">{size}px</span>
                   </div>
                 )
               })}
