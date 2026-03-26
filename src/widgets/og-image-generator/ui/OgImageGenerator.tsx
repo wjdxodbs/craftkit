@@ -59,7 +59,7 @@ export function OgImageGenerator() {
                 onClick={() => setConfig((c) => ({ ...c, backgroundColor: color }))}
                 className={`h-6 w-6 rounded transition-transform hover:scale-110 ${
                   config.backgroundColor === color
-                    ? 'ring-2 ring-blue-400 ring-offset-1 ring-offset-[#0d0d1a]'
+                    ? 'ring-2 ring-violet-400 ring-offset-1 ring-offset-[#0d0d1a]'
                     : ''
                 }`}
                 style={{
@@ -104,7 +104,7 @@ export function OgImageGenerator() {
           <Input
             value={config.title}
             onChange={(e) => setConfig((c) => ({ ...c, title: e.target.value }))}
-            className="border-blue-800/40 bg-blue-950/10 text-slate-200 placeholder:text-white/20"
+            className="border-white/10 bg-white/[0.06] text-slate-200 placeholder:text-white/20"
             placeholder="제목을 입력해주세요..."
           />
         </div>
@@ -119,7 +119,7 @@ export function OgImageGenerator() {
             onChange={(e) =>
               setConfig((c) => ({ ...c, subtitle: e.target.value }))
             }
-            className="border-blue-800/40 bg-blue-950/10 text-slate-200 placeholder:text-white/20"
+            className="border-white/10 bg-white/[0.06] text-slate-200 placeholder:text-white/20"
             placeholder="부제목 입력..."
           />
         </div>
@@ -136,7 +136,7 @@ export function OgImageGenerator() {
                 onClick={() => setConfig((c) => ({ ...c, fontFamily: font }))}
                 className={`rounded-lg px-3 py-1.5 text-xs transition-colors ${
                   config.fontFamily === font
-                    ? 'border border-blue-500 bg-blue-600/20 text-blue-300'
+                    ? 'border border-violet-500 bg-violet-600/20 text-violet-300'
                     : 'border border-white/10 text-white/40 hover:border-white/20'
                 }`}
               >
@@ -154,7 +154,7 @@ export function OgImageGenerator() {
             실시간 미리보기
           </label>
           <div
-            className="overflow-hidden rounded-xl border border-blue-800/30"
+            className="overflow-hidden rounded-xl border border-white/10 bg-white/[0.08]"
             style={{ aspectRatio: '1200/630' }}
           >
             <canvas
