@@ -1,36 +1,50 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Craftkit
 
-## Getting Started
+누구나 쓸 수 있는 심플한 웹 도구 모음. 가입 없이, 업로드 없이. 브라우저에서 바로.
 
-First, run the development server:
+## 도구
+
+| 도구 | 설명 |
+|------|------|
+| **Favicon Generator** | 이미지 업로드 → favicon.ico, Apple/Android 아이콘, manifest.json을 ZIP으로 다운로드 |
+| **OG Image Generator** | 배경색, 로고, 제목, 부제목 설정 → 1200×630 PNG 다운로드 |
+
+## 특징
+
+- 모든 이미지 처리는 클라이언트 사이드 (Canvas API) — 서버로 전송되지 않음
+- 회원가입 불필요
+
+## 시작하기
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+`http://localhost:3000` 에서 확인.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 기술 스택
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Next.js 15** (App Router)
+- **shadcn/ui** + **Tailwind CSS v4**
+- **Motion** (애니메이션)
+- **fflate** (ZIP 생성)
+- **Vitest** + **Testing Library** (테스트)
+- **FSD** (Feature-Sliced Design) 폴더 구조
 
-## Learn More
+## 테스트
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+pnpm test
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 폴더 구조
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+src/
+├── app/              # Next.js 라우팅
+├── views/            # 페이지 뷰
+├── widgets/          # 독립적인 UI 블록
+├── features/         # 기능 단위 (favicon/og-image export 등)
+└── shared/           # 공통 유틸, 설정, UI 컴포넌트
+```
