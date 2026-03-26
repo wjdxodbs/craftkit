@@ -15,6 +15,25 @@ Object.defineProperty(HTMLCanvasElement.prototype, 'getContext', {
   writable: true,
 })
 
+// Mock Image so that setting src triggers onload immediately
+const OriginalImage = globalThis.Image
+class MockImage {
+  onload: (() => void) | null = null
+  onerror: (() => void) | null = null
+  width = 0
+  height = 0
+  private _src = ''
+  get src() { return this._src }
+  set src(value: string) {
+    this._src = value
+    // Trigger onload asynchronously
+    setTimeout(() => {
+      if (this.onload) this.onload()
+    }, 0)
+  }
+}
+globalThis.Image = MockImage as unknown as typeof Image
+
 Object.defineProperty(HTMLCanvasElement.prototype, 'toBlob', {
   value: vi.fn(function (this: HTMLCanvasElement, callback: (blob: Blob | null) => void) {
     // PNG signature(8) + IHDR chunk header(8) + IHDR data(13) = 29 bytes
