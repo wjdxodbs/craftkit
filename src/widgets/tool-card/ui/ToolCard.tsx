@@ -23,7 +23,7 @@ export function ToolCard({ tool }: Props) {
         <div
           className="cursor-pointer rounded-xl p-4 transition-colors"
           style={{
-            background: 'linear-gradient(135deg, #13132a, #1a1a35)',
+            background: '#1e1d1b',
             border: `1px solid ${tool.borderColor}`,
           }}
         >
