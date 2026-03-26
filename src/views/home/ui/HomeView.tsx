@@ -23,10 +23,10 @@ export function HomeView() {
           transition={{ duration: 0.5 }}
           className="text-3xl font-bold leading-tight text-white"
         >
-          Simple tools for
+          누구나 쓸 수 있는
           <br />
           <span className="bg-gradient-to-r from-violet-400 to-blue-400 bg-clip-text text-transparent">
-            developers & designers
+            심플한 웹 도구
           </span>
         </motion.h1>
         <motion.p
@@ -35,7 +35,7 @@ export function HomeView() {
           transition={{ delay: 0.3, duration: 0.5 }}
           className="mt-4 text-sm text-white/30"
         >
-          No signup. No upload. Runs in your browser.
+          가입 없이, 업로드 없이. 브라우저에서 바로.
         </motion.p>
       </div>
 
@@ -61,7 +61,7 @@ export function HomeView() {
             >
               <div className="rounded-xl border border-dashed border-white/5 p-4 opacity-30">
                 <div className="mb-3 h-8 w-8 rounded-lg bg-white/5" />
-                <p className="text-xs text-white/20">Coming soon...</p>
+                <p className="text-xs text-white/20">준비 중...</p>
               </div>
             </motion.div>
           ))}
