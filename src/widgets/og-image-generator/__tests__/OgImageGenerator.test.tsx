@@ -1,13 +1,12 @@
 import { render, screen, fireEvent } from '@testing-library/react'
-import { describe, it, expect, vi } from 'vitest'
 import { OgImageGenerator } from '../ui/OgImageGenerator'
 
-vi.mock('@/features/og-image-export/lib/generateOgImage', () => ({
-  generateOgImage: vi.fn().mockResolvedValue(new Blob(['mock'], { type: 'image/png' })),
+jest.mock('@/features/og-image-export/lib/generateOgImage', () => ({
+  generateOgImage: jest.fn().mockResolvedValue(new Blob(['mock'], { type: 'image/png' })),
 }))
 
-vi.mock('@/features/og-image-export/lib/renderOgImageToCanvas', () => ({
-  renderOgImageToCanvas: vi.fn().mockResolvedValue(undefined),
+jest.mock('@/features/og-image-export/lib/renderOgImageToCanvas', () => ({
+  renderOgImageToCanvas: jest.fn().mockResolvedValue(undefined),
 }))
 
 describe('OgImageGenerator', () => {

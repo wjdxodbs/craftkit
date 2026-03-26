@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+
 import { unzipSync } from 'fflate'
 import { generateFavicons } from '../lib/generateFavicons'
 

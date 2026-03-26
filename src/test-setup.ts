@@ -1,13 +1,27 @@
 import '@testing-library/jest-dom'
-import { vi } from 'vitest'
+import { TextEncoder, TextDecoder } from 'util'
+global.TextEncoder = TextEncoder
+global.TextDecoder = TextDecoder as typeof global.TextDecoder
+
+// Polyfill Blob.arrayBuffer for jest-environment-jsdom
+if (typeof Blob !== 'undefined' && !Blob.prototype.arrayBuffer) {
+  Blob.prototype.arrayBuffer = function () {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onload = () => resolve(reader.result as ArrayBuffer)
+      reader.onerror = () => reject(reader.error)
+      reader.readAsArrayBuffer(this)
+    })
+  }
+}
 
 Object.defineProperty(HTMLCanvasElement.prototype, 'getContext', {
-  value: vi.fn(() => ({
-    drawImage: vi.fn(),
-    fillRect: vi.fn(),
-    clearRect: vi.fn(),
-    fillText: vi.fn(),
-    measureText: vi.fn(() => ({ width: 100 })),
+  value: jest.fn(() => ({
+    drawImage: jest.fn(),
+    fillRect: jest.fn(),
+    clearRect: jest.fn(),
+    fillText: jest.fn(),
+    measureText: jest.fn(() => ({ width: 100 })),
     fillStyle: '',
     font: '',
     textAlign: 'left' as CanvasTextAlign,
@@ -16,7 +30,6 @@ Object.defineProperty(HTMLCanvasElement.prototype, 'getContext', {
 })
 
 // Mock Image so that setting src triggers onload immediately
-const OriginalImage = globalThis.Image
 class MockImage {
   onload: (() => void) | null = null
   onerror: (() => void) | null = null
@@ -26,7 +39,6 @@ class MockImage {
   get src() { return this._src }
   set src(value: string) {
     this._src = value
-    // Trigger onload asynchronously
     setTimeout(() => {
       if (this.onload) this.onload()
     }, 0)
@@ -35,7 +47,7 @@ class MockImage {
 globalThis.Image = MockImage as unknown as typeof Image
 
 Object.defineProperty(HTMLCanvasElement.prototype, 'toBlob', {
-  value: vi.fn(function (this: HTMLCanvasElement, callback: (blob: Blob | null) => void) {
+  value: jest.fn(function (this: HTMLCanvasElement, callback: (blob: Blob | null) => void) {
     // PNG signature(8) + IHDR chunk header(8) + IHDR data(13) = 29 bytes
     const buf = new Uint8Array(29)
     const view = new DataView(buf.buffer)

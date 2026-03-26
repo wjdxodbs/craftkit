@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+
 import { createResizedCanvas, canvasToUint8Array } from '../canvas'
 
 describe('createResizedCanvas', () => {

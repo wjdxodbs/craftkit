@@ -1,14 +1,13 @@
 import { render, screen } from '@testing-library/react'
-import { describe, it, expect, vi } from 'vitest'
 import { FaviconGenerator } from '../ui/FaviconGenerator'
 
-vi.mock('@/features/favicon-export/lib/generateFavicons', () => ({
-  generateFavicons: vi.fn().mockResolvedValue(new Uint8Array([1, 2, 3])),
+jest.mock('@/features/favicon-export/lib/generateFavicons', () => ({
+  generateFavicons: jest.fn().mockResolvedValue(new Uint8Array([1, 2, 3])),
 }))
 
-vi.mock('@/shared/lib/zip', () => ({
-  downloadBlob: vi.fn(),
-  createZip: vi.fn(),
+jest.mock('@/shared/lib/zip', () => ({
+  downloadBlob: jest.fn(),
+  createZip: jest.fn(),
 }))
 
 describe('FaviconGenerator', () => {

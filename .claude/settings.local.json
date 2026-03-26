@@ -7,7 +7,21 @@
       "Bash(pnpm:*)",
       "Bash(git init:*)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(node:*)",
+      "Bash(/tmp/check_canvas_test.ts:*)",
+      "Bash(/c/Users/user/Desktop/tools/src/features/favicon-export/__tests__/canvas_debug.test.ts:*)",
+      "Bash(find /c/Users/user/Desktop/tools/src -type f \\\\\\(-name *.ts -o -name *.tsx \\\\\\))",
+      "Bash(find /c/Users/user/Desktop/tools/src/shared -name favicon-sizes* -o -name canvas* -o -name ico* -o -name zip*)",
+      "Bash(git stash:*)",
+      "Bash(git remote:*)",
+      "Bash(git branch:*)",
+      "Bash(git push:*)",
+      "Bash(for f:*)",
+      "Bash(do)",
+      "Bash(sed -i \"s/^import { describe, it, expect } from ''vitest''$//\" \"$f\")",
+      "Bash(sed -i \"s/^import { describe, it, expect, vi } from ''vitest''$//\" \"$f\")",
+      "Bash(done)"
     ]
   }
 }

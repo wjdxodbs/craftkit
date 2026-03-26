@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react'
-import { describe, it, expect } from 'vitest'
+
 import { ToolCard } from '../ui/ToolCard'
 import type { Tool } from '@/shared/config/tools'
 

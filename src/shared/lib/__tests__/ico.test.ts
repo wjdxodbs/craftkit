@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+
 import { encodeIco } from '../ico'
 
 function makeFakePng(size: number): Uint8Array {

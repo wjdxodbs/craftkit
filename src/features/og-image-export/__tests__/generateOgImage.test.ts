@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+
 import { generateOgImage, type OgImageConfig } from '../lib/generateOgImage'
 
 const baseConfig: OgImageConfig = {
