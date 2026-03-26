@@ -19,12 +19,12 @@ export function Sidebar() {
       animate={{ width: isExpanded ? EXPANDED_WIDTH : COLLAPSED_WIDTH }}
       transition={{ type: 'spring', stiffness: 300, damping: 30 }}
       style={{ overflow: 'hidden' }}
-      className="relative flex shrink-0 flex-col border-r border-white/10 bg-[#0d0d1a]"
+      className="relative flex shrink-0 flex-col border-r border-white/10 bg-[#0e0d0b]"
     >
       {/* Logo */}
       <div className="flex h-14 items-center border-b border-white/10 px-3">
         <Link href="/" className="flex items-center gap-2 overflow-hidden">
-          <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-gradient-to-br from-violet-500 to-blue-500 text-[11px] font-bold text-white">
+          <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-white text-[11px] font-bold text-stone-900">
             CK
           </span>
           <AnimatePresence initial={false}>
@@ -35,7 +35,7 @@ export function Sidebar() {
                 animate={{ opacity: 1, width: 'auto' }}
                 exit={{ opacity: 0, width: 0 }}
                 transition={{ duration: 0.15 }}
-                className="whitespace-nowrap bg-gradient-to-r from-violet-500 to-blue-500 bg-clip-text text-sm font-bold tracking-[3px] text-transparent"
+                className="whitespace-nowrap text-sm font-bold tracking-wide text-white"
               >
                 CRAFTKIT
               </motion.span>
@@ -57,7 +57,7 @@ export function Sidebar() {
                 className={cn(
                   'flex h-9 items-center gap-3 rounded-lg px-2 text-sm transition-colors',
                   isActive
-                    ? 'bg-white/10 text-white'
+                    ? 'bg-amber-500/15 text-amber-300'
                     : 'text-white/50 hover:bg-white/5 hover:text-white/70'
                 )}
               >
