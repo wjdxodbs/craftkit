@@ -39,4 +39,17 @@ export const TOOLS: Tool[] = [
     icon: '📸',
     available: true,
   },
+  {
+    id: 'image-converter',
+    name: 'Image Converter',
+    description: 'PNG · JPG · WebP 포맷 변환 + 품질 조정',
+    href: '/tools/image-converter',
+    tags: ['.png', '.jpg', '.webp'],
+    accentColor: '#10b981',
+    borderColor: '#10b98144',
+    tagBg: '#10b98122',
+    tagText: '#6ee7b7',
+    icon: '🔄',
+    available: true,
+  },
 ]
