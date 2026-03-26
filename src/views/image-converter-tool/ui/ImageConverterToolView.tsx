@@ -1,4 +1,3 @@
-'use client'
 import { ImageConverter } from '@/widgets/image-converter/ui/ImageConverter'
 
 export function ImageConverterToolView() {

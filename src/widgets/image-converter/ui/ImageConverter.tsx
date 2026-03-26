@@ -102,9 +102,10 @@ export function ImageConverter() {
         {/* 품질 슬라이더 (JPG/WebP만) */}
         {outputFormat !== 'image/png' && (
           <div>
-            <label className="mb-2 block text-xs text-white/50">
-              품질 {quality}%
-            </label>
+            <div className="mb-2 flex items-center justify-between">
+              <span className="text-xs text-white/50">품질</span>
+              <span className="text-xs text-amber-300">{quality}%</span>
+            </div>
             <input
               type="range"
               min={0}
