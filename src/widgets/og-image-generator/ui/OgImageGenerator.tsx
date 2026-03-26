@@ -49,7 +49,7 @@ export function OgImageGenerator() {
       <div className="space-y-5">
         {/* 배경색 */}
         <div>
-          <label className="mb-2 block text-xs uppercase tracking-widest text-white/40">
+          <label className="mb-2 block text-xs text-white/50">
             배경색
           </label>
           <div className="flex flex-wrap gap-2">
@@ -59,7 +59,7 @@ export function OgImageGenerator() {
                 onClick={() => setConfig((c) => ({ ...c, backgroundColor: color }))}
                 className={`h-6 w-6 rounded transition-transform hover:scale-110 ${
                   config.backgroundColor === color
-                    ? 'ring-2 ring-violet-400 ring-offset-1 ring-offset-[#0d0d1a]'
+                    ? 'ring-2 ring-amber-400 ring-offset-1 ring-offset-[#191917]'
                     : ''
                 }`}
                 style={{
@@ -87,7 +87,7 @@ export function OgImageGenerator() {
 
         {/* 로고 업로드 */}
         <div>
-          <label className="mb-2 block text-xs uppercase tracking-widest text-white/40">
+          <label className="mb-2 block text-xs text-white/50">
             로고 (선택)
           </label>
           <ImageUpload
@@ -98,7 +98,7 @@ export function OgImageGenerator() {
 
         {/* 제목 */}
         <div>
-          <label className="mb-2 block text-xs uppercase tracking-widest text-white/40">
+          <label className="mb-2 block text-xs text-white/50">
             제목
           </label>
           <Input
@@ -111,7 +111,7 @@ export function OgImageGenerator() {
 
         {/* 부제목 */}
         <div>
-          <label className="mb-2 block text-xs uppercase tracking-widest text-white/40">
+          <label className="mb-2 block text-xs text-white/50">
             부제목
           </label>
           <Input
@@ -126,7 +126,7 @@ export function OgImageGenerator() {
 
         {/* 폰트 */}
         <div>
-          <label className="mb-2 block text-xs uppercase tracking-widest text-white/40">
+          <label className="mb-2 block text-xs text-white/50">
             폰트
           </label>
           <div className="flex gap-2">
@@ -136,7 +136,7 @@ export function OgImageGenerator() {
                 onClick={() => setConfig((c) => ({ ...c, fontFamily: font }))}
                 className={`rounded-lg px-3 py-1.5 text-xs transition-colors ${
                   config.fontFamily === font
-                    ? 'border border-violet-500 bg-violet-600/20 text-violet-300'
+                    ? 'border border-amber-500 bg-amber-500/20 text-amber-300'
                     : 'border border-white/10 text-white/40 hover:border-white/20'
                 }`}
               >
@@ -150,7 +150,7 @@ export function OgImageGenerator() {
       {/* 우측: 미리보기 + 다운로드 */}
       <div className="space-y-4">
         <div>
-          <label className="mb-2 block text-xs uppercase tracking-widest text-white/40">
+          <label className="mb-2 block text-xs text-white/50">
             실시간 미리보기
           </label>
           <div
@@ -170,7 +170,7 @@ export function OgImageGenerator() {
           <Button
             onClick={handleDownload}
             disabled={isDownloading}
-            className="w-full bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-500 hover:to-blue-500"
+            className="w-full bg-amber-500 hover:bg-amber-400"
           >
             {isDownloading ? '생성 중...' : '⬇ Download PNG'}
           </Button>
