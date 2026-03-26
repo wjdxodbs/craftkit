@@ -108,7 +108,7 @@ export function FaviconGenerator() {
           <Button
             onClick={handleDownload}
             disabled={!imageEl || isGenerating}
-            className="w-full bg-gradient-to-r from-violet-600 to-violet-800 hover:from-violet-500 hover:to-violet-700 disabled:opacity-40"
+            className="w-full bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-500 hover:to-blue-500 disabled:opacity-40"
           >
             {isGenerating ? '생성 중...' : '⬇ Download ZIP'}
           </Button>

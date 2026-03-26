@@ -170,7 +170,7 @@ export function OgImageGenerator() {
           <Button
             onClick={handleDownload}
             disabled={isDownloading}
-            className="w-full bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-500 hover:to-blue-700"
+            className="w-full bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-500 hover:to-blue-500"
           >
             {isDownloading ? '생성 중...' : '⬇ Download PNG'}
           </Button>
