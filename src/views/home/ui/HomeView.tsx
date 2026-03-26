@@ -9,7 +9,7 @@ export function HomeView() {
   return (
     <main className="min-h-screen bg-[#0d0d1a]">
       {/* Nav */}
-      <nav className="border-b border-white/5 px-6 py-4">
+      <nav className="border-b border-white/10 px-6 py-4">
         <span className="bg-gradient-to-r from-violet-500 to-blue-500 bg-clip-text text-sm font-bold tracking-[3px] text-transparent">
           CRAFTKIT
         </span>
@@ -33,7 +33,7 @@ export function HomeView() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3, duration: 0.5 }}
-          className="mt-4 text-sm text-white/30"
+          className="mt-4 text-sm text-white/50"
         >
           가입 없이, 업로드 없이. 브라우저에서 바로.
         </motion.p>
@@ -59,7 +59,7 @@ export function HomeView() {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.1 * (TOOLS.length + i) }}
             >
-              <div className="rounded-xl border border-dashed border-white/5 p-4 opacity-30">
+              <div className="rounded-xl border border-dashed border-white/10 p-4 opacity-30">
                 <div className="mb-3 h-8 w-8 rounded-lg bg-white/5" />
                 <p className="text-xs text-white/20">준비 중...</p>
               </div>
