@@ -35,7 +35,6 @@ export function Sidebar() {
                 exit={{ opacity: 0, width: 0 }}
                 transition={{ duration: 0.15 }}
                 className="whitespace-nowrap bg-gradient-to-r from-violet-500 to-blue-500 bg-clip-text text-sm font-bold tracking-[3px] text-transparent"
-                aria-label="CRAFTKIT"
               >
                 CRAFTKIT
               </motion.span>
@@ -52,8 +51,8 @@ export function Sidebar() {
             <li key={tool.id}>
               <Link
                 href={tool.href}
+                aria-label={!isExpanded ? tool.name : undefined}
                 aria-current={isActive ? 'page' : undefined}
-                data-active={isActive ? 'true' : undefined}
                 className={cn(
                   'flex h-9 items-center gap-3 rounded-lg px-2 text-sm transition-colors',
                   isActive

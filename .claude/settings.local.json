@@ -21,7 +21,11 @@
       "Bash(do)",
       "Bash(sed -i \"s/^import { describe, it, expect } from ''vitest''$//\" \"$f\")",
       "Bash(sed -i \"s/^import { describe, it, expect, vi } from ''vitest''$//\" \"$f\")",
-      "Bash(done)"
+      "Bash(done)",
+      "mcp__filesystem__directory_tree",
+      "mcp__filesystem__read_text_file",
+      "Bash(git:*)",
+      "Bash(wait)"
     ]
   }
 }

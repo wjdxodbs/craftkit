@@ -1,9 +1,10 @@
+import type { ReactNode } from 'react'
 import { Sidebar } from '@/widgets/sidebar/ui/Sidebar'
 
 export default function ToolsLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: ReactNode
 }) {
   return (
     <div className="flex min-h-screen bg-[#0d0d1a]">
