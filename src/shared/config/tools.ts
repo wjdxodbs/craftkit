@@ -52,4 +52,17 @@ export const TOOLS: Tool[] = [
     icon: '🔄',
     available: true,
   },
+  {
+    id: 'image-resizer',
+    name: 'Image Resizer',
+    description: '이미지 크기 조절 + 포맷 변환',
+    href: '/tools/image-resizer',
+    tags: ['px', '.png', '.jpg', '.webp'],
+    accentColor: '#f97316',
+    borderColor: '#f9731644',
+    tagBg: '#f9731622',
+    tagText: '#fdba74',
+    icon: '📐',
+    available: true,
+  },
 ]
