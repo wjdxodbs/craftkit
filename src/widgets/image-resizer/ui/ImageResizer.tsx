@@ -28,6 +28,7 @@ export function ImageResizer() {
   const [outputFormat, setOutputFormat] = useState<OutputFormat>('image/png')
   const [quality, setQuality] = useState(90)
   const [isConverting, setIsConverting] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const handleFileLoad = (img: HTMLImageElement, url: string) => {
     setImageEl(img)
@@ -38,6 +39,7 @@ export function ImageResizer() {
     setWidth(w)
     setHeight(h)
     setLocked(true)
+    setError(null)
   }
 
   const handleWidthChange = (val: number) => {
@@ -59,6 +61,7 @@ export function ImageResizer() {
   const handleDownload = async () => {
     if (!imageEl) return
     setIsConverting(true)
+    setError(null)
     try {
       const blob = await resizeImage(imageEl, width, height, outputFormat, quality / 100)
       const url = URL.createObjectURL(blob)
@@ -67,6 +70,8 @@ export function ImageResizer() {
       a.download = `resized.${EXT_MAP[outputFormat]}`
       a.click()
       URL.revokeObjectURL(url)
+    } catch {
+      setError('변환에 실패했습니다. 다시 시도해 주세요.')
     } finally {
       setIsConverting(false)
     }
@@ -202,6 +207,9 @@ export function ImageResizer() {
             {isConverting ? '처리 중...' : '⬇ Download'}
           </Button>
         </motion.div>
+        {error && (
+          <p className="text-xs text-red-400">{error}</p>
+        )}
       </div>
     </div>
   )
