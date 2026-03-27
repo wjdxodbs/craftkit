@@ -7,6 +7,14 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: 'Craftkit',
   description: 'Simple tools for developers & designers. No signup. No upload.',
+  icons: {
+    apple: '/apple-touch-icon.png',
+  },
+  openGraph: {
+    title: 'Craftkit',
+    description: 'Simple tools for developers & designers. No signup. No upload.',
+    images: ['/og-image.png'],
+  },
 }
 
 export default function RootLayout({
