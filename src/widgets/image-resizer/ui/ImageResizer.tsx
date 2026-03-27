@@ -110,7 +110,7 @@ export function ImageResizer() {
               disabled={!imageEl}
               className={`shrink-0 rounded-lg border px-2 py-1.5 text-sm transition-colors disabled:opacity-30 ${
                 locked
-                  ? 'border-orange-500 bg-orange-500/20 text-orange-300'
+                  ? 'border-amber-500 bg-amber-500/20 text-amber-300'
                   : 'border-white/10 text-white/40 hover:border-white/20'
               }`}
               title={locked ? '비율 잠금 켜짐' : '비율 잠금 꺼짐'}
