@@ -84,7 +84,7 @@ export function ImageResizer() {
           />
           {naturalSize && (
             <p className="mt-2 text-xs">
-              <span className="rounded bg-orange-500/20 px-1.5 py-0.5 text-orange-300">
+              <span className="rounded bg-amber-500/20 px-1.5 py-0.5 text-amber-300">
                 원본: {naturalSize.w} × {naturalSize.h}
               </span>
             </p>
