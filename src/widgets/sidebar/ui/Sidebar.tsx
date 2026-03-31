@@ -19,7 +19,7 @@ export function Sidebar() {
       animate={{ width: isExpanded ? EXPANDED_WIDTH : COLLAPSED_WIDTH }}
       transition={{ type: 'spring', stiffness: 300, damping: 30 }}
       style={{ overflow: 'hidden' }}
-      className="relative flex shrink-0 flex-col border-r border-white/10 bg-[#0e0d0b]"
+      className="relative flex shrink-0 flex-col border-r border-white/10 bg-sidebar"
     >
       {/* Logo */}
       <div className="flex h-14 items-center border-b border-white/10 px-3">
