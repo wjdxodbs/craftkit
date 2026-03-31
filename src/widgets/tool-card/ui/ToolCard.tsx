@@ -21,9 +21,8 @@ export function ToolCard({ tool }: Props) {
     <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
       <Link href={tool.href}>
         <div
-          className="cursor-pointer rounded-xl p-4 transition-colors"
+          className="cursor-pointer rounded-xl p-4 transition-colors bg-card"
           style={{
-            background: '#1e1d1b',
             border: `1px solid ${tool.borderColor}`,
           }}
         >
