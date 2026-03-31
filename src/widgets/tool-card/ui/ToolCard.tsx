@@ -18,10 +18,14 @@ export function ToolCard({ tool }: Props) {
   }
 
   return (
-    <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+    <motion.div
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
+      style={{ '--glow': tool.accentColor + '55' } as React.CSSProperties}
+    >
       <Link href={tool.href}>
         <div
-          className="cursor-pointer rounded-xl p-4 transition-colors bg-card"
+          className="cursor-pointer rounded-xl p-4 bg-card transition-shadow hover:shadow-[0_0_20px_var(--glow)]"
           style={{
             border: `1px solid ${tool.borderColor}`,
           }}

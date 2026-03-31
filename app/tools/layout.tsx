@@ -10,7 +10,6 @@ export default function ToolsLayout({
     <div className="flex min-h-screen bg-background">
       <Sidebar />
       <main className="flex min-w-0 flex-1 flex-col bg-background">
-        <div className="h-14 border-b border-white/10" />
         {children}
       </main>
     </div>

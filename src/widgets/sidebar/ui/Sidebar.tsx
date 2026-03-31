@@ -35,7 +35,7 @@ export function Sidebar() {
                 animate={{ opacity: 1, width: 'auto' }}
                 exit={{ opacity: 0, width: 0 }}
                 transition={{ duration: 0.15 }}
-                className="whitespace-nowrap text-sm font-bold tracking-wide text-white"
+                className="whitespace-nowrap text-sm font-bold tracking-widest text-white font-heading"
               >
                 CRAFTKIT
               </motion.span>
@@ -114,7 +114,7 @@ export function Sidebar() {
                 transition={{ duration: 0.12 }}
                 className="overflow-hidden whitespace-nowrap text-xs"
               >
-                Collapse
+                접기
               </motion.span>
             )}
           </AnimatePresence>

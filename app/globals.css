@@ -5,23 +5,23 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: oklch(0.13 0.03 264);
-  --foreground: oklch(0.97 0.003 264);
-  --card: oklch(0.15 0.025 264);
-  --card-foreground: oklch(0.97 0.003 264);
-  --popover: oklch(0.15 0.025 264);
-  --popover-foreground: oklch(0.97 0.003 264);
+  --background: oklch(0.213 0.004 107);
+  --foreground: oklch(0.97 0.003 45);
+  --card: oklch(0.231 0.004 85);
+  --card-foreground: oklch(0.97 0.003 45);
+  --popover: oklch(0.15 0.025 45);
+  --popover-foreground: oklch(0.97 0.003 45);
   --primary: oklch(0.78 0.18 73);
   --primary-foreground: oklch(0.15 0.05 73);
-  --secondary: oklch(0.2 0.02 264);
-  --secondary-foreground: oklch(0.97 0.003 264);
-  --muted: oklch(0.2 0.02 264);
-  --muted-foreground: oklch(0.55 0.015 264);
-  --accent: oklch(0.2 0.02 264);
-  --accent-foreground: oklch(0.97 0.003 264);
+  --secondary: oklch(0.2 0.02 45);
+  --secondary-foreground: oklch(0.97 0.003 45);
+  --muted: oklch(0.2 0.02 45);
+  --muted-foreground: oklch(0.55 0.015 45);
+  --accent: oklch(0.2 0.02 45);
+  --accent-foreground: oklch(0.97 0.003 45);
   --destructive: oklch(0.6 0.22 27);
-  --border: oklch(0.19 0.02 264);
-  --input: oklch(0.19 0.02 264);
+  --border: oklch(0.19 0.02 45);
+  --input: oklch(0.19 0.02 45);
   --ring: oklch(0.78 0.18 73);
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
@@ -29,22 +29,22 @@
   --chart-4: oklch(0.371 0 0);
   --chart-5: oklch(0.269 0 0);
   --radius: 0.5rem;
-  --sidebar: oklch(0.15 0.025 264);
-  --sidebar-foreground: oklch(0.97 0.003 264);
+  --sidebar: oklch(0.159 0.005 85);
+  --sidebar-foreground: oklch(0.97 0.003 45);
   --sidebar-primary: oklch(0.78 0.18 73);
   --sidebar-primary-foreground: oklch(0.15 0.05 73);
-  --sidebar-accent: oklch(0.2 0.02 264);
-  --sidebar-accent-foreground: oklch(0.97 0.003 264);
-  --sidebar-border: oklch(0.19 0.02 264);
+  --sidebar-accent: oklch(0.2 0.02 45);
+  --sidebar-accent-foreground: oklch(0.97 0.003 45);
+  --sidebar-border: oklch(0.19 0.02 45);
   --sidebar-ring: oklch(0.78 0.18 73);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
+  --font-sans: var(--font-dm-sans);
   --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-sans);
+  --font-heading: var(--font-syne);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -92,5 +92,9 @@
   }
   html {
     @apply font-sans;
+  }
+  h1, h2, h3 {
+    font-family: var(--font-heading);
+    letter-spacing: -0.02em;
   }
 }
