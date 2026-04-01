@@ -6,6 +6,8 @@ import { TOOLS } from '@/shared/config/tools'
 const COMING_SOON_COUNT = 2
 
 export function HomeView() {
+  const availableCount = TOOLS.filter((t) => t.available).length
+
   return (
     <main
       className="relative min-h-screen"
@@ -22,14 +24,28 @@ export function HomeView() {
         }}
       />
       {/* Nav */}
-      <nav className="border-b border-white/10 px-6 py-4">
-        <span className="font-heading text-sm font-bold tracking-widest text-white">
-          CRAFTKIT
-        </span>
+      <nav className="flex items-center justify-between border-b border-white/10 px-6 py-4">
+        <div className="flex items-center gap-2">
+          <span className="flex size-[18px] shrink-0 items-center justify-center rounded-md bg-primary text-[10px] font-black text-primary-foreground">
+            CK
+          </span>
+          <span className="font-heading text-sm font-bold tracking-widest text-white">
+            CRAFTKIT
+          </span>
+        </div>
+        <span className="text-xs text-foreground/25">{availableCount} tools</span>
       </nav>
 
       {/* Hero */}
       <div className="px-6 py-16 text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="mb-4 inline-block rounded-full border border-primary/20 bg-primary/[0.08] px-3 py-1 text-[11px] text-primary"
+        >
+          브라우저에서 바로 · 가입 불필요
+        </motion.div>
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -40,14 +56,6 @@ export function HomeView() {
           <br />
           심플한 웹 도구
         </motion.h1>
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3, duration: 0.5 }}
-          className="mt-4 text-sm text-white/50"
-        >
-          가입 없이, 업로드 없이. 브라우저에서 바로.
-        </motion.p>
       </div>
 
       {/* Tool Grid */}
