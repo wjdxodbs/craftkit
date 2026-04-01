@@ -55,13 +55,16 @@ export function Sidebar() {
                 aria-label={!isExpanded ? tool.name : undefined}
                 aria-current={isActive ? 'page' : undefined}
                 className={cn(
-                  'flex h-9 items-center gap-3 rounded-lg px-2 text-sm transition-colors',
+                  'relative flex h-9 items-center gap-3 rounded-lg px-2 text-sm transition-colors',
                   isActive
                     ? 'bg-amber-500/15 text-amber-300'
                     : 'text-white/50 hover:bg-white/5 hover:text-white/70'
                 )}
               >
-                <span className="flex size-5 shrink-0 items-center justify-center text-base leading-none">
+                {isActive && (
+                  <span className="absolute left-0 top-1/2 h-4 w-0.5 -translate-y-1/2 rounded-r bg-primary" />
+                )}
+                <span className="flex size-[22px] shrink-0 items-center justify-center text-base leading-none">
                   {tool.icon}
                 </span>
                 <AnimatePresence initial={false}>
