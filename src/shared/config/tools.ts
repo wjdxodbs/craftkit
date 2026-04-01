@@ -65,4 +65,17 @@ export const TOOLS: Tool[] = [
     icon: '✂️',
     available: true,
   },
+  {
+    id: 'color-converter',
+    name: 'Color Format Converter',
+    description: 'HEX · RGB · HSL · OKLCH 색상 변환',
+    href: '/tools/color-converter',
+    tags: ['HEX', 'RGB', 'HSL', 'OKLCH'],
+    accentColor: '#a78bfa',
+    borderColor: '#a78bfa44',
+    tagBg: '#a78bfa22',
+    tagText: '#c4b5fd',
+    icon: '🎨',
+    available: true,
+  },
 ]
