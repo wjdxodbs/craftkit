@@ -228,8 +228,10 @@ export function ImageCropper() {
       const a = document.createElement('a')
       a.href = url
       a.download = `cropped.${EXT_MAP[outputFormat]}`
+      document.body.appendChild(a)
       a.click()
-      URL.revokeObjectURL(url)
+      document.body.removeChild(a)
+      setTimeout(() => URL.revokeObjectURL(url), 100)
     } catch {
       setError('크롭에 실패했습니다. 다시 시도해 주세요.')
     } finally {
