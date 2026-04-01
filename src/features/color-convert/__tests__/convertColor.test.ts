@@ -1,4 +1,5 @@
 import { detectFormat } from '../lib/detectFormat'
+import { convertColor } from '../lib/convertColor'
 
 describe('detectFormat', () => {
   it('#rrggbb 형식을 hex로 감지한다', () => {
@@ -33,5 +34,53 @@ describe('detectFormat', () => {
     expect(detectFormat('red')).toBeNull()
     expect(detectFormat('123')).toBeNull()
     expect(detectFormat('')).toBeNull()
+  })
+})
+
+describe('convertColor — HEX 입력', () => {
+  it('#3b82f6을 모든 포맷으로 변환한다', () => {
+    const result = convertColor('#3b82f6')
+    expect(result).not.toBeNull()
+    expect(result!.hex).toBe('#3b82f6')
+    expect(result!.rgb).toBe('rgb(59, 130, 246)')
+    expect(result!.hsl).toBe('hsl(217, 91%, 60%)')
+  })
+
+  it('#fff 축약 HEX를 변환한다', () => {
+    const result = convertColor('#fff')
+    expect(result).not.toBeNull()
+    expect(result!.hex).toBe('#ffffff')
+    expect(result!.rgb).toBe('rgb(255, 255, 255)')
+  })
+})
+
+describe('convertColor — RGB 입력', () => {
+  it('rgb(59, 130, 246)을 변환한다', () => {
+    const result = convertColor('rgb(59, 130, 246)')
+    expect(result).not.toBeNull()
+    expect(result!.hex).toBe('#3b82f6')
+  })
+
+  it('공백 구분 rgb(59 130 246)을 변환한다', () => {
+    const result = convertColor('rgb(59 130 246)')
+    expect(result).not.toBeNull()
+    expect(result!.hex).toBe('#3b82f6')
+  })
+})
+
+describe('convertColor — HSL 입력', () => {
+  it('hsl(0, 100%, 50%)을 red로 변환한다', () => {
+    const result = convertColor('hsl(0, 100%, 50%)')
+    expect(result).not.toBeNull()
+    expect(result!.hex).toBe('#ff0000')
+    expect(result!.rgb).toBe('rgb(255, 0, 0)')
+  })
+})
+
+describe('convertColor — 에러 처리', () => {
+  it('잘못된 입력에 null을 반환한다', () => {
+    expect(convertColor('red')).toBeNull()
+    expect(convertColor('')).toBeNull()
+    expect(convertColor('123')).toBeNull()
   })
 })
