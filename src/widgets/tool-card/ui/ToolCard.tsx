@@ -25,15 +25,19 @@ export function ToolCard({ tool }: Props) {
     >
       <Link href={tool.href}>
         <div
-          className="cursor-pointer rounded-xl p-4 bg-card transition-shadow hover:shadow-[0_0_20px_var(--glow)]"
-          style={{
-            border: `1px solid ${tool.borderColor}`,
-          }}
+          className="relative cursor-pointer overflow-hidden rounded-xl border border-white/[0.06] bg-card p-4 transition-shadow hover:shadow-[0_0_20px_var(--glow)]"
         >
+          {/* 상단 컬러바 */}
+          <div
+            className="absolute inset-x-0 top-0 h-[2px]"
+            style={{
+              background: `linear-gradient(90deg, ${tool.accentColor}, ${tool.accentColor}33)`,
+            }}
+          />
           <div
             className="mb-3 flex h-8 w-8 items-center justify-center rounded-lg text-base"
             style={{
-              background: tool.accentColor,
+              background: `${tool.accentColor}20`,
             }}
           >
             {tool.icon}
@@ -48,7 +52,6 @@ export function ToolCard({ tool }: Props) {
                 style={{
                   background: tool.tagBg,
                   color: tool.tagText,
-                  border: `1px solid ${tool.borderColor}`,
                 }}
               >
                 {tag}
