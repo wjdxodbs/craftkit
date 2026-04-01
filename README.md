@@ -8,10 +8,13 @@
 |------|------|
 | **Favicon Generator** | 이미지 업로드 → favicon.ico, Apple/Android 아이콘, manifest.json을 ZIP으로 다운로드 |
 | **OG Image Generator** | 배경색, 로고, 제목, 부제목 설정 → 1200×630 PNG 다운로드 |
+| **Image Resizer** | 이미지 크기 조절 + PNG/JPG/WebP 포맷 변환 |
+| **Image Cropper** | 이미지 크롭 + PNG/JPG/WebP 포맷 변환 |
+| **Color Format Converter** | HEX · RGB · HSL · OKLCH 색상 포맷 상호 변환 |
 
 ## 특징
 
-- 모든 이미지 처리는 클라이언트 사이드 (Canvas API) — 서버로 전송되지 않음
+- 모든 처리는 클라이언트 사이드 (Canvas API) — 서버로 전송되지 않음
 - 회원가입 불필요
 
 ## 시작하기
@@ -25,11 +28,12 @@ pnpm dev
 
 ## 기술 스택
 
-- **Next.js 15** (App Router)
-- **shadcn/ui** + **Tailwind CSS v4**
+- **Next.js 16** (App Router)
+- **React 19**
+- **Tailwind CSS v4**
 - **Motion** (애니메이션)
 - **fflate** (ZIP 생성)
-- **Vitest** + **Testing Library** (테스트)
+- **Jest** + **Testing Library** (테스트)
 - **FSD** (Feature-Sliced Design) 폴더 구조
 
 ## 테스트
@@ -41,10 +45,10 @@ pnpm test
 ## 폴더 구조
 
 ```
+app/              # Next.js 라우팅
 src/
-├── app/              # Next.js 라우팅
-├── views/            # 페이지 뷰
-├── widgets/          # 독립적인 UI 블록
-├── features/         # 기능 단위 (favicon/og-image export 등)
-└── shared/           # 공통 유틸, 설정, UI 컴포넌트
+├── views/        # 페이지 뷰
+├── widgets/      # 독립적인 UI 블록
+├── features/     # 기능 단위 로직 및 UI
+└── shared/       # 공통 유틸, 설정, UI 컴포넌트
 ```
