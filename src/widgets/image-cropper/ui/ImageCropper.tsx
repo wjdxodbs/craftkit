@@ -67,6 +67,7 @@ export function ImageCropper() {
           <div className="flex gap-2">
             {ASPECT_PRESETS.map(({ label, value }) => (
               <button
+                type="button"
                 key={label}
                 onClick={() => setAspectRatio(value)}
                 disabled={!imageEl}
@@ -88,6 +89,7 @@ export function ImageCropper() {
           <div className="flex gap-2">
             {OUTPUT_FORMATS.map(({ label, value }) => (
               <button
+                type="button"
                 key={value}
                 onClick={() => setOutputFormat(value)}
                 className={`rounded-lg px-3 py-1.5 text-xs transition-colors ${
