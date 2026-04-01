@@ -199,6 +199,19 @@ export function ImageCropper() {
     e.currentTarget.releasePointerCapture(e.pointerId)
   }
 
+  const handlePresetChange = (ratio: number | null) => {
+    setAspectRatio(ratio)
+    if (ratio && cropBox && displaySize) {
+      const newW = cropBox.w
+      const newH = newW / ratio
+      const centerY = cropBox.y + cropBox.h / 2
+      const newY = centerY - newH / 2
+      if (newH >= MIN_CROP && newY >= 0 && newY + newH <= displaySize.h) {
+        setCropBox({ x: cropBox.x, y: newY, w: newW, h: newH })
+      }
+    }
+  }
+
   const handleFileLoad = (img: HTMLImageElement, url: string) => {
     setImageEl(img)
     setDataUrl(url)
@@ -230,7 +243,7 @@ export function ImageCropper() {
               <button
                 type="button"
                 key={label}
-                onClick={() => setAspectRatio(value)}
+                onClick={() => handlePresetChange(value)}
                 disabled={!imageEl}
                 className={`rounded-lg px-3 py-1.5 text-xs transition-colors disabled:opacity-30 ${
                   aspectRatio === value
