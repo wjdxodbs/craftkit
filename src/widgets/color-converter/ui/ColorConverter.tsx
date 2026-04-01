@@ -82,7 +82,7 @@ export function ColorConverter() {
             className="sr-only"
           />
         </div>
-        <p className="text-right text-xs text-white/30">클릭해서 색상 선택</p>
+        <p className="text-xs text-white/30">#hex · rgb() · hsl() · oklch() 형식 지원</p>
       </div>
 
       {/* 변환 결과 */}
