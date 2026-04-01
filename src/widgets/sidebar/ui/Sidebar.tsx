@@ -24,7 +24,7 @@ export function Sidebar() {
       {/* Logo */}
       <div className="flex h-14 items-center border-b border-white/10 px-3">
         <Link href="/" className="flex items-center gap-2 overflow-hidden">
-          <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-white text-[11px] font-bold text-stone-900">
+          <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-primary text-[11px] font-black text-primary-foreground">
             CK
           </span>
           <AnimatePresence initial={false}>

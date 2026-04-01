@@ -26,7 +26,7 @@ export function HomeView() {
       {/* Nav */}
       <nav className="flex items-center justify-between border-b border-white/10 px-6 py-4">
         <div className="flex items-center gap-2">
-          <span className="flex size-[18px] shrink-0 items-center justify-center rounded-md bg-primary text-[10px] font-black text-primary-foreground">
+          <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-primary text-[11px] font-black text-primary-foreground">
             CK
           </span>
           <span className="font-heading text-sm font-bold tracking-widest text-white">
