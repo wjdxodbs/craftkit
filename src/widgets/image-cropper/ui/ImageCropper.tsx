@@ -52,13 +52,6 @@ export function ImageCropper() {
   const [dataUrl, setDataUrl] = useState<string | null>(null)
   const [displaySize, setDisplaySize] = useState<{ w: number; h: number } | null>(null)
   const [cropBox, setCropBox] = useState<CropBox | null>(null)
-
-  useEffect(() => {
-    const canvas = canvasRef.current
-    if (!canvas || !cropBox) return
-    drawOverlay(canvas, cropBox)
-  }, [cropBox])
-
   const [aspectRatio, setAspectRatio] = useState<number | null>(null)
   const [outputFormat, setOutputFormat] = useState<OutputFormat>('image/png')
   const [quality, setQuality] = useState(90)
@@ -67,6 +60,12 @@ export function ImageCropper() {
 
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas || !cropBox) return
+    drawOverlay(canvas, cropBox)
+  }, [cropBox])
 
   const handleFileLoad = (img: HTMLImageElement, url: string) => {
     setImageEl(img)
