@@ -34,12 +34,9 @@ export function ImageUpload({
   }
 
   return (
-    <div
-      role="button"
+    <button
       aria-label="이미지 업로드"
-      tabIndex={0}
       onClick={() => inputRef.current?.click()}
-      onKeyDown={(e) => e.key === 'Enter' && inputRef.current?.click()}
       onDragOver={(e) => {
         e.preventDefault()
         setIsDragging(true)
@@ -89,6 +86,6 @@ export function ImageUpload({
           if (file) handleFile(file)
         }}
       />
-    </div>
+    </button>
   )
 }

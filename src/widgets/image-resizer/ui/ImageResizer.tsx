@@ -107,7 +107,7 @@ export function ImageResizer() {
               value={width || ''}
               onChange={(e) => handleWidthChange(Number(e.target.value))}
               disabled={!imageEl}
-              className="w-full rounded-lg border border-white/10 bg-white/[0.04] px-3 py-1.5 text-sm text-white placeholder-white/20 focus:border-white/20 focus:outline-none disabled:opacity-30"
+              className="w-full rounded-lg border border-white/10 bg-white/[0.04] px-3 py-1.5 text-sm text-white placeholder-white/20 focus:border-white/20 focus-visible:outline-none disabled:opacity-30"
               placeholder="W"
             />
             <button
@@ -129,7 +129,7 @@ export function ImageResizer() {
               value={height || ''}
               onChange={(e) => handleHeightChange(Number(e.target.value))}
               disabled={!imageEl}
-              className="w-full rounded-lg border border-white/10 bg-white/[0.04] px-3 py-1.5 text-sm text-white placeholder-white/20 focus:border-white/20 focus:outline-none disabled:opacity-30"
+              className="w-full rounded-lg border border-white/10 bg-white/[0.04] px-3 py-1.5 text-sm text-white placeholder-white/20 focus:border-white/20 focus-visible:outline-none disabled:opacity-30"
               placeholder="H"
             />
           </div>

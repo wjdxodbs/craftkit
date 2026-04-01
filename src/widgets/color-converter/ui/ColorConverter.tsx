@@ -61,7 +61,7 @@ export function ColorConverter() {
             value={input}
             onChange={(e) => handleInput(e.target.value)}
             placeholder="#3b82f6"
-            className={`flex-1 rounded-lg border bg-white/[0.04] px-3 py-2 text-sm text-white placeholder-white/20 focus:outline-none ${
+            className={`flex-1 rounded-lg border bg-white/[0.04] px-3 py-2 text-sm text-white placeholder-white/20 focus-visible:outline-none ${
               !isValid && input.trim() !== ''
                 ? 'border-red-500/60 focus:border-red-400'
                 : 'border-white/10 focus:border-white/20'
