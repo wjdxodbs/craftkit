@@ -46,7 +46,7 @@ export function ImageUpload({
       className={`cursor-pointer rounded-xl border-2 border-dashed p-6 text-center transition-colors ${
         isDragging
           ? 'border-amber-400 bg-white/[0.08]'
-          : 'border-white/20 bg-white/[0.04] hover:border-white/30'
+          : 'border-primary/20 bg-primary/[0.03] hover:border-primary/30'
       }`}
     >
       {fileName ? (
