@@ -46,16 +46,16 @@ export function FaviconGenerator() {
       {/* 좌측 */}
       <div className="space-y-6">
         <div>
-          <h2 className="mb-3 text-sm font-semibold text-slate-200">
-            1. 파일 업로드
-          </h2>
+          <p className="mb-2 text-[11px] font-semibold tracking-widest text-foreground/35">
+            파일 업로드
+          </p>
           <ImageUpload onFileLoad={handleFileLoad} />
         </div>
 
         <div>
-          <h2 className="mb-3 text-sm font-semibold text-slate-200">
-            2. 생성될 파일
-          </h2>
+          <p className="mb-2 text-[11px] font-semibold tracking-widest text-foreground/35">
+            생성될 파일
+          </p>
           <div className="space-y-2">
             <FileRow filename="favicon.ico" size="16, 32, 48px" />
             {FAVICON_SIZES.map(({ filename, size }) => (
@@ -73,9 +73,9 @@ export function FaviconGenerator() {
       {/* 우측 */}
       <div className="space-y-4">
         <div>
-          <h2 className="mb-3 text-sm font-semibold text-slate-200">
-            3. 미리보기
-          </h2>
+          <p className="mb-2 text-[11px] font-semibold tracking-widest text-foreground/35">
+            미리보기
+          </p>
           <div className="rounded-xl border border-white/10 bg-white/[0.08] p-4">
             <div className="flex items-end justify-center gap-4">
               {PREVIEW_SIZES.map((size) => {
@@ -148,9 +148,11 @@ function FileRow({
   size: string
 }) {
   return (
-    <div className="flex items-center justify-between rounded-lg border border-white/10 bg-white/[0.08] px-3 py-2">
-      <span className="text-xs text-slate-200">{filename}</span>
-      <span className="text-xs text-white/50">{size}</span>
+    <div className="flex items-center justify-between rounded-lg bg-card px-3 py-2">
+      <span className="text-xs text-foreground/80">{filename}</span>
+      <span className="rounded bg-primary/[0.08] px-2 py-0.5 text-[10px] text-primary/60">
+        {size}
+      </span>
     </div>
   )
 }
