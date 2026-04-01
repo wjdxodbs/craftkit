@@ -1,9 +1,32 @@
 'use client'
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { motion } from 'motion/react'
 import { ImageUpload } from '@/features/image-upload/ui/ImageUpload'
 import type { CropBox, OutputFormat } from '@/features/image-crop/lib/cropImage'
 import { Button } from '@/shared/ui/button'
+
+const HANDLE_SIZE = 8
+
+function drawOverlay(canvas: HTMLCanvasElement, box: CropBox) {
+  const ctx = canvas.getContext('2d')
+  if (!ctx) return
+  const { width, height } = canvas
+  ctx.clearRect(0, 0, width, height)
+  ctx.fillStyle = 'rgba(0,0,0,0.5)'
+  ctx.fillRect(0, 0, width, height)
+  ctx.clearRect(box.x, box.y, box.w, box.h)
+  ctx.strokeStyle = 'rgba(255,255,255,0.8)'
+  ctx.lineWidth = 1
+  ctx.strokeRect(box.x, box.y, box.w, box.h)
+  ctx.fillStyle = 'white'
+  const corners: [number, number][] = [
+    [box.x, box.y],
+    [box.x + box.w - HANDLE_SIZE, box.y],
+    [box.x, box.y + box.h - HANDLE_SIZE],
+    [box.x + box.w - HANDLE_SIZE, box.y + box.h - HANDLE_SIZE],
+  ]
+  corners.forEach(([cx, cy]) => ctx.fillRect(cx, cy, HANDLE_SIZE, HANDLE_SIZE))
+}
 
 const OUTPUT_FORMATS: { label: string; value: OutputFormat }[] = [
   { label: 'PNG', value: 'image/png' },
@@ -29,6 +52,13 @@ export function ImageCropper() {
   const [dataUrl, setDataUrl] = useState<string | null>(null)
   const [displaySize, setDisplaySize] = useState<{ w: number; h: number } | null>(null)
   const [cropBox, setCropBox] = useState<CropBox | null>(null)
+
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas || !cropBox) return
+    drawOverlay(canvas, cropBox)
+  }, [cropBox])
+
   const [aspectRatio, setAspectRatio] = useState<number | null>(null)
   const [outputFormat, setOutputFormat] = useState<OutputFormat>('image/png')
   const [quality, setQuality] = useState(90)
