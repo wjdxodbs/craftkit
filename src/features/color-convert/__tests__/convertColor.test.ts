@@ -84,3 +84,25 @@ describe('convertColor — 에러 처리', () => {
     expect(convertColor('123')).toBeNull()
   })
 })
+
+describe('convertColor — OKLCH 입력', () => {
+  it('oklch(0 0 0)을 black으로 변환한다', () => {
+    const result = convertColor('oklch(0 0 0)')
+    expect(result).not.toBeNull()
+    expect(result!.hex).toBe('#000000')
+  })
+
+  it('oklch(1 0 0)을 white로 변환한다', () => {
+    const result = convertColor('oklch(1 0 0)')
+    expect(result).not.toBeNull()
+    expect(result!.hex).toBe('#ffffff')
+  })
+})
+
+describe('convertColor — OKLCH 출력', () => {
+  it('#000000의 oklch는 oklch(0.00 0.00 0)이다', () => {
+    const result = convertColor('#000000')
+    expect(result).not.toBeNull()
+    expect(result!.oklch).toBe('oklch(0.00 0.00 0)')
+  })
+})
