@@ -1,11 +1,12 @@
 import { OgImageGenerator } from '@/widgets/og-image-generator/ui/OgImageGenerator'
+import { ToolHeader } from '@/shared/ui/ToolHeader'
+import { TOOLS } from '@/shared/config/tools'
 
 export function OgImageToolView() {
+  const tool = TOOLS.find((t) => t.id === 'og-image')!
   return (
     <div className="mx-auto max-w-4xl px-6 py-10">
-      <h1 className="mb-8 border-l-2 border-amber-500/60 pl-3 text-2xl font-bold text-foreground">
-        OG Image Generator
-      </h1>
+      <ToolHeader icon={tool.icon} name={tool.name} description={tool.description} accentColor={tool.accentColor} />
       <OgImageGenerator />
     </div>
   )
