@@ -57,7 +57,7 @@ export function OgImageGenerator() {
               <button
                 key={color}
                 onClick={() => setConfig((c) => ({ ...c, backgroundColor: color }))}
-                className={`h-6 w-6 rounded transition-transform hover:scale-110 ${
+                className={`h-6 w-6 cursor-pointer rounded transition-transform hover:scale-110 ${
                   config.backgroundColor === color
                     ? 'ring-2 ring-amber-400 ring-offset-1 ring-offset-[#191917]'
                     : ''
@@ -134,7 +134,7 @@ export function OgImageGenerator() {
               <button
                 key={font}
                 onClick={() => setConfig((c) => ({ ...c, fontFamily: font }))}
-                className={`rounded-lg px-3 py-1.5 text-xs transition-colors ${
+                className={`cursor-pointer rounded-lg px-3 py-1.5 text-xs transition-colors ${
                   config.fontFamily === font
                     ? 'border border-amber-500 bg-amber-500/20 text-amber-300'
                     : 'border border-white/10 text-white/40 hover:border-white/20'

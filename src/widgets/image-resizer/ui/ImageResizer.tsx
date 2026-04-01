@@ -113,7 +113,7 @@ export function ImageResizer() {
             <button
               onClick={() => setLocked((v) => !v)}
               disabled={!imageEl}
-              className={`shrink-0 rounded-lg border px-2 py-1.5 text-sm transition-colors disabled:opacity-30 ${
+              className={`shrink-0 cursor-pointer rounded-lg border px-2 py-1.5 text-sm transition-colors disabled:opacity-30 ${
                 locked
                   ? 'border-amber-500 bg-amber-500/20 text-amber-300'
                   : 'border-white/10 text-white/40 hover:border-white/20'
@@ -143,7 +143,7 @@ export function ImageResizer() {
               <button
                 key={value}
                 onClick={() => setOutputFormat(value)}
-                className={`rounded-lg px-3 py-1.5 text-xs transition-colors ${
+                className={`cursor-pointer rounded-lg px-3 py-1.5 text-xs transition-colors ${
                   outputFormat === value
                     ? 'border border-amber-500 bg-amber-500/20 text-amber-300'
                     : 'border border-white/10 text-white/40 hover:border-white/20'

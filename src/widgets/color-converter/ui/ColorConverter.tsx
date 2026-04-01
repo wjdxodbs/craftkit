@@ -70,7 +70,7 @@ export function ColorConverter() {
           <button
             type="button"
             onClick={() => colorPickerRef.current?.click()}
-            className="h-10 w-10 shrink-0 rounded-lg border border-white/10 transition-transform hover:scale-105"
+            className="h-10 w-10 shrink-0 cursor-pointer rounded-lg border border-white/10 transition-transform hover:scale-105"
             style={{ background: swatchColor }}
             title="클릭해서 색상 선택"
           />
@@ -101,7 +101,7 @@ export function ColorConverter() {
                 type="button"
                 onClick={() => result && handleCopy(value, label)}
                 disabled={!result}
-                className="shrink-0 rounded px-2 py-1 text-xs text-white/40 transition-colors hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-30"
+                className="shrink-0 cursor-pointer rounded px-2 py-1 text-xs text-white/40 transition-colors hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-30"
               >
                 {isCopied ? '복사됨' : '복사'}
               </button>

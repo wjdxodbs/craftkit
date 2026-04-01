@@ -126,7 +126,7 @@ export function FaviconGenerator() {
             <span className="text-xs text-white/50">HTML 코드 스니펫</span>
             <button
               onClick={handleCopy}
-              className="text-xs text-amber-400 transition-colors hover:text-amber-300"
+              className="cursor-pointer text-xs text-amber-400 transition-colors hover:text-amber-300"
             >
               {copied ? '복사됨!' : '복사'}
             </button>

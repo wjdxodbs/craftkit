@@ -285,7 +285,7 @@ export function ImageCropper() {
                 key={label}
                 onClick={() => handlePresetChange(value)}
                 disabled={!imageEl}
-                className={`rounded-lg px-3 py-1.5 text-xs transition-colors disabled:opacity-30 ${
+                className={`cursor-pointer rounded-lg px-3 py-1.5 text-xs transition-colors disabled:opacity-30 ${
                   aspectRatio === value
                     ? 'border border-amber-500 bg-amber-500/20 text-amber-300'
                     : 'border border-white/10 text-white/40 hover:border-white/20'
@@ -307,7 +307,7 @@ export function ImageCropper() {
                 key={value}
                 onClick={() => setOutputFormat(value)}
                 disabled={!imageEl}
-                className={`rounded-lg px-3 py-1.5 text-xs transition-colors disabled:opacity-30 ${
+                className={`cursor-pointer rounded-lg px-3 py-1.5 text-xs transition-colors disabled:opacity-30 ${
                   outputFormat === value
                     ? 'border border-amber-500 bg-amber-500/20 text-amber-300'
                     : 'border border-white/10 text-white/40 hover:border-white/20'

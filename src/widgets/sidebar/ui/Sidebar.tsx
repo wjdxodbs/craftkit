@@ -55,7 +55,7 @@ export function Sidebar() {
                 aria-label={!isExpanded ? tool.name : undefined}
                 aria-current={isActive ? 'page' : undefined}
                 className={cn(
-                  'relative flex h-9 items-center gap-3 rounded-lg px-2 text-sm transition-colors',
+                  'relative flex h-9 cursor-pointer items-center gap-3 rounded-lg px-2 text-sm transition-colors',
                   isActive
                     ? 'bg-amber-500/15 text-amber-300'
                     : 'text-white/50 hover:bg-white/5 hover:text-white/70'
@@ -93,7 +93,7 @@ export function Sidebar() {
           onClick={() => setIsExpanded((prev) => !prev)}
           aria-label={isExpanded ? 'Collapse sidebar' : 'Expand sidebar'}
           className={cn(
-            'flex h-9 w-full items-center rounded-lg px-2 text-white/40 transition-colors hover:bg-white/5 hover:text-white/60',
+            'flex h-9 w-full cursor-pointer items-center rounded-lg px-2 text-white/40 transition-colors hover:bg-white/5 hover:text-white/60',
             isExpanded ? 'justify-start gap-3' : 'justify-center'
           )}
         >
