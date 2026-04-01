@@ -95,7 +95,7 @@ export function ColorConverter() {
               key={label}
               className="flex items-center gap-3 rounded-lg border border-white/10 bg-white/[0.04] px-4 py-3"
             >
-              <span className="w-14 text-xs font-medium text-white/40">{label}</span>
+              <span className="w-14 text-[11px] font-semibold tracking-widest text-foreground/35">{label}</span>
               <span className="flex-1 font-mono text-sm text-slate-200">{value}</span>
               <button
                 type="button"

@@ -49,7 +49,7 @@ export function OgImageGenerator() {
       <div className="space-y-5">
         {/* 배경색 */}
         <div>
-          <label className="mb-2 block text-xs text-white/50">
+          <label className="mb-2 block text-[11px] font-semibold tracking-widest text-foreground/35">
             배경색
           </label>
           <div className="flex flex-wrap gap-2">
@@ -87,7 +87,7 @@ export function OgImageGenerator() {
 
         {/* 로고 업로드 */}
         <div>
-          <label className="mb-2 block text-xs text-white/50">
+          <label className="mb-2 block text-[11px] font-semibold tracking-widest text-foreground/35">
             로고 (선택)
           </label>
           <ImageUpload
@@ -98,7 +98,7 @@ export function OgImageGenerator() {
 
         {/* 제목 */}
         <div>
-          <label className="mb-2 block text-xs text-white/50">
+          <label className="mb-2 block text-[11px] font-semibold tracking-widest text-foreground/35">
             제목
           </label>
           <Input
@@ -111,7 +111,7 @@ export function OgImageGenerator() {
 
         {/* 부제목 */}
         <div>
-          <label className="mb-2 block text-xs text-white/50">
+          <label className="mb-2 block text-[11px] font-semibold tracking-widest text-foreground/35">
             부제목
           </label>
           <Input
@@ -126,7 +126,7 @@ export function OgImageGenerator() {
 
         {/* 폰트 */}
         <div>
-          <label className="mb-2 block text-xs text-white/50">
+          <label className="mb-2 block text-[11px] font-semibold tracking-widest text-foreground/35">
             폰트
           </label>
           <div className="flex gap-2">
@@ -150,7 +150,7 @@ export function OgImageGenerator() {
       {/* 우측: 미리보기 + 다운로드 */}
       <div className="space-y-4">
         <div>
-          <label className="mb-2 block text-xs text-white/50">
+          <label className="mb-2 block text-[11px] font-semibold tracking-widest text-foreground/35">
             실시간 미리보기
           </label>
           <div

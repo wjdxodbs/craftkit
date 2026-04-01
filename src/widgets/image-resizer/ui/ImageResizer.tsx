@@ -98,7 +98,7 @@ export function ImageResizer() {
 
         {/* 크기 입력 */}
         <div>
-          <label className="mb-2 block text-xs text-white/50">크기 (px)</label>
+          <label className="mb-2 block text-[11px] font-semibold tracking-widest text-foreground/35">크기 (px)</label>
           <div className="flex items-center gap-2">
             <input
               type="number"
@@ -137,7 +137,7 @@ export function ImageResizer() {
 
         {/* 출력 포맷 */}
         <div>
-          <label className="mb-2 block text-xs text-white/50">출력 포맷</label>
+          <label className="mb-2 block text-[11px] font-semibold tracking-widest text-foreground/35">출력 포맷</label>
           <div className="flex gap-2">
             {OUTPUT_FORMATS.map(({ label, value }) => (
               <button
@@ -158,7 +158,7 @@ export function ImageResizer() {
         {/* 품질 슬라이더 */}
         {outputFormat !== 'image/png' && (
           <div>
-            <label className="mb-2 block text-xs text-white/50">
+            <label className="mb-2 block text-[11px] font-semibold tracking-widest text-foreground/35">
               품질 {quality}%
             </label>
             <input
