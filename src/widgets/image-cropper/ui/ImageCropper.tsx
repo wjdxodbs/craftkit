@@ -2,6 +2,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { motion } from 'motion/react'
 import { ImageUpload } from '@/features/image-upload/ui/ImageUpload'
+import { cropImage } from '@/features/image-crop/lib/cropImage'
 import type { CropBox, OutputFormat } from '@/features/image-crop/lib/cropImage'
 import { Button } from '@/shared/ui/button'
 
@@ -216,6 +217,26 @@ export function ImageCropper() {
     }
   }
 
+  const handleDownload = async () => {
+    if (!imageEl || !cropBox || !displaySize) return
+    setIsConverting(true)
+    setError(null)
+    try {
+      const scale = imageEl.naturalWidth / displaySize.w
+      const blob = await cropImage(imageEl, cropBox, scale, outputFormat, quality / 100)
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `cropped.${EXT_MAP[outputFormat]}`
+      a.click()
+      URL.revokeObjectURL(url)
+    } catch {
+      setError('크롭에 실패했습니다. 다시 시도해 주세요.')
+    } finally {
+      setIsConverting(false)
+    }
+  }
+
   const handleFileLoad = (img: HTMLImageElement, url: string) => {
     setImageEl(img)
     setDataUrl(url)
@@ -346,7 +367,7 @@ export function ImageCropper() {
 
         <motion.div whileTap={{ scale: 0.98 }}>
           <Button
-            onClick={() => {}}
+            onClick={handleDownload}
             disabled={!imageEl || isConverting}
             className="w-full bg-amber-500 hover:bg-amber-400 disabled:opacity-40"
           >
