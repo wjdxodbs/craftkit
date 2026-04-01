@@ -200,13 +200,17 @@ export function ImageCropper() {
   }
 
   const handlePresetChange = (ratio: number | null) => {
-    setAspectRatio(ratio)
-    if (ratio && cropBox && displaySize) {
+    if (!ratio) {
+      setAspectRatio(null)
+      return
+    }
+    if (cropBox && displaySize) {
       const newW = cropBox.w
       const newH = newW / ratio
       const centerY = cropBox.y + cropBox.h / 2
       const newY = centerY - newH / 2
       if (newH >= MIN_CROP && newY >= 0 && newY + newH <= displaySize.h) {
+        setAspectRatio(ratio)
         setCropBox({ x: cropBox.x, y: newY, w: newW, h: newH })
       }
     }
