@@ -3,10 +3,10 @@ import { ImageResizerToolView } from '@/views/image-resizer-tool/ui/ImageResizer
 
 export const metadata: Metadata = {
   title: 'Image Resizer — Craftkit',
-  description: 'Resize images to any dimension and export as PNG, JPG, or WebP. No upload.',
+  description: 'Resize and convert PNG, JPG, and WebP images in your browser. No upload.',
   openGraph: {
     title: 'Image Resizer — Craftkit',
-    description: 'Resize images to any dimension and export as PNG, JPG, or WebP. No upload.',
+    description: 'Resize and convert PNG, JPG, and WebP images in your browser. No upload.',
     images: ['/og-image.png'],
   },
 }

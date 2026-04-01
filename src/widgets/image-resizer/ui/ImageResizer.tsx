@@ -175,8 +175,10 @@ export function ImageResizer() {
         {/* 변환 요약 */}
         <p className="text-xs text-white/30">
           {imageEl && naturalSize
-            ? `${naturalSize.w} × ${naturalSize.h} → ${width} × ${height}`
-            : '이미지를 업로드하면 크기를 조절할 수 있습니다'}
+            ? naturalSize.w === width && naturalSize.h === height
+              ? `크기 유지 · ${OUTPUT_FORMATS.find((f) => f.value === outputFormat)?.label} 변환`
+              : `${naturalSize.w} × ${naturalSize.h} → ${width} × ${height}`
+            : '이미지를 업로드하면 크기를 조절하거나 포맷을 변환할 수 있습니다'}
         </p>
       </div>
 
