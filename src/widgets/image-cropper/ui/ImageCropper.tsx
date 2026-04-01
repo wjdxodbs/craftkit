@@ -201,20 +201,33 @@ export function ImageCropper() {
   }
 
   const handlePresetChange = (ratio: number | null) => {
-    if (!ratio) {
+    if (ratio === null) {
       setAspectRatio(null)
       return
     }
-    if (cropBox && displaySize) {
-      const newW = cropBox.w
-      const newH = newW / ratio
-      const centerY = cropBox.y + cropBox.h / 2
-      const newY = centerY - newH / 2
-      if (newH >= MIN_CROP && newY >= 0 && newY + newH <= displaySize.h) {
-        setAspectRatio(ratio)
-        setCropBox({ x: cropBox.x, y: newY, w: newW, h: newH })
-      }
+    if (!cropBox || !displaySize) return
+
+    // 현재 너비 기준으로 높이 계산, 캔버스를 초과하면 높이 기준으로 재계산
+    let newW = cropBox.w
+    let newH = newW / ratio
+    if (newH > displaySize.h) {
+      newH = displaySize.h
+      newW = newH * ratio
     }
+    if (newW > displaySize.w) {
+      newW = displaySize.w
+      newH = newW / ratio
+    }
+    newW = Math.max(MIN_CROP, newW)
+    newH = Math.max(MIN_CROP, newH)
+
+    const centerX = cropBox.x + cropBox.w / 2
+    const centerY = cropBox.y + cropBox.h / 2
+    const newX = clamp(centerX - newW / 2, 0, displaySize.w - newW)
+    const newY = clamp(centerY - newH / 2, 0, displaySize.h - newH)
+
+    setAspectRatio(ratio)
+    setCropBox({ x: newX, y: newY, w: newW, h: newH })
   }
 
   const handleDownload = async () => {
@@ -293,7 +306,8 @@ export function ImageCropper() {
                 type="button"
                 key={value}
                 onClick={() => setOutputFormat(value)}
-                className={`rounded-lg px-3 py-1.5 text-xs transition-colors ${
+                disabled={!imageEl}
+                className={`rounded-lg px-3 py-1.5 text-xs transition-colors disabled:opacity-30 ${
                   outputFormat === value
                     ? 'border border-amber-500 bg-amber-500/20 text-amber-300'
                     : 'border border-white/10 text-white/40 hover:border-white/20'
@@ -358,6 +372,7 @@ export function ImageCropper() {
                 onPointerDown={handlePointerDown}
                 onPointerMove={handlePointerMove}
                 onPointerUp={handlePointerUp}
+                onPointerCancel={handlePointerUp}
               />
             </>
           ) : (
