@@ -75,19 +75,47 @@ function applyDrag(
   }
 
   if (drag.type === 'se') {
-    w = clamp(sb.w + dx, MIN_CROP, canvasW - sb.x)
-    h = aspectRatio ? clamp(w / aspectRatio, MIN_CROP, canvasH - sb.y) : clamp(sb.h + dy, MIN_CROP, canvasH - sb.y)
+    if (aspectRatio) {
+      w = clamp(sb.w + dx, MIN_CROP, canvasW - sb.x)
+      h = w / aspectRatio
+      if (h > canvasH - sb.y) { h = canvasH - sb.y; w = h * aspectRatio }
+      w = Math.max(w, MIN_CROP); h = Math.max(h, MIN_CROP)
+    } else {
+      w = clamp(sb.w + dx, MIN_CROP, canvasW - sb.x)
+      h = clamp(sb.h + dy, MIN_CROP, canvasH - sb.y)
+    }
   } else if (drag.type === 'sw') {
-    w = clamp(sb.w - dx, MIN_CROP, sb.x + sb.w)
-    h = aspectRatio ? clamp(w / aspectRatio, MIN_CROP, canvasH - sb.y) : clamp(sb.h + dy, MIN_CROP, canvasH - sb.y)
+    if (aspectRatio) {
+      w = clamp(sb.w - dx, MIN_CROP, sb.x + sb.w)
+      h = w / aspectRatio
+      if (h > canvasH - sb.y) { h = canvasH - sb.y; w = h * aspectRatio }
+      w = Math.max(w, MIN_CROP); h = Math.max(h, MIN_CROP)
+    } else {
+      w = clamp(sb.w - dx, MIN_CROP, sb.x + sb.w)
+      h = clamp(sb.h + dy, MIN_CROP, canvasH - sb.y)
+    }
     x = sb.x + sb.w - w
   } else if (drag.type === 'ne') {
-    w = clamp(sb.w + dx, MIN_CROP, canvasW - sb.x)
-    h = aspectRatio ? clamp(w / aspectRatio, MIN_CROP, sb.y + sb.h) : clamp(sb.h - dy, MIN_CROP, sb.y + sb.h)
+    if (aspectRatio) {
+      w = clamp(sb.w + dx, MIN_CROP, canvasW - sb.x)
+      h = w / aspectRatio
+      if (h > sb.y + sb.h) { h = sb.y + sb.h; w = h * aspectRatio }
+      w = Math.max(w, MIN_CROP); h = Math.max(h, MIN_CROP)
+    } else {
+      w = clamp(sb.w + dx, MIN_CROP, canvasW - sb.x)
+      h = clamp(sb.h - dy, MIN_CROP, sb.y + sb.h)
+    }
     y = sb.y + sb.h - h
   } else if (drag.type === 'nw') {
-    w = clamp(sb.w - dx, MIN_CROP, sb.x + sb.w)
-    h = aspectRatio ? clamp(w / aspectRatio, MIN_CROP, sb.y + sb.h) : clamp(sb.h - dy, MIN_CROP, sb.y + sb.h)
+    if (aspectRatio) {
+      w = clamp(sb.w - dx, MIN_CROP, sb.x + sb.w)
+      h = w / aspectRatio
+      if (h > sb.y + sb.h) { h = sb.y + sb.h; w = h * aspectRatio }
+      w = Math.max(w, MIN_CROP); h = Math.max(h, MIN_CROP)
+    } else {
+      w = clamp(sb.w - dx, MIN_CROP, sb.x + sb.w)
+      h = clamp(sb.h - dy, MIN_CROP, sb.y + sb.h)
+    }
     x = sb.x + sb.w - w
     y = sb.y + sb.h - h
   }
@@ -140,6 +168,7 @@ export function ImageCropper() {
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas || !cropBox) return
+    if (dragRef.current) return // 드래그 중에는 handlePointerMove가 직접 그림
     drawOverlay(canvas, cropBox)
   }, [cropBox])
 
@@ -165,6 +194,7 @@ export function ImageCropper() {
   }
 
   const handlePointerUp = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    if (!dragRef.current) return
     dragRef.current = null
     e.currentTarget.releasePointerCapture(e.pointerId)
   }
