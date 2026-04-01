@@ -15,6 +15,7 @@ const dmSans = DM_Sans({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://wjdxodbs-craftkit.vercel.app'),
   title: 'Craftkit',
   description: 'Simple tools for developers & designers. No signup. No upload.',
   icons: {
