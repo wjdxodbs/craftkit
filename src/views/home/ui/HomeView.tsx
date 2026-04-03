@@ -63,60 +63,47 @@ export function HomeView() {
 
         {/* Tool List */}
         <div className="pb-16">
-          {TOOLS.map((tool, i) =>
-            tool.available ? (
-              <motion.div
-                key={tool.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.05 * i, duration: 0.4 }}
+          {TOOLS.filter((tool) => tool.available).map((tool, i) => (
+            <motion.div
+              key={tool.id}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.05 * i, duration: 0.4 }}
+            >
+              <Link
+                href={tool.href}
+                className="group flex items-center gap-4 border-b border-white/5 py-[18px] transition-colors hover:bg-white/[0.02] last:border-b-0"
               >
-                <Link
-                  href={tool.href}
-                  className="group flex items-center gap-4 border-b border-white/5 py-[18px] transition-colors hover:bg-white/[0.02]"
-                >
-                  <div className="flex-1">
-                      <p className="text-sm font-bold tracking-tight text-slate-200 transition-colors group-hover:text-white">
-                        {tool.name}
-                      </p>
-                      <p className="mt-0.5 text-[11px] text-white/40">
-                        {tool.description}
-                      </p>
-                    </div>
-                    <div className="flex shrink-0 items-center gap-3">
-                      <div className="flex flex-wrap gap-1">
-                        {tool.tags.map((tag) => (
-                          <span
-                            key={tag}
-                            className="rounded px-[7px] py-0.5 text-[9px] font-semibold"
-                            style={{
-                              background: tool.tagBg,
-                              color: tool.tagText,
-                            }}
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                      <span aria-hidden="true" className="text-sm text-white/20 transition-colors group-hover:text-white/50">
-                        ↗
-                      </span>
-                    </div>
-                </Link>
-              </motion.div>
-            ) : (
-              <motion.div
-                key={tool.id}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.05 * i }}
-              >
-                <div className="flex items-center border-b border-white/5 py-[18px] opacity-30">
-                  <p className="text-xs text-white/20">준비 중...</p>
+                <div className="flex-1">
+                  <p className="text-sm font-bold tracking-tight text-slate-200 transition-colors group-hover:text-white">
+                    {tool.name}
+                  </p>
+                  <p className="mt-0.5 text-[11px] text-white/40">
+                    {tool.description}
+                  </p>
                 </div>
-              </motion.div>
-            )
-          )}
+                <div className="flex shrink-0 items-center gap-3">
+                  <div className="flex flex-wrap gap-1">
+                    {tool.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="rounded px-[7px] py-0.5 text-[9px] font-semibold"
+                        style={{
+                          background: tool.tagBg,
+                          color: tool.tagText,
+                        }}
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                  <span aria-hidden="true" className="text-sm text-white/20 transition-colors group-hover:text-white/50">
+                    ↗
+                  </span>
+                </div>
+              </Link>
+            </motion.div>
+          ))}
           {Array.from({ length: COMING_SOON_COUNT }).map((_, i) => (
             <motion.div
               key={`coming-${i}`}
@@ -124,7 +111,7 @@ export function HomeView() {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.05 * (TOOLS.length + i) }}
             >
-              <div className="flex items-center border-b border-white/5 py-[18px] opacity-30">
+              <div className="flex items-center border-b border-white/5 py-[18px] opacity-30 last:border-b-0">
                 <p className="text-xs text-white/20">준비 중...</p>
               </div>
             </motion.div>
