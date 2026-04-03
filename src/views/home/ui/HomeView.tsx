@@ -4,9 +4,9 @@ import { motion } from 'motion/react'
 import { TOOLS } from '@/shared/config/tools'
 
 const COMING_SOON_COUNT = 2
+const availableCount = TOOLS.filter((t) => t.available).length
 
 export function HomeView() {
-  const availableCount = TOOLS.filter((t) => t.available).length
 
   return (
     <main
@@ -26,7 +26,7 @@ export function HomeView() {
       />
 
       {/* Nav */}
-      <nav className="flex items-center justify-between border-b border-white/10 px-6 py-4">
+      <nav aria-label="사이트 헤더" className="flex items-center justify-between border-b border-white/10 px-6 py-4">
         <div className="flex items-center gap-2">
           <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-primary text-[11px] font-black text-primary-foreground">
             CK
@@ -71,9 +71,11 @@ export function HomeView() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.05 * i, duration: 0.4 }}
               >
-                <Link href={tool.href}>
-                  <div className="group flex cursor-pointer items-center gap-4 border-b border-white/5 py-[18px] transition-colors hover:bg-white/[0.02]">
-                    <div className="flex-1">
+                <Link
+                  href={tool.href}
+                  className="group flex items-center gap-4 border-b border-white/5 py-[18px] transition-colors hover:bg-white/[0.02]"
+                >
+                  <div className="flex-1">
                       <p className="text-sm font-bold tracking-tight text-slate-200 transition-colors group-hover:text-white">
                         {tool.name}
                       </p>
@@ -96,11 +98,10 @@ export function HomeView() {
                           </span>
                         ))}
                       </div>
-                      <span className="text-sm text-white/20 transition-colors group-hover:text-white/50">
+                      <span aria-hidden="true" className="text-sm text-white/20 transition-colors group-hover:text-white/50">
                         ↗
                       </span>
                     </div>
-                  </div>
                 </Link>
               </motion.div>
             ) : (
