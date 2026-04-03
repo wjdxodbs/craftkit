@@ -11,6 +11,8 @@ const config: Config = {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
+  testPathIgnorePatterns: ['/node_modules/', '/.worktrees/'],
+  watchPathIgnorePatterns: ['/.worktrees/'],
 }
 
 export default createJestConfig(config)
