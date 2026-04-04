@@ -18,8 +18,7 @@ export function Sidebar() {
       initial={false}
       animate={{ width: isExpanded ? EXPANDED_WIDTH : COLLAPSED_WIDTH }}
       transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-      style={{ overflow: 'hidden' }}
-      className="relative flex shrink-0 flex-col border-r border-white/10 bg-sidebar"
+      className="sticky top-0 flex h-screen shrink-0 flex-col border-r border-white/10 bg-sidebar"
     >
       {/* Logo */}
       <div className="flex h-14 items-center border-b border-white/10 px-3">
@@ -35,7 +34,7 @@ export function Sidebar() {
                 animate={{ opacity: 1, width: 'auto' }}
                 exit={{ opacity: 0, width: 0 }}
                 transition={{ duration: 0.15 }}
-                className="whitespace-nowrap text-sm font-bold tracking-widest text-white font-heading"
+                className="overflow-hidden whitespace-nowrap text-sm font-bold tracking-widest text-white font-heading"
               >
                 CRAFTKIT
               </motion.span>
@@ -45,8 +44,8 @@ export function Sidebar() {
       </div>
 
       {/* Tool List */}
-      <ul className="flex flex-1 flex-col gap-1 overflow-hidden p-2">
-        {TOOLS.filter((t) => t.available).map((tool) => {
+      <ul className="flex flex-1 flex-col gap-1 p-2">
+        {TOOLS.filter((t) => t.available).map((tool, i) => {
           const isActive = pathname === tool.href
           return (
             <li key={tool.id}>
@@ -55,7 +54,7 @@ export function Sidebar() {
                 aria-label={!isExpanded ? tool.name : undefined}
                 aria-current={isActive ? 'page' : undefined}
                 className={cn(
-                  'relative flex h-9 cursor-pointer items-center gap-3 rounded-lg px-2 text-sm transition-colors',
+                  'group/link relative flex h-9 cursor-pointer items-center gap-3 rounded-lg px-2 text-sm transition-colors',
                   isActive
                     ? 'bg-amber-500/15 text-amber-300'
                     : 'text-white/50 hover:bg-white/5 hover:text-white/70'
@@ -64,9 +63,14 @@ export function Sidebar() {
                 {isActive && (
                   <span className="absolute left-0 top-1/2 h-4 w-0.5 -translate-y-1/2 rounded-r bg-primary" />
                 )}
-                <span className="flex size-[22px] shrink-0 items-center justify-center text-base leading-none">
-                  {tool.icon}
+                <span className="flex size-[22px] shrink-0 items-center justify-center text-[10px] font-bold tabular-nums">
+                  {String(i + 1).padStart(2, '0')}
                 </span>
+                {!isExpanded && (
+                  <span className="pointer-events-none absolute left-full z-50 ml-2 whitespace-nowrap rounded-md border border-white/10 bg-[#1a1f2e] px-2.5 py-1.5 text-xs text-white/80 opacity-0 shadow-lg transition-opacity group-hover/link:opacity-100">
+                    {tool.name}
+                  </span>
+                )}
                 <AnimatePresence initial={false}>
                   {isExpanded && (
                     <motion.span
