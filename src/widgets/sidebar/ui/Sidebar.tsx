@@ -10,7 +10,9 @@ const EXPANDED_WIDTH = 220
 const COLLAPSED_WIDTH = 56
 
 export function Sidebar() {
-  const [isExpanded, setIsExpanded] = useState(true)
+  const [isExpanded, setIsExpanded] = useState(
+    () => typeof window !== 'undefined' && window.innerWidth >= 768
+  )
   const pathname = usePathname()
 
   return (
