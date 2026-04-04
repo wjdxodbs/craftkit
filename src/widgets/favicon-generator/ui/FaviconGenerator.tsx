@@ -7,7 +7,8 @@ import { downloadBlob } from '@/shared/lib/zip'
 import { FAVICON_SIZES } from '@/shared/config/favicon-sizes'
 import { Button } from '@/shared/ui/button'
 
-const PREVIEW_SIZES = [16, 32, 180, 512]
+const PREVIEW_SIZES = [16, 32, 180, 192]
+const PREVIEW_DISPLAY_SIZE: Record<number, number> = { 16: 16, 32: 32, 180: 48, 192: 56 }
 const HTML_SNIPPET = `<link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" href="/favicon-32x32.png" type="image/png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -46,14 +47,14 @@ export function FaviconGenerator() {
       {/* 좌측 */}
       <div className="space-y-6">
         <div>
-          <p className="mb-2 text-[11px] font-semibold tracking-widest text-foreground/35">
+          <p className="mb-3 text-[9px] font-semibold uppercase tracking-[0.2em] text-primary">
             파일 업로드
           </p>
           <ImageUpload onFileLoad={handleFileLoad} />
         </div>
 
         <div>
-          <p className="mb-2 text-[11px] font-semibold tracking-widest text-foreground/35">
+          <p className="mb-3 text-[9px] font-semibold uppercase tracking-[0.2em] text-primary">
             생성될 파일
           </p>
           <div className="space-y-2">
@@ -73,13 +74,13 @@ export function FaviconGenerator() {
       {/* 우측 */}
       <div className="space-y-4">
         <div>
-          <p className="mb-2 text-[11px] font-semibold tracking-widest text-foreground/35">
+          <p className="mb-3 text-[9px] font-semibold uppercase tracking-[0.2em] text-primary">
             미리보기
           </p>
-          <div className="rounded-xl border border-white/10 bg-white/[0.08] p-4">
+          <div className="rounded-lg border border-white/5 bg-white/[0.04] p-4">
             <div className="flex items-end justify-center gap-4">
               {PREVIEW_SIZES.map((size) => {
-                const displaySize = Math.min(size, 48)
+                const displaySize = PREVIEW_DISPLAY_SIZE[size] ?? Math.min(size, 48)
                 return (
                   <div key={size} className="flex flex-col items-center gap-2">
                     {dataUrl ? (
@@ -121,9 +122,9 @@ export function FaviconGenerator() {
           </Button>
         </motion.div>
 
-        <div className="rounded-lg border border-white/10 bg-white/[0.06] p-3">
+        <div className="rounded-lg border border-white/5 bg-white/[0.04] p-3">
           <div className="mb-2 flex items-center justify-between">
-            <span className="text-xs text-white/50">HTML 코드 스니펫</span>
+            <span className="text-[9px] font-semibold uppercase tracking-[0.2em] text-primary">HTML 코드 스니펫</span>
             <button
               onClick={handleCopy}
               className="cursor-pointer text-xs text-amber-400 transition-colors hover:text-amber-300"
@@ -148,11 +149,9 @@ function FileRow({
   size: string
 }) {
   return (
-    <div className="flex items-center justify-between rounded-lg bg-card px-3 py-2">
-      <span className="text-xs text-foreground/80">{filename}</span>
-      <span className="rounded bg-primary/[0.08] px-2 py-0.5 text-[10px] text-primary/60">
-        {size}
-      </span>
+    <div className="flex items-center justify-between border-b border-white/5 py-2 last:border-b-0">
+      <span className="text-xs text-white/70">{filename}</span>
+      <span className="text-[10px] text-primary/60">{size}</span>
     </div>
   )
 }
