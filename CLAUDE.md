@@ -54,6 +54,11 @@ src/
 - `shared/lib/zip.ts` — fflate 기반 ZIP 생성
 - `shared/lib/ico.ts` — ICO 포맷 생성
 
+### 공유 UI 컴포넌트 사용 시 주의
+
+- `ToolHeader` props: `name`, `description`, `accentColor` — `icon` prop은 존재하지 않음
+- `Sidebar`는 뷰포트 너비 768px 미만일 때 접힌 상태(56px)로 시작함
+
 ### React Compiler
 
 `next.config.ts`에서 `reactCompiler: true` 활성화되어 있다. `memo`, `useMemo`, `useCallback`을 수동으로 추가하지 말 것.
