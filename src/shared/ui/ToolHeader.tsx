@@ -1,5 +1,4 @@
 interface ToolHeaderProps {
-  icon: string
   name: string
   description: string
   accentColor: string

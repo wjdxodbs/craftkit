@@ -183,6 +183,7 @@ export function OgImageGenerator() {
         <ImageUpload
           onFileLoad={(_, url) => setLogoDataUrl(url)}
           accept="image/png,image/svg+xml,image/webp"
+          hint="PNG, SVG, WebP — 투명 배경 권장"
         />
       </div>
     </div>

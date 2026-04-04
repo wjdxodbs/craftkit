@@ -4,11 +4,13 @@ import { useRef, useState } from 'react'
 interface Props {
   onFileLoad: (img: HTMLImageElement, dataUrl: string) => void
   accept?: string
+  hint?: string
 }
 
 export function ImageUpload({
   onFileLoad,
   accept = 'image/png,image/jpeg,image/svg+xml,image/webp',
+  hint = 'PNG, JPG, SVG, WebP — 권장: 512×512 이상',
 }: Props) {
   const inputRef = useRef<HTMLInputElement>(null)
   const [isDragging, setIsDragging] = useState(false)
@@ -71,16 +73,14 @@ export function ImageUpload({
             />
           </svg>
           <p className="text-sm text-amber-400">클릭하거나 드래그해서 이미지 업로드</p>
-          <p className="mt-1 text-xs text-white/20">
-            PNG, JPG, SVG, WebP — 권장: 512×512 이상
-          </p>
+          <p className="mt-1 text-xs text-white/20">{hint}</p>
         </>
       )}
       <input
         ref={inputRef}
         type="file"
         accept={accept}
-        className="hidden"
+        className="sr-only"
         onChange={(e) => {
           const file = e.target.files?.[0]
           if (file) handleFile(file)
