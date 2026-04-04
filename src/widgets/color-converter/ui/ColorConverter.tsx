@@ -59,7 +59,7 @@ export function ColorConverter() {
           type="button"
           onClick={() => colorPickerRef.current?.click()}
           title="클릭해서 색상 선택"
-          className="w-full cursor-pointer rounded-2xl transition-transform hover:scale-[1.01]"
+          className="w-full cursor-pointer rounded-2xl transition-transform hover:scale-[1.01] max-h-48 md:max-h-none"
           style={{ background: swatchColor, aspectRatio: '1 / 1' }}
         />
         <input

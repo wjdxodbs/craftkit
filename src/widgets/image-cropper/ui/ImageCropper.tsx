@@ -336,7 +336,7 @@ export function ImageCropper() {
           }}
         />
 
-        <div className="h-4 w-px bg-white/10" />
+        <div className="hidden h-4 w-px bg-white/10 sm:block" />
 
         {/* 비율 */}
         <div className="flex items-center gap-1.5">
@@ -360,7 +360,7 @@ export function ImageCropper() {
           </div>
         </div>
 
-        <div className="h-4 w-px bg-white/10" />
+        <div className="hidden h-4 w-px bg-white/10 sm:block" />
 
         {/* 출력 포맷 */}
         <div className="flex items-center gap-1.5">
