@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion } from 'motion/react'
 import { ImageUpload } from '@/features/image-upload/ui/ImageUpload'
 import { resizeImage } from '@/features/image-resize/lib/resizeImage'
@@ -29,6 +29,9 @@ export function ImageResizer() {
   const [quality, setQuality] = useState(90)
   const [isConverting, setIsConverting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null)
+  const [previewSize, setPreviewSize] = useState<number | null>(null)
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const handleFileLoad = (img: HTMLImageElement, url: string) => {
     setImageEl(img)
@@ -58,6 +61,27 @@ export function ImageResizer() {
     }
   }
 
+  useEffect(() => {
+    if (!imageEl || !width || !height) return
+    if (debounceRef.current) clearTimeout(debounceRef.current)
+    debounceRef.current = setTimeout(async () => {
+      try {
+        const blob = await resizeImage(imageEl, width, height, outputFormat, quality / 100)
+        const url = URL.createObjectURL(blob)
+        setPreviewUrl((prev) => {
+          if (prev) URL.revokeObjectURL(prev)
+          return url
+        })
+        setPreviewSize(blob.size)
+      } catch {
+        // 미리보기 실패는 무시
+      }
+    }, 300)
+    return () => {
+      if (debounceRef.current) clearTimeout(debounceRef.current)
+    }
+  }, [imageEl, width, height, outputFormat, quality])
+
   const handleDownload = async () => {
     if (!imageEl) return
     setIsConverting(true)
@@ -78,11 +102,12 @@ export function ImageResizer() {
   }
 
   return (
-    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:items-start">
       {/* 좌측: 컨트롤 */}
-      <div className="space-y-5">
+      <div className="min-w-0 space-y-5">
         {/* 이미지 업로드 */}
-        <div>
+        <div className="overflow-hidden">
+          <p className="mb-2 text-[9px] font-semibold uppercase tracking-[0.2em] text-primary">파일 업로드</p>
           <ImageUpload
             onFileLoad={handleFileLoad}
             accept="image/png,image/jpeg,image/webp,image/svg+xml,image/avif"
@@ -98,7 +123,7 @@ export function ImageResizer() {
 
         {/* 크기 입력 */}
         <div>
-          <label className="mb-2 block text-[11px] font-semibold tracking-widest text-foreground/35">크기 (px)</label>
+          <label className="mb-2 block text-[9px] font-semibold uppercase tracking-[0.2em] text-primary">크기 (px)</label>
           <div className="flex items-center gap-2">
             <input
               type="number"
@@ -120,7 +145,15 @@ export function ImageResizer() {
               }`}
               title={locked ? '비율 잠금 켜짐' : '비율 잠금 꺼짐'}
             >
-              {locked ? '🔒' : '🔓'}
+              {locked ? (
+                <svg className="size-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                </svg>
+              ) : (
+                <svg className="size-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 10.5V6.75a4.5 4.5 0 119 0v3.75M3.75 21.75h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H3.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                </svg>
+              )}
             </button>
             <input
               type="number"
@@ -137,7 +170,7 @@ export function ImageResizer() {
 
         {/* 출력 포맷 */}
         <div>
-          <label className="mb-2 block text-[11px] font-semibold tracking-widest text-foreground/35">출력 포맷</label>
+          <label className="mb-2 block text-[9px] font-semibold uppercase tracking-[0.2em] text-primary">출력 포맷</label>
           <div className="flex gap-2">
             {OUTPUT_FORMATS.map(({ label, value }) => (
               <button
@@ -158,7 +191,7 @@ export function ImageResizer() {
         {/* 품질 슬라이더 */}
         {outputFormat !== 'image/png' && (
           <div>
-            <label className="mb-2 block text-[11px] font-semibold tracking-widest text-foreground/35">
+            <label className="mb-2 block text-[9px] font-semibold uppercase tracking-[0.2em] text-primary">
               품질 {quality}%
             </label>
             <input
@@ -183,22 +216,34 @@ export function ImageResizer() {
       </div>
 
       {/* 우측: 미리보기 + 다운로드 */}
-      <div className="space-y-4">
-        <div
-          className="flex items-center justify-center overflow-hidden rounded-xl border border-white/10 bg-white/[0.08]"
-          style={{ aspectRatio: '1 / 1' }}
-        >
-          {dataUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={dataUrl}
-              alt="미리보기"
-              className="h-full w-full object-contain"
-            />
-          ) : (
-            <p className="text-xs text-white/20">미리보기</p>
-          )}
+      <div className="min-w-0 space-y-4">
+        <div>
+          <p className="mb-2 text-[9px] font-semibold uppercase tracking-[0.2em] text-primary">미리보기</p>
+          <div
+            className="flex aspect-square items-center justify-center overflow-hidden rounded-lg border border-white/5 bg-white/[0.04]"
+          >
+            {previewUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={previewUrl}
+                alt="미리보기"
+                className="h-full w-full object-contain"
+              />
+            ) : (
+              <p className="text-xs text-white/20">미리보기</p>
+            )}
+          </div>
         </div>
+        {previewSize !== null && (
+          <p className="text-[11px] text-white/40">
+            예상 크기:{' '}
+            <span className="text-primary">
+              {previewSize >= 1024 * 1024
+                ? `${(previewSize / 1024 / 1024).toFixed(1)} MB`
+                : `${Math.round(previewSize / 1024)} KB`}
+            </span>
+          </p>
+        )}
 
         <motion.div whileTap={{ scale: 0.98 }}>
           <Button
