@@ -5,10 +5,14 @@ interface ToolHeaderProps {
   accentColor: string
 }
 
-export function ToolHeader({ name }: ToolHeaderProps) {
+export function ToolHeader({ name, description, accentColor }: ToolHeaderProps) {
   return (
-    <h1 className="mb-8 border-l-2 border-primary/60 pl-3 text-2xl font-bold text-foreground">
-      {name}
-    </h1>
+    <div className="mb-8">
+      <h1 className="font-heading text-3xl font-black leading-tight tracking-tight text-white sm:text-4xl">
+        {name}
+      </h1>
+      <p className="mt-1.5 text-sm text-white/40">{description}</p>
+      <div className="mt-5 h-[3px]" style={{ background: accentColor }} />
+    </div>
   )
 }

@@ -43,7 +43,7 @@ export function ImageUpload({
       }}
       onDragLeave={() => setIsDragging(false)}
       onDrop={handleDrop}
-      className={`cursor-pointer rounded-xl border-2 border-dashed p-6 text-center transition-colors ${
+      className={`flex h-[120px] w-full overflow-hidden flex-col items-center justify-center cursor-pointer rounded-xl border-2 border-dashed px-6 text-center transition-colors ${
         isDragging
           ? 'border-amber-400 bg-white/[0.08]'
           : 'border-primary/20 bg-primary/[0.03] hover:border-primary/30'
@@ -51,7 +51,7 @@ export function ImageUpload({
     >
       {fileName ? (
         <>
-          <p className="text-sm text-white/70">{fileName}</p>
+          <p className="w-full truncate text-sm text-white/70">{fileName}</p>
           <p className="mt-1 text-xs text-white/30">클릭하여 변경</p>
         </>
       ) : (
