@@ -51,14 +51,25 @@ export async function renderOgImageToCanvas(
 
   const fontFamily = FONT_MAP[config.fontFamily]
   const light = isLightColor(config.backgroundColor)
+  const maxTextWidth = W - 160
 
-  // 제목
-  ctx.font = `bold 64px ${fontFamily}`
-  ctx.fillStyle = light ? '#111111' : '#ffffff'
-  ctx.fillText(config.title, 80, H / 2 + 20)
+  // 제목 — maxTextWidth에 맞게 폰트 크기 자동 축소
+  let titleSize = 64
+  ctx.font = `bold ${titleSize}px ${fontFamily}`
+  while (ctx.measureText(config.title).width > maxTextWidth && titleSize > 24) {
+    titleSize -= 2
+    ctx.font = `bold ${titleSize}px ${fontFamily}`
+  }
+  ctx.fillStyle = light ? '#111111' : '#f1f5f9'
+  ctx.fillText(config.title, 80, H / 2 + 20, maxTextWidth)
 
-  // 부제목
-  ctx.font = `32px ${fontFamily}`
-  ctx.fillStyle = light ? '#555555' : '#64748b'
-  ctx.fillText(config.subtitle, 80, H / 2 + 80)
+  // 부제목 — maxTextWidth에 맞게 폰트 크기 자동 축소
+  let subtitleSize = 32
+  ctx.font = `${subtitleSize}px ${fontFamily}`
+  while (ctx.measureText(config.subtitle).width > maxTextWidth && subtitleSize > 16) {
+    subtitleSize -= 2
+    ctx.font = `${subtitleSize}px ${fontFamily}`
+  }
+  ctx.fillStyle = light ? '#555555' : '#94a3b8'
+  ctx.fillText(config.subtitle, 80, H / 2 + 20 + titleSize + 20, maxTextWidth)
 }
