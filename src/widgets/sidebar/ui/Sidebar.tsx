@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'motion/react'
@@ -10,9 +10,11 @@ const EXPANDED_WIDTH = 220
 const COLLAPSED_WIDTH = 56
 
 export function Sidebar() {
-  const [isExpanded, setIsExpanded] = useState(
-    () => typeof window !== 'undefined' && window.innerWidth >= 768
-  )
+  const [isExpanded, setIsExpanded] = useState(false)
+
+  useEffect(() => {
+    setIsExpanded(window.innerWidth >= 768)
+  }, [])
   const pathname = usePathname()
 
   return (
