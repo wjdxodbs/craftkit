@@ -3,6 +3,8 @@ import Link from "next/link";
 import { motion } from "motion/react";
 import { TOOLS } from "@/shared/config/tools";
 
+const MotionLink = motion.create(Link)
+
 const availableCount = TOOLS.filter((t) => t.available).length;
 
 export function HomeView() {
@@ -46,54 +48,49 @@ export function HomeView() {
       <div className="h-[3px] bg-primary" />
 
       {/* Tool List — 풀 와이드 */}
-      <div>
-        {/* 카테고리 필터 바 자리 — 도구 10개 초과 시 여기에 추가 */}
-        <div className="pb-16">
-          {TOOLS.filter((tool) => tool.available).map((tool, i) => (
-            <motion.div
-              key={tool.id}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.05 * i, duration: 0.4 }}
-            >
-              <Link
-                href={tool.href}
-                className="group flex items-center gap-4 border-b border-white/5 px-6 py-[14px] transition-colors hover:bg-white/[0.02] sm:px-10 sm:py-[18px] md:px-16 last:border-b-0"
-              >
-                <div className="flex-1">
-                  <p className="text-base font-bold tracking-tight text-slate-200 transition-colors group-hover:text-white sm:text-lg">
-                    {tool.name}
-                  </p>
-                  <p className="mt-0.5 text-xs text-white/40 sm:text-sm">
-                    {tool.description}
-                  </p>
-                </div>
-                <div className="flex shrink-0 items-center gap-2 sm:gap-3">
-                  <div className="hidden flex-wrap gap-1 sm:flex">
-                    {tool.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="rounded px-1.5 py-0.5 text-[9px] font-semibold sm:px-2 sm:py-1 sm:text-[11px]"
-                        style={{
-                          background: tool.tagBg,
-                          color: tool.tagText,
-                        }}
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
+      {/* 카테고리 필터 바 자리 — 도구 10개 초과 시 여기에 추가 */}
+      <div className="pb-16">
+        {TOOLS.filter((tool) => tool.available).map((tool, i) => (
+          <MotionLink
+            key={tool.id}
+            href={tool.href}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.05 * i, duration: 0.4 }}
+            className="group flex items-center gap-4 border-b border-white/5 px-6 py-[14px] transition-colors hover:bg-white/[0.02] sm:px-10 sm:py-[18px] md:px-16 last:border-b-0"
+          >
+            <div className="flex-1">
+              <p className="text-base font-bold tracking-tight text-slate-200 transition-colors group-hover:text-white sm:text-lg">
+                {tool.name}
+              </p>
+              <p className="mt-0.5 text-xs text-white/40 sm:text-sm">
+                {tool.description}
+              </p>
+            </div>
+            <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+              <div className="hidden flex-wrap gap-1 sm:flex">
+                {tool.tags.map((tag) => (
                   <span
-                    aria-hidden="true"
-                    className="text-sm text-white/20 transition-colors group-hover:text-white/50"
+                    key={tag}
+                    className="rounded px-1.5 py-0.5 text-[9px] font-semibold sm:px-2 sm:py-1 sm:text-[11px]"
+                    style={{
+                      background: tool.tagBg,
+                      color: tool.tagText,
+                    }}
                   >
-                    ↗
+                    {tag}
                   </span>
-                </div>
-              </Link>
-            </motion.div>
-          ))}
-        </div>
+                ))}
+              </div>
+              <span
+                aria-hidden="true"
+                className="text-sm text-white/20 transition-colors group-hover:text-white/50"
+              >
+                ↗
+              </span>
+            </div>
+          </MotionLink>
+        ))}
       </div>
     </main>
   );
