@@ -43,100 +43,104 @@ export function FaviconGenerator() {
   }
 
   return (
-    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-      {/* 좌측 */}
-      <div className="space-y-6">
-        <div>
-          <p className="mb-3 text-[9px] font-semibold uppercase tracking-[0.2em] text-primary">
-            파일 업로드
-          </p>
-          <ImageUpload onFileLoad={handleFileLoad} />
-        </div>
-
-        <div>
-          <p className="mb-3 text-[9px] font-semibold uppercase tracking-[0.2em] text-primary">
-            생성될 파일
-          </p>
-          <div className="space-y-2">
-            <FileRow filename="favicon.ico" size="16, 32, 48px" />
-            {FAVICON_SIZES.map(({ filename, size }) => (
-              <FileRow
-                key={filename}
-                filename={filename}
-                size={`${size}×${size}`}
-              />
-            ))}
-            <FileRow filename="manifest.json" size="PWA" />
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+        {/* 좌측 */}
+        <div className="space-y-6">
+          <div>
+            <p className="mb-3 text-[9px] font-semibold uppercase tracking-[0.2em] text-primary">
+              파일 업로드
+            </p>
+            <ImageUpload onFileLoad={handleFileLoad} />
           </div>
-        </div>
-      </div>
 
-      {/* 우측 */}
-      <div className="space-y-4">
-        <div>
-          <p className="mb-3 text-[9px] font-semibold uppercase tracking-[0.2em] text-primary">
-            미리보기
-          </p>
-          <div className="rounded-lg border border-white/5 bg-white/[0.04] p-4">
-            <div className="flex items-end justify-center gap-4">
-              {PREVIEW_SIZES.map((size) => {
-                const displaySize = PREVIEW_DISPLAY_SIZE[size] ?? Math.min(size, 48)
-                return (
-                  <div key={size} className="flex flex-col items-center gap-2">
-                    {dataUrl ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={dataUrl}
-                        alt={`${size}px preview`}
-                        style={{ width: displaySize, height: displaySize }}
-                        className="rounded object-cover"
-                      />
-                    ) : (
-                      <div
-                        style={{ width: displaySize, height: displaySize }}
-                        className="rounded bg-white/10"
-                      />
-                    )}
-                    <span className="text-[10px] text-white/50">{size}px</span>
-                  </div>
-                )
-              })}
+          <div>
+            <p className="mb-3 text-[9px] font-semibold uppercase tracking-[0.2em] text-primary">
+              생성될 파일
+            </p>
+            <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+              <FileRow filename="favicon.ico" size="16, 32, 48px" />
+              {FAVICON_SIZES.map(({ filename, size }) => (
+                <FileRow
+                  key={filename}
+                  filename={filename}
+                  size={`${size}×${size}`}
+                />
+              ))}
+              <div className="col-span-2">
+                <FileRow filename="manifest.json" size="PWA" />
+              </div>
             </div>
           </div>
         </div>
 
-        <motion.div whileTap={{ scale: 0.98 }}>
-          <Button
-            onClick={handleDownload}
-            disabled={!imageEl || isGenerating}
-            className="w-full bg-amber-500 hover:bg-amber-400 disabled:opacity-40"
-          >
-            {isGenerating ? '생성 중…' : (
-              <>
-                <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                </svg>
-                Download ZIP
-              </>
-            )}
-          </Button>
-        </motion.div>
-
-        <div className="rounded-lg border border-white/5 bg-white/[0.04] p-3">
-          <div className="mb-2 flex items-center justify-between">
-            <span className="text-[9px] font-semibold uppercase tracking-[0.2em] text-primary">HTML 코드 스니펫</span>
-            <button
-              onClick={handleCopy}
-              className="cursor-pointer text-xs text-amber-400 transition-colors hover:text-amber-300"
-            >
-              {copied ? '복사됨!' : '복사'}
-            </button>
+        {/* 우측 */}
+        <div className="space-y-4">
+          <div>
+            <p className="mb-3 text-[9px] font-semibold uppercase tracking-[0.2em] text-primary">
+              미리보기
+            </p>
+            <div className="rounded-lg border border-white/5 bg-white/[0.04] p-4">
+              <div className="flex items-end justify-center gap-4">
+                {PREVIEW_SIZES.map((size) => {
+                  const displaySize = PREVIEW_DISPLAY_SIZE[size] ?? Math.min(size, 48)
+                  return (
+                    <div key={size} className="flex flex-col items-center gap-2">
+                      {dataUrl ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={dataUrl}
+                          alt={`${size}px preview`}
+                          style={{ width: displaySize, height: displaySize }}
+                          className="rounded object-cover"
+                        />
+                      ) : (
+                        <div
+                          style={{ width: displaySize, height: displaySize }}
+                          className="rounded bg-white/10"
+                        />
+                      )}
+                      <span className="text-[10px] text-white/50">{size}px</span>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
           </div>
-          <pre className="overflow-x-auto text-[10px] leading-relaxed text-amber-400">
-            {HTML_SNIPPET}
-          </pre>
+
+          <div className="rounded-lg border border-white/5 bg-white/[0.04] p-3">
+            <div className="mb-2 flex items-center justify-between">
+              <span className="text-[9px] font-semibold uppercase tracking-[0.2em] text-primary">HTML 코드 스니펫</span>
+              <button
+                onClick={handleCopy}
+                className="cursor-pointer text-xs text-amber-400 transition-colors hover:text-amber-300"
+              >
+                {copied ? '복사됨!' : '복사'}
+              </button>
+            </div>
+            <pre className="overflow-x-auto text-[10px] leading-relaxed text-amber-400">
+              {HTML_SNIPPET}
+            </pre>
+          </div>
         </div>
       </div>
+
+      <motion.div whileTap={{ scale: 0.98 }}>
+        <Button
+          onClick={handleDownload}
+          disabled={!imageEl || isGenerating}
+          className="w-full bg-amber-500 hover:bg-amber-400 disabled:opacity-40"
+        >
+          {isGenerating ? '생성 중…' : (
+            <>
+              <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+              </svg>
+              Download ZIP
+            </>
+          )}
+        </Button>
+      </motion.div>
     </div>
   )
 }

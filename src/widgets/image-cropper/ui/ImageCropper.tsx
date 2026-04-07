@@ -439,10 +439,20 @@ export function ImageCropper() {
             onClick={() => inputRef.current?.click()}
             className="flex h-full min-h-[400px] w-full flex-col items-center justify-center gap-3 cursor-pointer"
           >
-            <svg className="size-10 text-white/10" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1} aria-hidden="true">
+            <motion.svg
+              className="size-10 text-white/10"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={1}
+              aria-hidden="true"
+              whileHover={{ y: -4 }}
+              transition={{ type: 'spring', stiffness: 300 }}
+            >
               <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
-            </svg>
+            </motion.svg>
             <p className="text-xs text-white/20">클릭하거나 드래그해서 이미지 업로드</p>
+            <p className="mt-1 text-[10px] text-white/10">자유롭게 크롭하고 비율을 조정하세요</p>
           </button>
         )}
       </div>

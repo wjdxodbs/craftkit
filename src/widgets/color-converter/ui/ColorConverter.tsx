@@ -52,15 +52,15 @@ export function ColorConverter() {
   const swatchColor = result?.hex ?? '#a78bfa'
 
   return (
-    <div className="grid grid-cols-1 gap-6 md:grid-cols-5">
-      {/* 좌측: 색상 프리뷰 */}
-      <div className="md:col-span-2">
+    <div className="space-y-6">
+      {/* 상단: 가로 프리뷰 + 입력 */}
+      <div className="flex flex-col gap-4 md:flex-row md:items-start">
         <button
           type="button"
           onClick={() => colorPickerRef.current?.click()}
           title="클릭해서 색상 선택"
-          className="w-full cursor-pointer rounded-2xl transition-transform hover:scale-[1.01] max-h-48 md:max-h-none"
-          style={{ background: swatchColor, aspectRatio: '1 / 1' }}
+          className="w-full cursor-pointer rounded-2xl transition-transform hover:scale-[1.01] h-24 md:h-40 md:w-64 md:shrink-0"
+          style={{ background: swatchColor }}
         />
         <input
           ref={colorPickerRef}
@@ -69,12 +69,9 @@ export function ColorConverter() {
           onChange={handlePickerChange}
           className="sr-only"
         />
-      </div>
 
-      {/* 우측: 입력 + 변환 결과 */}
-      <div className="flex flex-col gap-4 md:col-span-3">
         {/* 입력창 */}
-        <div className="space-y-1.5">
+        <div className="flex-1 space-y-1.5">
           <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-primary">색상 입력</p>
           <input
             type="text"
@@ -89,11 +86,12 @@ export function ColorConverter() {
           />
           <p className="text-xs text-white/30">#hex · rgb() · hsl() · oklch()</p>
         </div>
+      </div>
 
-        {/* 변환 결과 */}
-        <div className="space-y-1.5">
-          <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-primary">변환 결과</p>
-          <div className={`space-y-2 transition-opacity ${result ? 'opacity-100' : 'opacity-30'}`}>
+      {/* 하단: 2x2 결과 카드 */}
+      <div className="space-y-1.5">
+        <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-primary">변환 결과</p>
+        <div className={`grid grid-cols-1 gap-2 sm:grid-cols-2 transition-opacity ${result ? 'opacity-100' : 'opacity-30'}`}>
           {FORMAT_LABELS.map((label) => {
             const value = result ? getResultValue(result, label) : '—'
             const isCopied = copied === label
@@ -115,7 +113,6 @@ export function ColorConverter() {
               </div>
             )
           })}
-          </div>
         </div>
       </div>
     </div>
