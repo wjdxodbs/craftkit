@@ -1,7 +1,16 @@
 "use client";
 import Link from "next/link";
 import { motion } from "motion/react";
+import { Globe, Share2, Scaling, Crop, Palette } from "lucide-react";
 import { TOOLS } from "@/shared/config/tools";
+
+const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
+  Globe,
+  Share2,
+  Scaling,
+  Crop,
+  Palette,
+};
 
 const MotionLink = motion.create(Link)
 
@@ -39,7 +48,7 @@ export function HomeView() {
           <h1 className="font-heading text-[36px] font-black leading-[0.9] tracking-[-0.05em] text-white sm:text-[72px] md:text-[90px]">
             CRAFT
             <br />
-            <span className="text-primary">KIT</span>
+            <span className="text-primary tracking-[0.08em]">KIT</span>
           </h1>
         </motion.div>
       </div>
@@ -57,8 +66,13 @@ export function HomeView() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.05 * i, duration: 0.4 }}
-            className="group flex items-center gap-4 border-b border-white/5 px-6 py-[14px] transition-colors hover:bg-white/[0.02] sm:px-10 sm:py-[18px] md:px-16 last:border-b-0"
+            className="group relative flex items-center gap-4 border-b border-white/5 px-6 py-[14px] transition-colors hover:bg-surface sm:px-10 sm:py-[18px] md:px-16 last:border-b-0"
           >
+            <span className="absolute left-0 top-0 h-full w-[3px] rounded-r bg-primary opacity-0 transition-opacity group-hover:opacity-100" />
+            {(() => {
+              const Icon = ICON_MAP[tool.icon]
+              return Icon ? <Icon className="size-5 shrink-0 text-white/25 transition-colors group-hover:text-white/50" /> : null
+            })()}
             <div className="flex-1">
               <p className="text-base font-bold tracking-tight text-slate-200 transition-colors group-hover:text-white sm:text-lg">
                 {tool.name}
@@ -68,6 +82,10 @@ export function HomeView() {
               </p>
             </div>
             <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+              <span
+                className="block size-2 shrink-0 rounded-full sm:hidden"
+                style={{ background: tool.accentColor }}
+              />
               <div className="hidden flex-wrap gap-1 sm:flex">
                 {tool.tags.map((tag) => (
                   <span
@@ -84,13 +102,14 @@ export function HomeView() {
               </div>
               <span
                 aria-hidden="true"
-                className="text-sm text-white/20 transition-colors group-hover:text-white/50"
+                className="text-sm text-white/20 transition-all duration-200 group-hover:text-white/50 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
               >
                 ↗
               </span>
             </div>
           </MotionLink>
         ))}
+
       </div>
     </main>
   );

@@ -23,7 +23,7 @@ export const TOOLS: Tool[] = [
     borderColor: '#fbbf2444',
     tagBg: '#fbbf2422',
     tagText: '#fde68a',
-    icon: '🖼️',
+    icon: 'Globe',
     available: true,
   },
   {
@@ -36,7 +36,7 @@ export const TOOLS: Tool[] = [
     borderColor: '#f59e0b44',
     tagBg: '#f59e0b22',
     tagText: '#fcd34d',
-    icon: '📸',
+    icon: 'Share2',
     available: true,
   },
   {
@@ -49,7 +49,7 @@ export const TOOLS: Tool[] = [
     borderColor: '#d9770644',
     tagBg: '#d9770622',
     tagText: '#f59e0b',
-    icon: '📐',
+    icon: 'Scaling',
     available: true,
   },
   {
@@ -62,7 +62,7 @@ export const TOOLS: Tool[] = [
     borderColor: '#d9770644',
     tagBg: '#d9770622',
     tagText: '#f59e0b',
-    icon: '✂️',
+    icon: 'Crop',
     available: true,
   },
   {
@@ -75,7 +75,7 @@ export const TOOLS: Tool[] = [
     borderColor: '#a78bfa44',
     tagBg: '#a78bfa22',
     tagText: '#c4b5fd',
-    icon: '🎨',
+    icon: 'Palette',
     available: true,
   },
 ]
