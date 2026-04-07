@@ -1,29 +1,62 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'motion/react'
+import { Globe, Share2, Scaling, Crop, Palette } from 'lucide-react'
 import { TOOLS } from '@/shared/config/tools'
 import { cn } from '@/shared/lib/utils'
+
+const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
+  Globe,
+  Share2,
+  Scaling,
+  Crop,
+  Palette,
+}
 
 const EXPANDED_WIDTH = 220
 const COLLAPSED_WIDTH = 56
 
 export function Sidebar() {
   const [isExpanded, setIsExpanded] = useState(false)
-
-  useEffect(() => {
-    setIsExpanded(window.innerWidth >= 768)
-  }, [])
+  const sidebarRef = useRef<HTMLElement>(null)
   const pathname = usePathname()
+
+  // 라우팅 변경 시 접힘
+  useEffect(() => {
+    setIsExpanded(false)
+  }, [pathname])
+
+  // 바깥 클릭 시 접힘
+  useEffect(() => {
+    if (!isExpanded) return
+    const handleClickOutside = (e: MouseEvent) => {
+      if (sidebarRef.current && !sidebarRef.current.contains(e.target as Node)) {
+        setIsExpanded(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [isExpanded])
 
   return (
     <motion.nav
+      ref={sidebarRef}
       initial={false}
       animate={{ width: isExpanded ? EXPANDED_WIDTH : COLLAPSED_WIDTH }}
       transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-      className="sticky top-0 flex h-screen shrink-0 flex-col border-r border-white/10 bg-sidebar"
+      className="absolute left-0 top-0 z-50 flex h-screen flex-col border-r border-white/15 bg-sidebar shadow-[4px_0_24px_rgba(0,0,0,0.3)]"
     >
+      {/* Noise texture */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 opacity-[0.04]"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E")`,
+        }}
+      />
+
       {/* Logo */}
       <div className="flex h-14 items-center border-b border-white/10 px-3">
         <Link href="/" className="flex items-center gap-2 overflow-hidden">
@@ -49,7 +82,7 @@ export function Sidebar() {
 
       {/* Tool List */}
       <ul className="flex flex-1 flex-col gap-1 p-2">
-        {TOOLS.filter((t) => t.available).map((tool, i) => {
+        {TOOLS.filter((t) => t.available).map((tool) => {
           const isActive = pathname === tool.href
           return (
             <li key={tool.id}>
@@ -58,18 +91,27 @@ export function Sidebar() {
                 aria-label={!isExpanded ? tool.name : undefined}
                 aria-current={isActive ? 'page' : undefined}
                 className={cn(
-                  'group/link relative flex h-9 cursor-pointer items-center gap-3 rounded-lg px-2 text-sm transition-colors',
+                  'group/link relative flex h-9 cursor-pointer items-center gap-3 rounded-lg text-sm transition-colors',
+                  isExpanded ? 'px-2' : 'justify-center',
                   isActive
-                    ? 'bg-amber-500/15 text-amber-300'
+                    ? ''
                     : 'text-white/50 hover:bg-white/5 hover:text-white/70'
                 )}
+                style={isActive ? {
+                  backgroundColor: `${tool.accentColor}15`,
+                  color: tool.accentColor,
+                } : undefined}
               >
                 {isActive && (
-                  <span className="absolute left-0 top-1/2 h-4 w-0.5 -translate-y-1/2 rounded-r bg-primary" />
+                  <span
+                    className="absolute left-0 top-1/2 h-4 w-0.5 -translate-y-1/2 rounded-r"
+                    style={{ backgroundColor: tool.accentColor }}
+                  />
                 )}
-                <span className="flex size-[22px] shrink-0 items-center justify-center text-[10px] font-bold tabular-nums">
-                  {String(i + 1).padStart(2, '0')}
-                </span>
+                {(() => {
+                  const Icon = ICON_MAP[tool.icon]
+                  return Icon ? <Icon className="size-4 shrink-0" /> : null
+                })()}
                 {!isExpanded && (
                   <span className="pointer-events-none absolute left-full z-50 ml-2 whitespace-nowrap rounded-md border border-white/10 bg-[#1a1f2e] px-2.5 py-1.5 text-xs text-white/80 opacity-0 shadow-lg transition-opacity group-hover/link:opacity-100">
                     {tool.name}
@@ -95,7 +137,7 @@ export function Sidebar() {
         })}
       </ul>
 
-      {/* Collapse Toggle */}
+      {/* Expand Toggle */}
       <div className="border-t border-white/10 p-2">
         <button
           onClick={() => setIsExpanded((prev) => !prev)}
