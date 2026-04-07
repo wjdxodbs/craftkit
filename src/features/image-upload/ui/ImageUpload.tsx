@@ -1,5 +1,6 @@
 'use client'
 import { useRef, useState } from 'react'
+import { motion } from 'motion/react'
 
 interface Props {
   onFileLoad: (img: HTMLImageElement, dataUrl: string) => void
@@ -48,7 +49,7 @@ export function ImageUpload({
       className={`flex h-[120px] w-full overflow-hidden flex-col items-center justify-center cursor-pointer rounded-xl border-2 border-dashed px-6 text-center transition-colors ${
         isDragging
           ? 'border-amber-400 bg-white/[0.08]'
-          : 'border-primary/20 bg-primary/[0.03] hover:border-primary/30'
+          : 'border-primary/20 bg-surface hover:border-primary/30'
       }`}
     >
       {fileName ? (
@@ -58,20 +59,22 @@ export function ImageUpload({
         </>
       ) : (
         <>
-          <svg
+          <motion.svg
             className="mx-auto mb-3 h-8 w-8 text-amber-400/50"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
             strokeWidth={1.5}
             aria-hidden="true"
+            whileHover={{ y: -3 }}
+            transition={{ type: 'spring', stiffness: 300 }}
           >
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
               d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
             />
-          </svg>
+          </motion.svg>
           <p className="text-sm text-amber-400">클릭하거나 드래그해서 이미지 업로드</p>
           <p className="mt-1 text-xs text-white/20">{hint}</p>
         </>
