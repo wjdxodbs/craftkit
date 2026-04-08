@@ -42,7 +42,7 @@ next-env.d.ts
 
 .superpowers/
 .worktrees/
-
+.playwright-mcp/
 
 .docs
 .claude

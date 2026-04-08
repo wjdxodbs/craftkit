@@ -46,7 +46,7 @@ export function Sidebar() {
       initial={false}
       animate={{ width: isExpanded ? EXPANDED_WIDTH : COLLAPSED_WIDTH }}
       transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-      className="absolute left-0 top-0 z-50 flex h-screen flex-col border-r border-white/15 bg-sidebar shadow-[4px_0_24px_rgba(0,0,0,0.3)]"
+      className="fixed left-0 top-0 z-50 flex h-screen flex-col border-r border-white/15 bg-sidebar shadow-[4px_0_24px_rgba(0,0,0,0.3)]"
     >
       {/* Noise texture */}
       <div
@@ -91,8 +91,7 @@ export function Sidebar() {
                 aria-label={!isExpanded ? tool.name : undefined}
                 aria-current={isActive ? 'page' : undefined}
                 className={cn(
-                  'group/link relative flex h-9 cursor-pointer items-center gap-3 rounded-lg text-sm transition-colors',
-                  isExpanded ? 'px-2' : 'justify-center',
+                  'group/link relative flex h-9 cursor-pointer items-center overflow-hidden rounded-lg text-sm transition-colors',
                   isActive
                     ? ''
                     : 'text-white/50 hover:bg-white/5 hover:text-white/70'
@@ -108,10 +107,12 @@ export function Sidebar() {
                     style={{ backgroundColor: tool.accentColor }}
                   />
                 )}
-                {(() => {
-                  const Icon = ICON_MAP[tool.icon]
-                  return Icon ? <Icon className="size-4 shrink-0" /> : null
-                })()}
+                <span className="flex w-10 shrink-0 items-center justify-center">
+                  {(() => {
+                    const Icon = ICON_MAP[tool.icon]
+                    return Icon ? <Icon className="size-4 shrink-0" /> : null
+                  })()}
+                </span>
                 {!isExpanded && (
                   <span className="pointer-events-none absolute left-full z-50 ml-2 whitespace-nowrap rounded-md border border-white/10 bg-[#1a1f2e] px-2.5 py-1.5 text-xs text-white/80 opacity-0 shadow-lg transition-opacity group-hover/link:opacity-100">
                     {tool.name}
@@ -142,21 +143,20 @@ export function Sidebar() {
         <button
           onClick={() => setIsExpanded((prev) => !prev)}
           aria-label={isExpanded ? 'Collapse sidebar' : 'Expand sidebar'}
-          className={cn(
-            'flex h-9 w-full cursor-pointer items-center rounded-lg px-2 text-white/40 transition-colors hover:bg-white/5 hover:text-white/60',
-            isExpanded ? 'justify-start gap-3' : 'justify-center'
-          )}
+          className="flex h-9 w-full cursor-pointer items-center overflow-hidden rounded-lg text-white/40 transition-colors hover:bg-white/5 hover:text-white/60"
         >
-          <svg
-            className={cn('size-4 shrink-0 transition-transform duration-200', !isExpanded && 'rotate-180')}
+          <span className="flex w-10 shrink-0 items-center justify-center">
+            <svg
+              className={cn('size-4 shrink-0 transition-transform duration-200', !isExpanded && 'rotate-180')}
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
             strokeWidth={2}
             aria-hidden="true"
           >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
-          </svg>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+          </span>
           <AnimatePresence initial={false}>
             {isExpanded && (
               <motion.span
