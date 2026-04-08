@@ -6,17 +6,36 @@ const baseConfig: OgImageConfig = {
   title: 'Test Title',
   subtitle: 'Test Subtitle',
   fontFamily: 'Inter',
+  template: 'classic',
 }
 
 describe('generateOgImage', () => {
-  it('Blob을 반환한다', async () => {
+  it('Classic 템플릿 — Blob을 반환한다', async () => {
     const result = await generateOgImage(baseConfig)
+    expect(result).toBeInstanceOf(Blob)
+    expect(result.type).toBe('image/png')
+  })
+
+  it('Gradient 템플릿 — Blob을 반환한다', async () => {
+    const config: OgImageConfig = {
+      ...baseConfig,
+      template: 'gradient',
+      gradientColor2: '#ec4899',
+      gradientAngle: 45,
+    }
+    const result = await generateOgImage(config)
     expect(result).toBeInstanceOf(Blob)
   })
 
-  it('image/png 타입이다', async () => {
-    const result = await generateOgImage(baseConfig)
-    expect(result.type).toBe('image/png')
+  it('Code Snippet 템플릿 — Blob을 반환한다', async () => {
+    const config: OgImageConfig = {
+      ...baseConfig,
+      template: 'code-snippet',
+      codeTheme: 'dark',
+      filePath: 'src/index.ts',
+    }
+    const result = await generateOgImage(config)
+    expect(result).toBeInstanceOf(Blob)
   })
 
   it('logoDataUrl이 없어도 동작한다', async () => {
