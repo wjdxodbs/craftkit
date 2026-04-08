@@ -1,23 +1,35 @@
 export type FontFamily = 'Inter' | 'Serif' | 'Mono'
 
+export type TemplateName = 'classic' | 'gradient' | 'code-snippet'
+
 export interface OgImageConfig {
   backgroundColor: string
   title: string
   subtitle: string
   logoDataUrl?: string
   fontFamily: FontFamily
+  template?: TemplateName
+
+  // gradient 템플릿 전용
+  gradientColor2?: string
+  gradientAngle?: number
+  gradientPreset?: string
+
+  // code-snippet 템플릿 전용
+  codeTheme?: 'dark' | 'light'
+  filePath?: string
 }
 
-const FONT_MAP: Record<FontFamily, string> = {
+export const FONT_MAP: Record<FontFamily, string> = {
   Inter: '"Inter", sans-serif',
   Serif: 'Georgia, serif',
   Mono: '"Courier New", monospace',
 }
 
-const W = 1200
-const H = 630
+export const W = 1200
+export const H = 630
 
-function isLightColor(hex: string): boolean {
+export function isLightColor(hex: string): boolean {
   const c = hex.replace('#', '')
   const r = parseInt(c.substring(0, 2), 16)
   const g = parseInt(c.substring(2, 4), 16)
@@ -26,7 +38,61 @@ function isLightColor(hex: string): boolean {
   return (r * 299 + g * 587 + b * 114) / 1000 > 128
 }
 
-export async function renderOgImageToCanvas(
+/**
+ * 로고 이미지를 contain-fit 방식으로 지정 영역에 그린다.
+ * 비율을 유지하면서 박스 안에 맞추고, 박스 중앙에 배치한다.
+ */
+export async function loadLogo(
+  ctx: CanvasRenderingContext2D,
+  dataUrl: string,
+  x: number,
+  y: number,
+  w: number,
+  h: number
+): Promise<void> {
+  await new Promise<void>((resolve) => {
+    const img = new Image()
+    img.onload = () => {
+      const scale = Math.min(w / img.width, h / img.height)
+      const drawW = img.width * scale
+      const drawH = img.height * scale
+      const drawX = x + (w - drawW) / 2
+      const drawY = y + (h - drawH) / 2
+      ctx.drawImage(img, drawX, drawY, drawW, drawH)
+      resolve()
+    }
+    img.onerror = () => resolve()
+    img.src = dataUrl
+  })
+}
+
+/**
+ * 텍스트가 maxWidth를 넘으면 폰트 크기를 자동으로 줄여서 그린다.
+ */
+export function drawAutoSizedText(
+  ctx: CanvasRenderingContext2D,
+  text: string,
+  x: number,
+  y: number,
+  maxWidth: number,
+  initialSize: number,
+  minSize: number,
+  weight: string,
+  fontFamily: string,
+  color: string
+): number {
+  let size = initialSize
+  ctx.font = `${weight} ${size}px ${fontFamily}`
+  while (ctx.measureText(text).width > maxWidth && size > minSize) {
+    size -= 2
+    ctx.font = `${weight} ${size}px ${fontFamily}`
+  }
+  ctx.fillStyle = color
+  ctx.fillText(text, x, y, maxWidth)
+  return size
+}
+
+export async function renderClassicTemplate(
   canvas: HTMLCanvasElement,
   config: OgImageConfig
 ): Promise<void> {
@@ -38,15 +104,7 @@ export async function renderOgImageToCanvas(
 
   // 로고
   if (config.logoDataUrl) {
-    await new Promise<void>((resolve) => {
-      const img = new Image()
-      img.onload = () => {
-        ctx.drawImage(img, 80, H / 2 - 160, 80, 80)
-        resolve()
-      }
-      img.onerror = () => resolve()
-      img.src = config.logoDataUrl!
-    })
+    await loadLogo(ctx, config.logoDataUrl, 80, H / 2 - 160, 80, 80)
   }
 
   const fontFamily = FONT_MAP[config.fontFamily]
@@ -54,22 +112,54 @@ export async function renderOgImageToCanvas(
   const maxTextWidth = W - 160
 
   // 제목 — maxTextWidth에 맞게 폰트 크기 자동 축소
-  let titleSize = 64
-  ctx.font = `bold ${titleSize}px ${fontFamily}`
-  while (ctx.measureText(config.title).width > maxTextWidth && titleSize > 24) {
-    titleSize -= 2
-    ctx.font = `bold ${titleSize}px ${fontFamily}`
-  }
-  ctx.fillStyle = light ? '#111111' : '#f1f5f9'
-  ctx.fillText(config.title, 80, H / 2 + 20, maxTextWidth)
+  const titleSize = drawAutoSizedText(
+    ctx,
+    config.title,
+    80,
+    H / 2 + 20,
+    maxTextWidth,
+    64,
+    24,
+    'bold',
+    fontFamily,
+    light ? '#111111' : '#f1f5f9'
+  )
 
   // 부제목 — maxTextWidth에 맞게 폰트 크기 자동 축소
-  let subtitleSize = 32
-  ctx.font = `${subtitleSize}px ${fontFamily}`
-  while (ctx.measureText(config.subtitle).width > maxTextWidth && subtitleSize > 16) {
-    subtitleSize -= 2
-    ctx.font = `${subtitleSize}px ${fontFamily}`
+  drawAutoSizedText(
+    ctx,
+    config.subtitle,
+    80,
+    H / 2 + 20 + titleSize + 20,
+    maxTextWidth,
+    32,
+    16,
+    'normal',
+    fontFamily,
+    light ? '#555555' : '#94a3b8'
+  )
+}
+
+export async function renderOgImageToCanvas(
+  canvas: HTMLCanvasElement,
+  config: OgImageConfig
+): Promise<void> {
+  const template = config.template ?? 'classic'
+
+  switch (template) {
+    case 'gradient': {
+      const { renderGradientTemplate } = await import('./renderGradientTemplate')
+      await renderGradientTemplate(canvas, config)
+      break
+    }
+    case 'code-snippet': {
+      const { renderCodeSnippetTemplate } = await import('./renderCodeSnippetTemplate')
+      await renderCodeSnippetTemplate(canvas, config)
+      break
+    }
+    case 'classic':
+    default:
+      await renderClassicTemplate(canvas, config)
+      break
   }
-  ctx.fillStyle = light ? '#555555' : '#94a3b8'
-  ctx.fillText(config.subtitle, 80, H / 2 + 20 + titleSize + 20, maxTextWidth)
 }
