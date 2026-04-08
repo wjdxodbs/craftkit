@@ -24,9 +24,11 @@ export function Sidebar() {
   const pathname = usePathname()
 
   // 라우팅 변경 시 접힘
-  useEffect(() => {
-    setIsExpanded(false)
-  }, [pathname])
+  const [prevPathname, setPrevPathname] = useState(pathname)
+  if (prevPathname !== pathname) {
+    setPrevPathname(pathname)
+    if (isExpanded) setIsExpanded(false)
+  }
 
   // 바깥 클릭 시 접힘
   useEffect(() => {

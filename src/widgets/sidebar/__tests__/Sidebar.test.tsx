@@ -17,9 +17,9 @@ jest.mock('motion/react', () => ({
 
 describe('Sidebar', () => {
   describe('렌더링', () => {
-    it('CRAFTKIT 로고 링크가 "/"를 가리킨다', () => {
+    it('CK 로고 링크가 "/"를 가리킨다', () => {
       render(<Sidebar />)
-      expect(screen.getByRole('link', { name: /CRAFTKIT/ })).toHaveAttribute('href', '/')
+      expect(screen.getByRole('link', { name: /CK/ })).toHaveAttribute('href', '/')
     })
 
     it('available한 모든 툴을 렌더링한다', () => {
@@ -45,23 +45,23 @@ describe('Sidebar', () => {
   })
 
   describe('Collapse/Expand', () => {
-    it('기본 상태에서 토글 버튼 aria-label이 "Collapse sidebar"이다', () => {
+    it('기본 상태에서 토글 버튼 aria-label이 "Expand sidebar"이다', () => {
       render(<Sidebar />)
-      expect(screen.getByRole('button')).toHaveAttribute('aria-label', 'Collapse sidebar')
-    })
-
-    it('토글 클릭 후 aria-label이 "Expand sidebar"로 바뀐다', () => {
-      render(<Sidebar />)
-      fireEvent.click(screen.getByRole('button'))
       expect(screen.getByRole('button')).toHaveAttribute('aria-label', 'Expand sidebar')
     })
 
-    it('두 번 클릭 후 aria-label이 "Collapse sidebar"로 돌아온다', () => {
+    it('토글 클릭 후 aria-label이 "Collapse sidebar"로 바뀐다', () => {
+      render(<Sidebar />)
+      fireEvent.click(screen.getByRole('button'))
+      expect(screen.getByRole('button')).toHaveAttribute('aria-label', 'Collapse sidebar')
+    })
+
+    it('두 번 클릭 후 aria-label이 "Expand sidebar"로 돌아온다', () => {
       render(<Sidebar />)
       const button = screen.getByRole('button')
       fireEvent.click(button)
       fireEvent.click(button)
-      expect(screen.getByRole('button')).toHaveAttribute('aria-label', 'Collapse sidebar')
+      expect(screen.getByRole('button')).toHaveAttribute('aria-label', 'Expand sidebar')
     })
   })
 
