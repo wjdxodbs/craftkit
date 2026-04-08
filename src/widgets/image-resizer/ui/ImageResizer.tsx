@@ -20,7 +20,7 @@ const EXT_MAP: Record<OutputFormat, string> = {
 
 export function ImageResizer() {
   const [imageEl, setImageEl] = useState<HTMLImageElement | null>(null)
-  const [dataUrl, setDataUrl] = useState<string | null>(null)
+  const [, setDataUrl] = useState<string | null>(null)
   const [naturalSize, setNaturalSize] = useState<{ w: number; h: number } | null>(null)
   const [width, setWidth] = useState(0)
   const [height, setHeight] = useState(0)

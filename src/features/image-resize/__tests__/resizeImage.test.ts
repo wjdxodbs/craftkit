@@ -1,5 +1,4 @@
 import { resizeImage } from '../lib/resizeImage'
-import type { OutputFormat } from '../lib/resizeImage'
 import { createResizedCanvas } from '@/shared/lib/canvas'
 
 jest.mock('@/shared/lib/canvas', () => ({

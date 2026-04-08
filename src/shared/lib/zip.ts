@@ -1,4 +1,4 @@
-import { zipSync, strToU8 } from 'fflate'
+import { zipSync } from 'fflate'
 
 const encoder = new TextEncoder()
 

@@ -80,7 +80,6 @@ export async function renderCodeSnippetTemplate(
 
   // 에디터 콘텐츠 영역
   const contentX = frameX + 60
-  const contentAreaY = frameY + TITLE_BAR_H
   const contentH = frameH - TITLE_BAR_H
   const maxTextWidth = frameW - 120
 
