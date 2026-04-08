@@ -51,20 +51,20 @@ describe('OgImageGenerator', () => {
     expect(input.value).toBe('New Title')
   })
 
-  it('Gradient 탭 클릭 시 그라데이션 프리셋 섹션이 나타난다', () => {
+  it('Gradient 탭 클릭 시 색상 피커와 각도 슬라이더가 나타난다', () => {
     render(<OgImageGenerator />)
     fireEvent.click(screen.getByRole('button', { name: 'Gradient' }))
-    expect(screen.getByText('그라데이션 프리셋')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /Sunset/ })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /Ocean/ })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /Cyberpunk/ })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /Forest/ })).toBeInTheDocument()
+    expect(screen.getByText('첫 번째 색상')).toBeInTheDocument()
+    expect(screen.getByText('두 번째 색상')).toBeInTheDocument()
+    expect(screen.getByText(/각도/)).toBeInTheDocument()
   })
 
-  it('Code 탭 클릭 시 파일 경로 입력 필드가 나타난다', () => {
+  it('Code 탭 클릭 시 테마 선택이 나타난다', () => {
     render(<OgImageGenerator />)
     fireEvent.click(screen.getByRole('button', { name: 'Code' }))
-    expect(screen.getByPlaceholderText('src/components/App.tsx')).toBeInTheDocument()
+    expect(screen.getByText('테마')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Dark' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Light' })).toBeInTheDocument()
   })
 
   it('Code 탭 클릭 시 폰트 버튼(Inter)이 사라진다', () => {
