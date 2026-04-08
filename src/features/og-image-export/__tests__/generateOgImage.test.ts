@@ -32,7 +32,6 @@ describe('generateOgImage', () => {
       ...baseConfig,
       template: 'code-snippet',
       codeTheme: 'dark',
-      filePath: 'src/index.ts',
     }
     const result = await generateOgImage(config)
     expect(result).toBeInstanceOf(Blob)

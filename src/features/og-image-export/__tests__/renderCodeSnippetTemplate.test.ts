@@ -45,7 +45,6 @@ const baseConfig: OgImageConfig = {
   fontFamily: 'Inter',
   template: 'code-snippet',
   codeTheme: 'dark',
-  filePath: 'src/index.ts',
 }
 
 describe('renderCodeSnippetTemplate', () => {
@@ -69,28 +68,6 @@ describe('renderCodeSnippetTemplate', () => {
     await renderCodeSnippetTemplate(canvas, baseConfig)
 
     expect(ctx.arc).toHaveBeenCalledTimes(3)
-  })
-
-  it('파일 경로 텍스트를 그린다', async () => {
-    const ctx = makeMockCtx()
-    const canvas = makeCanvas(ctx)
-
-    await renderCodeSnippetTemplate(canvas, baseConfig)
-
-    const fillTextCalls = (ctx.fillText as jest.Mock).mock.calls
-    const filePathCall = fillTextCalls.find((args: unknown[]) => args[0] === 'src/index.ts')
-    expect(filePathCall).toBeDefined()
-  })
-
-  it('filePath가 없으면 untitled를 표시한다', async () => {
-    const ctx = makeMockCtx()
-    const canvas = makeCanvas(ctx)
-
-    await renderCodeSnippetTemplate(canvas, { ...baseConfig, filePath: undefined })
-
-    const fillTextCalls = (ctx.fillText as jest.Mock).mock.calls
-    const filePathCall = fillTextCalls.find((args: unknown[]) => args[0] === 'untitled')
-    expect(filePathCall).toBeDefined()
   })
 
   it('title 텍스트를 그린다', async () => {

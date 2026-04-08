@@ -17,7 +17,6 @@ export interface OgImageConfig {
 
   // code-snippet 템플릿 전용
   codeTheme?: 'dark' | 'light'
-  filePath?: string
 }
 
 export const FONT_MAP: Record<FontFamily, string> = {

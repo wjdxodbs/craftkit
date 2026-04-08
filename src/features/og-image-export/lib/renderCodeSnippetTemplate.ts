@@ -14,7 +14,6 @@ const THEME_COLORS = {
     titleBarBg: '#1c2128',
     textColor: '#e6edf3',
     subTextColor: '#7d8590',
-    filePathColor: '#7d8590',
   },
   light: {
     outerBg: '#f0f0f0',
@@ -22,7 +21,6 @@ const THEME_COLORS = {
     titleBarBg: '#f6f8fa',
     textColor: '#1f2328',
     subTextColor: '#656d76',
-    filePathColor: '#656d76',
   },
 }
 
@@ -79,13 +77,6 @@ export async function renderCodeSnippetTemplate(
     ctx.arc(trafficStartX + i * TRAFFIC_SPACING, trafficY, TRAFFIC_RADIUS, 0, Math.PI * 2)
     ctx.fill()
   })
-
-  // 파일 경로 텍스트
-  const filePath = config.filePath ?? 'untitled'
-  const filePathX = trafficStartX + TRAFFIC_LIGHTS.length * TRAFFIC_SPACING + 16
-  ctx.font = `13px ${monoFont}`
-  ctx.fillStyle = colors.filePathColor
-  ctx.fillText(filePath, filePathX, trafficY + 4)
 
   // 에디터 콘텐츠 영역
   const contentX = frameX + 60
