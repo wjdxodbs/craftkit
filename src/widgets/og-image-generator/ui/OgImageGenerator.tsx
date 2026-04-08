@@ -4,19 +4,32 @@ import { motion } from 'motion/react'
 import { ImageUpload } from '@/features/image-upload/ui/ImageUpload'
 import { generateOgImage } from '@/features/og-image-export/lib/generateOgImage'
 import { renderOgImageToCanvas } from '@/features/og-image-export/lib/renderOgImageToCanvas'
-import type { OgImageConfig, FontFamily } from '@/features/og-image-export/lib/renderOgImageToCanvas'
+import type { OgImageConfig, FontFamily, TemplateName } from '@/features/og-image-export/lib/renderOgImageToCanvas'
 import { Button } from '@/shared/ui/button'
 import { Input } from '@/shared/ui/input'
+import { TemplateTabs } from './TemplateTabs'
 
 const PRESET_COLORS = ['#0f172a', '#18181b', '#1e1b4b', '#ffffff']
 const FONTS: FontFamily[] = ['Inter', 'Serif', 'Mono']
 
+const GRADIENT_PRESETS: { id: string; label: string; colors: [string, string] }[] = [
+  { id: 'sunset', label: 'Sunset', colors: ['#f97316', '#ec4899'] },
+  { id: 'ocean', label: 'Ocean', colors: ['#06b6d4', '#6366f1'] },
+  { id: 'cyberpunk', label: 'Cyberpunk', colors: ['#a855f7', '#ec4899'] },
+  { id: 'forest', label: 'Forest', colors: ['#10b981', '#06b6d4'] },
+]
+
 export function OgImageGenerator() {
   const [config, setConfig] = useState<OgImageConfig>({
+    template: 'classic',
     backgroundColor: '#0f172a',
     title: 'My Awesome Project',
     subtitle: 'A short description of your project',
     fontFamily: 'Inter',
+    gradientColor2: '#6366f1',
+    gradientAngle: 135,
+    codeTheme: 'dark',
+    filePath: '',
   })
   const [logoDataUrl, setLogoDataUrl] = useState<string | undefined>()
   const [isDownloading, setIsDownloading] = useState(false)
@@ -42,6 +55,13 @@ export function OgImageGenerator() {
       setIsDownloading(false)
     }
   }
+
+  const handleTemplateChange = (template: TemplateName) => {
+    setConfig((c) => ({ ...c, template }))
+  }
+
+  const showBgColor = config.template !== 'code-snippet'
+  const showFont = config.template !== 'code-snippet'
 
   return (
     <div className="space-y-6">
@@ -81,6 +101,9 @@ export function OgImageGenerator() {
         </Button>
       </motion.div>
 
+      {/* 템플릿 탭 */}
+      <TemplateTabs value={config.template ?? 'classic'} onChange={handleTemplateChange} />
+
       {/* 컨트롤 */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {/* 제목 */}
@@ -109,71 +132,196 @@ export function OgImageGenerator() {
           />
         </div>
 
-        {/* 배경색 */}
-        <div>
-          <label className="mb-2 block text-[9px] font-semibold uppercase tracking-[0.2em] text-primary">
-            배경색
-          </label>
-          <div className="flex flex-wrap items-center gap-2">
-            {PRESET_COLORS.map((color) => (
-              <button
-                key={color}
-                onClick={() => setConfig((c) => ({ ...c, backgroundColor: color }))}
-                className={`h-6 w-6 cursor-pointer rounded transition-transform hover:scale-110 ${
-                  config.backgroundColor === color
-                    ? 'ring-2 ring-amber-400 ring-offset-1 ring-offset-[#191917]'
-                    : ''
-                }`}
-                style={{ background: color, border: '1px solid rgba(255,255,255,0.1)' }}
-                aria-label={color}
-              />
-            ))}
-            <label className="relative h-6 w-6 cursor-pointer" title="커스텀 색상">
+        {/* 배경색 — classic, gradient 전용 */}
+        {showBgColor && (
+          <div>
+            <label className="mb-2 block text-[9px] font-semibold uppercase tracking-[0.2em] text-primary">
+              배경색
+            </label>
+            <div className="flex flex-wrap items-center gap-2">
+              {PRESET_COLORS.map((color) => (
+                <button
+                  key={color}
+                  onClick={() => setConfig((c) => ({ ...c, backgroundColor: color }))}
+                  className={`h-6 w-6 cursor-pointer rounded transition-transform hover:scale-110 ${
+                    config.backgroundColor === color
+                      ? 'ring-2 ring-amber-400 ring-offset-1 ring-offset-[#191917]'
+                      : ''
+                  }`}
+                  style={{ background: color, border: '1px solid rgba(255,255,255,0.1)' }}
+                  aria-label={color}
+                />
+              ))}
+              <label className="relative h-6 w-6 cursor-pointer" title="커스텀 색상">
+                <input
+                  type="color"
+                  value={config.backgroundColor.startsWith('#') ? config.backgroundColor : '#0f172a'}
+                  onChange={(e) => setConfig((c) => ({ ...c, backgroundColor: e.target.value }))}
+                  className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+                />
+                {PRESET_COLORS.includes(config.backgroundColor) ? (
+                  <span
+                    className="flex h-6 w-6 items-center justify-center rounded text-[10px] text-white/60"
+                    style={{ border: '1px dashed rgba(255,255,255,0.2)' }}
+                  >
+                    +
+                  </span>
+                ) : (
+                  <span
+                    className="block h-6 w-6 rounded ring-2 ring-amber-400 ring-offset-1 ring-offset-[#191917]"
+                    style={{ background: config.backgroundColor, border: '1px solid rgba(255,255,255,0.1)' }}
+                  />
+                )}
+              </label>
+            </div>
+          </div>
+        )}
+
+        {/* 폰트 — classic, gradient 전용 */}
+        {showFont && (
+          <div>
+            <label className="mb-2 block text-[9px] font-semibold uppercase tracking-[0.2em] text-primary">
+              폰트
+            </label>
+            <div className="flex gap-2">
+              {FONTS.map((font) => (
+                <button
+                  key={font}
+                  onClick={() => setConfig((c) => ({ ...c, fontFamily: font }))}
+                  className={`cursor-pointer rounded-lg px-3 py-1.5 text-xs transition-colors ${
+                    config.fontFamily === font
+                      ? 'border border-amber-500 bg-amber-500/20 text-amber-300'
+                      : 'border border-white/10 text-white/40 hover:border-white/20'
+                  }`}
+                >
+                  {font}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Gradient 전용 옵션 */}
+      {config.template === 'gradient' && (
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {/* 그라데이션 프리셋 */}
+          <div>
+            <label className="mb-2 block text-[9px] font-semibold uppercase tracking-[0.2em] text-primary">
+              그라데이션 프리셋
+            </label>
+            <div className="flex flex-wrap gap-2">
+              {GRADIENT_PRESETS.map((preset) => (
+                <button
+                  key={preset.id}
+                  onClick={() =>
+                    setConfig((c) => ({
+                      ...c,
+                      gradientPreset: preset.id,
+                      backgroundColor: preset.colors[0],
+                      gradientColor2: preset.colors[1],
+                    }))
+                  }
+                  className={`flex cursor-pointer items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs transition-colors ${
+                    config.gradientPreset === preset.id
+                      ? 'border border-amber-500 bg-amber-500/20 text-amber-300'
+                      : 'border border-white/10 text-white/40 hover:border-white/20'
+                  }`}
+                >
+                  <span
+                    className="h-3 w-8 rounded-sm"
+                    style={{
+                      background: `linear-gradient(to right, ${preset.colors[0]}, ${preset.colors[1]})`,
+                    }}
+                  />
+                  {preset.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* 두 번째 색상 */}
+          <div>
+            <label className="mb-2 block text-[9px] font-semibold uppercase tracking-[0.2em] text-primary">
+              두 번째 색상
+            </label>
+            <label className="relative flex h-8 w-16 cursor-pointer items-center">
               <input
                 type="color"
-                value={config.backgroundColor.startsWith('#') ? config.backgroundColor : '#0f172a'}
-                onChange={(e) => setConfig((c) => ({ ...c, backgroundColor: e.target.value }))}
+                value={config.gradientColor2 ?? '#6366f1'}
+                onChange={(e) =>
+                  setConfig((c) => ({ ...c, gradientColor2: e.target.value, gradientPreset: undefined }))
+                }
                 className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
               />
-              {PRESET_COLORS.includes(config.backgroundColor) ? (
-                <span
-                  className="flex h-6 w-6 items-center justify-center rounded text-[10px] text-white/60"
-                  style={{ border: '1px dashed rgba(255,255,255,0.2)' }}
-                >
-                  +
-                </span>
-              ) : (
-                <span
-                  className="block h-6 w-6 rounded ring-2 ring-amber-400 ring-offset-1 ring-offset-[#191917]"
-                  style={{ background: config.backgroundColor, border: '1px solid rgba(255,255,255,0.1)' }}
-                />
-              )}
+              <span
+                className="block h-8 w-16 rounded-lg"
+                style={{
+                  background: config.gradientColor2 ?? '#6366f1',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                }}
+              />
             </label>
           </div>
-        </div>
 
-        {/* 폰트 */}
-        <div>
-          <label className="mb-2 block text-[9px] font-semibold uppercase tracking-[0.2em] text-primary">
-            폰트
-          </label>
-          <div className="flex gap-2">
-            {FONTS.map((font) => (
-              <button
-                key={font}
-                onClick={() => setConfig((c) => ({ ...c, fontFamily: font }))}
-                className={`cursor-pointer rounded-lg px-3 py-1.5 text-xs transition-colors ${
-                  config.fontFamily === font
-                    ? 'border border-amber-500 bg-amber-500/20 text-amber-300'
-                    : 'border border-white/10 text-white/40 hover:border-white/20'
-                }`}
-              >
-                {font}
-              </button>
-            ))}
+          {/* 각도 */}
+          <div>
+            <label className="mb-2 block text-[9px] font-semibold uppercase tracking-[0.2em] text-primary">
+              각도: {config.gradientAngle ?? 135}°
+            </label>
+            <input
+              type="range"
+              min={0}
+              max={360}
+              value={config.gradientAngle ?? 135}
+              onChange={(e) =>
+                setConfig((c) => ({ ...c, gradientAngle: Number(e.target.value) }))
+              }
+              className="w-full cursor-pointer accent-amber-500"
+            />
           </div>
         </div>
-      </div>
+      )}
+
+      {/* Code Snippet 전용 옵션 */}
+      {config.template === 'code-snippet' && (
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {/* 테마 */}
+          <div>
+            <label className="mb-2 block text-[9px] font-semibold uppercase tracking-[0.2em] text-primary">
+              테마
+            </label>
+            <div className="flex gap-2">
+              {(['dark', 'light'] as const).map((theme) => (
+                <button
+                  key={theme}
+                  onClick={() => setConfig((c) => ({ ...c, codeTheme: theme }))}
+                  className={`cursor-pointer rounded-lg px-3 py-1.5 text-xs transition-colors ${
+                    config.codeTheme === theme
+                      ? 'border border-amber-500 bg-amber-500/20 text-amber-300'
+                      : 'border border-white/10 text-white/40 hover:border-white/20'
+                  }`}
+                >
+                  {theme === 'dark' ? 'Dark' : 'Light'}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* 파일 경로 */}
+          <div>
+            <label className="mb-2 block text-[9px] font-semibold uppercase tracking-[0.2em] text-primary">
+              파일 경로
+            </label>
+            <Input
+              value={config.filePath ?? ''}
+              onChange={(e) => setConfig((c) => ({ ...c, filePath: e.target.value }))}
+              className="border-white/10 bg-white/[0.06] font-mono text-slate-200 placeholder:text-white/20"
+              placeholder="src/components/App.tsx"
+            />
+          </div>
+        </div>
+      )}
 
       {/* 로고 */}
       <div>
