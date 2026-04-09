@@ -12,104 +12,179 @@ const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
   Palette,
 };
 
-const MotionLink = motion.create(Link)
+const MotionLink = motion.create(Link);
 
 const availableCount = TOOLS.filter((t) => t.available).length;
 
 export function HomeView() {
   return (
-    <main
-      className="relative min-h-screen"
-      style={{
-        background:
-          "radial-gradient(ellipse 80% 45% at 50% -5%, oklch(0.3 0.08 73 / 0.2) 0%, var(--background) 65%)",
-      }}
-    >
-      {/* Noise texture */}
+    <main className="relative min-h-screen bg-[#050505]">
+      {/* Aurora background */}
       <div
         aria-hidden="true"
-        className="pointer-events-none fixed inset-0 opacity-[0.035]"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)'/%3E%3C/svg%3E")`,
-        }}
-      />
+        className="pointer-events-none fixed left-1/2 top-[-220px] -translate-x-1/2"
+        style={{ width: 1200, height: 500 }}
+      >
+        <div
+          className="absolute left-[10%] top-0 rounded-full"
+          style={{
+            width: 500,
+            height: 400,
+            background: "#7c3aed",
+            filter: "blur(130px)",
+            opacity: 0.09,
+            animation: "aurora-drift 16s ease-in-out infinite alternate",
+          }}
+        />
+        <div
+          className="absolute left-[40%] top-[50px] rounded-full"
+          style={{
+            width: 400,
+            height: 350,
+            background: "#a78bfa",
+            filter: "blur(130px)",
+            opacity: 0.09,
+            animation: "aurora-drift 16s ease-in-out infinite alternate",
+            animationDelay: "-5s",
+          }}
+        />
+        <div
+          className="absolute right-[10%] top-[30px] rounded-full"
+          style={{
+            width: 350,
+            height: 300,
+            background: "#6d28d9",
+            filter: "blur(130px)",
+            opacity: 0.09,
+            animation: "aurora-drift 16s ease-in-out infinite alternate",
+            animationDelay: "-10s",
+          }}
+        />
+      </div>
 
-      {/* Poster Header — 풀 와이드 */}
-      <div className="px-6 sm:px-10 md:px-16">
+      {/* Content */}
+      <div className="relative z-10 mx-auto max-w-[960px] px-6 pb-16 pt-16 sm:px-10">
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="pb-8 pt-12"
+          className="mb-14"
         >
-          <p className="mb-3 text-[9px] font-semibold uppercase tracking-[0.2em] text-primary">
-            Web Tools · {availableCount} tools
+          <p className="mb-4 text-xs font-medium uppercase tracking-[0.08em] text-[#a78bfa]/55">
+            {availableCount} tools
           </p>
-          <h1 className="font-heading text-[36px] font-black leading-[0.9] tracking-[-0.05em] text-white sm:text-[72px] md:text-[90px]">
-            CRAFT
-            <br />
-            <span className="text-primary tracking-[0.08em]">KIT</span>
-          </h1>
-        </motion.div>
-      </div>
-
-      {/* Amber rule — 풀 와이드 */}
-      <div className="h-[3px] bg-primary" />
-
-      {/* Tool List — 풀 와이드 */}
-      {/* 카테고리 필터 바 자리 — 도구 10개 초과 시 여기에 추가 */}
-      <div className="pb-16">
-        {TOOLS.filter((tool) => tool.available).map((tool, i) => (
-          <MotionLink
-            key={tool.id}
-            href={tool.href}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.05 * i, duration: 0.4 }}
-            className="group relative flex items-center gap-4 border-b border-white/5 px-6 py-[14px] transition-colors hover:bg-surface sm:px-10 sm:py-[18px] md:px-16 last:border-b-0"
+          <h1
+            className="text-4xl font-extrabold tracking-[-0.05em] sm:text-5xl md:text-[56px]"
+            style={{
+              background: "linear-gradient(135deg, #fafafa 0%, #a78bfa 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              backgroundClip: "text",
+              lineHeight: "1.05",
+            }}
           >
-            <span className="absolute left-0 top-0 h-full w-[3px] rounded-r bg-primary opacity-0 transition-opacity group-hover:opacity-100" />
-            {(() => {
-              const Icon = ICON_MAP[tool.icon]
-              return Icon ? <Icon className="size-5 shrink-0 text-white/25 transition-colors group-hover:text-white/50" /> : null
-            })()}
-            <div className="flex-1">
-              <p className="text-base font-bold tracking-tight text-slate-200 transition-colors group-hover:text-white sm:text-lg">
-                {tool.name}
-              </p>
-              <p className="mt-0.5 text-xs text-white/40 sm:text-sm">
-                {tool.description}
-              </p>
-            </div>
-            <div className="flex shrink-0 items-center gap-2 sm:gap-3">
-              <span
-                className="block size-2 shrink-0 rounded-full sm:hidden"
-                style={{ background: tool.accentColor }}
-              />
-              <div className="hidden flex-wrap gap-1 sm:flex">
-                {tool.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="rounded px-1.5 py-0.5 text-[9px] font-semibold sm:px-2 sm:py-1 sm:text-[11px]"
-                    style={{
-                      background: tool.tagBg,
-                      color: tool.tagText,
-                    }}
-                  >
-                    {tag}
-                  </span>
-                ))}
-              </div>
-              <span
-                aria-hidden="true"
-                className="text-sm text-white/20 transition-all duration-200 group-hover:text-white/50 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-              >
-                ↗
-              </span>
-            </div>
-          </MotionLink>
-        ))}
+            Craftkit
+          </h1>
+          <p className="mt-2.5 text-base text-[#555]">
+            Browser-based tools for developers
+          </p>
+          <div
+            className="mt-9"
+            style={{
+              height: 1,
+              background:
+                "linear-gradient(90deg, #a78bfa38, #a78bfa18, transparent)",
+            }}
+          />
+        </motion.div>
 
+        {/* Section label */}
+        <p className="mb-4 text-[11px] font-medium uppercase tracking-[0.08em] text-[#444]">
+          All Tools
+        </p>
+
+        {/* Card grid */}
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
+          {TOOLS.filter((tool) => tool.available).map((tool, i) => {
+            const Icon = ICON_MAP[tool.icon];
+            return (
+              <MotionLink
+                key={tool.id}
+                href={tool.href}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.05 * i, duration: 0.4 }}
+                className="group relative overflow-hidden rounded-[14px] border border-[#ffffff15] bg-[#0c0c0c] p-5 transition-all duration-300 hover:-translate-y-0.5 hover:border-[#a78bfa22] hover:shadow-[0_8px_32px_-8px_#a78bfa14]"
+              >
+                {/* Gradient border glow */}
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-0 rounded-[14px] opacity-0 transition-opacity duration-400 group-hover:opacity-100"
+                  style={{
+                    padding: 1,
+                    background:
+                      "linear-gradient(135deg, #a78bfa50, #7c3aed30, #a78bfa20)",
+                    mask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+                    maskComposite: "exclude",
+                    WebkitMaskComposite: "xor",
+                  }}
+                />
+
+                {/* Inner glow */}
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute -left-1/2 -top-1/2 h-[200%] w-[200%] opacity-0 transition-opacity duration-400 group-hover:opacity-100"
+                  style={{
+                    background:
+                      "radial-gradient(circle at 30% 30%, #a78bfa08 0%, transparent 60%)",
+                  }}
+                />
+
+                {/* Arrow */}
+                <span
+                  aria-hidden="true"
+                  className="absolute right-5 top-5 text-sm text-[#444] transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-[#a78bfa]"
+                >
+                  ↗
+                </span>
+
+                {/* Icon */}
+                <div
+                  className="relative z-10 mb-4 flex size-10 items-center justify-center rounded-[10px] border border-[#a78bfa22]"
+                  style={{
+                    background:
+                      "linear-gradient(135deg, #a78bfa15 0%, #7c3aed0a 100%)",
+                  }}
+                >
+                  {Icon && (
+                    <Icon className="size-4 text-[#a78bfa]" />
+                  )}
+                </div>
+
+                {/* Text */}
+                <p className="relative z-10 mb-1 text-sm font-semibold text-[#fafafa]">
+                  {tool.name}
+                </p>
+                <p className="relative z-10 mb-4 text-xs leading-relaxed text-[#777]">
+                  {tool.description}
+                </p>
+
+                {/* Tags */}
+                <div className="relative z-10 flex flex-wrap gap-[5px]">
+                  {tool.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="rounded-md border border-[#a78bfa14] bg-[#a78bfa0c] px-2 py-0.5 font-mono text-[10px] font-medium text-[#a78bfa]/55"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </MotionLink>
+            );
+          })}
+        </div>
       </div>
     </main>
   );
