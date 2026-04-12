@@ -5,20 +5,14 @@ import { ImageUpload } from '@/features/image-upload/ui/ImageUpload'
 import { generateFavicons } from '@/features/favicon-export/lib/generateFavicons'
 import { downloadBlob } from '@/shared/lib/zip'
 import { FAVICON_SIZES } from '@/shared/config/favicon-sizes'
-import { Button } from '@/shared/ui/button'
 
 const PREVIEW_SIZES = [16, 32, 180, 192]
-const PREVIEW_DISPLAY_SIZE: Record<number, number> = { 16: 16, 32: 32, 180: 48, 192: 56 }
-const HTML_SNIPPET = `<link rel="icon" href="/favicon.ico" sizes="any">
-<link rel="icon" href="/favicon-32x32.png" type="image/png">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
-<link rel="manifest" href="/manifest.json">`
+const PREVIEW_DISPLAY_SIZE: Record<number, number> = { 16: 16, 32: 32, 180: 56, 192: 64 }
 
 export function FaviconGenerator() {
   const [imageEl, setImageEl] = useState<HTMLImageElement | null>(null)
   const [dataUrl, setDataUrl] = useState<string | null>(null)
   const [isGenerating, setIsGenerating] = useState(false)
-  const [copied, setCopied] = useState(false)
 
   const handleFileLoad = (img: HTMLImageElement, url: string) => {
     setImageEl(img)
@@ -36,100 +30,76 @@ export function FaviconGenerator() {
     }
   }
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(HTML_SNIPPET)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }
-
   return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-        {/* 좌측 */}
-        <div className="space-y-6">
-          <div>
-            <p className="mb-3 text-[9px] font-semibold uppercase tracking-[0.2em] text-primary">
-              파일 업로드
-            </p>
-            <ImageUpload onFileLoad={handleFileLoad} />
-          </div>
+    <div className="space-y-5">
+      {/* Upload */}
+      <ImageUpload onFileLoad={handleFileLoad} />
 
-          <div>
-            <p className="mb-3 text-[9px] font-semibold uppercase tracking-[0.2em] text-primary">
-              생성될 파일
-            </p>
-            <div className="grid grid-cols-2 gap-x-4 gap-y-2">
-              <FileRow filename="favicon.ico" size="16, 32, 48px" />
-              {FAVICON_SIZES.map(({ filename, size }) => (
-                <FileRow
-                  key={filename}
-                  filename={filename}
-                  size={`${size}×${size}`}
+      {/* Preview */}
+      <div
+        className="flex items-end justify-center gap-6 overflow-hidden rounded-[14px] border border-[#ffffff15] p-6"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='16' height='16' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='8' height='8' fill='%23111'/%3E%3Crect x='8' y='0' width='8' height='8' fill='%230c0c0c'/%3E%3Crect x='0' y='8' width='8' height='8' fill='%230c0c0c'/%3E%3Crect x='8' y='8' width='8' height='8' fill='%23111'/%3E%3C/svg%3E")`,
+          backgroundSize: '16px 16px',
+        }}
+      >
+        {PREVIEW_SIZES.map((size) => {
+          const displaySize = PREVIEW_DISPLAY_SIZE[size] ?? Math.min(size, 48)
+          return (
+            <div key={size} className="flex flex-col items-center gap-2">
+              {dataUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={dataUrl}
+                  alt={`${size}px preview`}
+                  style={{ width: displaySize, height: displaySize }}
+                  className="rounded border border-[#ffffff25] object-cover"
                 />
-              ))}
-              <div className="col-span-2">
-                <FileRow filename="manifest.json" size="PWA" />
-              </div>
+              ) : (
+                <div
+                  style={{ width: displaySize, height: displaySize }}
+                  className="rounded border border-[#ffffff20] bg-[#0a0a0a]"
+                />
+              )}
+              <span className="rounded bg-[#0c0c0c]/80 px-1.5 py-0.5 text-[10px] text-[#555]">{size}px</span>
             </div>
-          </div>
+          )
+        })}
+      </div>
+
+      {/* File list */}
+      <div className="rounded-[14px] border border-[#ffffff15] bg-[#0c0c0c] px-5 py-4">
+        <div className="mb-3 flex items-center justify-between">
+          <span className="text-[11px] font-medium text-[#555]">생성 파일</span>
+          <span className="rounded-md border border-[#a78bfa14] bg-[#a78bfa0c] px-2 py-0.5 text-[10px] font-medium text-[#a78bfa]/55">
+            {FAVICON_SIZES.length + 2}개
+          </span>
         </div>
-
-        {/* 우측 */}
-        <div className="space-y-4">
-          <div>
-            <p className="mb-3 text-[9px] font-semibold uppercase tracking-[0.2em] text-primary">
-              미리보기
-            </p>
-            <div className="rounded-lg border border-white/5 bg-white/[0.04] p-4">
-              <div className="flex items-end justify-center gap-4">
-                {PREVIEW_SIZES.map((size) => {
-                  const displaySize = PREVIEW_DISPLAY_SIZE[size] ?? Math.min(size, 48)
-                  return (
-                    <div key={size} className="flex flex-col items-center gap-2">
-                      {dataUrl ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
-                          src={dataUrl}
-                          alt={`${size}px preview`}
-                          style={{ width: displaySize, height: displaySize }}
-                          className="rounded object-cover"
-                        />
-                      ) : (
-                        <div
-                          style={{ width: displaySize, height: displaySize }}
-                          className="rounded bg-white/10"
-                        />
-                      )}
-                      <span className="text-[10px] text-white/50">{size}px</span>
-                    </div>
-                  )
-                })}
-              </div>
-            </div>
+        <div className="flex items-center justify-between border-b border-[#ffffff08] py-[7px]">
+          <span className="font-mono text-xs text-[#ccc]">favicon.ico</span>
+          <span className="text-[10px] text-[#555]">16, 32, 48px</span>
+        </div>
+        {FAVICON_SIZES.map(({ filename, size }) => (
+          <div
+            key={filename}
+            className="flex items-center justify-between border-b border-[#ffffff08] py-[7px] last:border-b-0"
+          >
+            <span className="font-mono text-xs text-[#ccc]">{filename}</span>
+            <span className="text-[10px] text-[#555]">{size} x {size}</span>
           </div>
-
-          <div className="rounded-lg border border-white/5 bg-white/[0.04] p-3">
-            <div className="mb-2 flex items-center justify-between">
-              <span className="text-[9px] font-semibold uppercase tracking-[0.2em] text-primary">HTML 코드 스니펫</span>
-              <button
-                onClick={handleCopy}
-                className="cursor-pointer text-xs text-amber-400 transition-colors hover:text-amber-300"
-              >
-                {copied ? '복사됨!' : '복사'}
-              </button>
-            </div>
-            <pre className="overflow-x-auto text-[10px] leading-relaxed text-amber-400">
-              {HTML_SNIPPET}
-            </pre>
-          </div>
+        ))}
+        <div className="flex items-center justify-between pt-[7px]">
+          <span className="font-mono text-xs text-[#ccc]">manifest.json</span>
+          <span className="text-[10px] text-[#555]">PWA</span>
         </div>
       </div>
 
+      {/* Download */}
       <motion.div whileTap={{ scale: 0.98 }}>
-        <Button
+        <button
           onClick={handleDownload}
           disabled={!imageEl || isGenerating}
-          className="w-full bg-amber-500 hover:bg-amber-400 disabled:opacity-40"
+          className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-[#a78bfa40] bg-transparent px-4 py-3.5 text-[13px] font-semibold text-[#a78bfa] transition-all hover:border-[#a78bfa60] hover:bg-[#a78bfa10] disabled:cursor-not-allowed disabled:opacity-40"
         >
           {isGenerating ? '생성 중…' : (
             <>
@@ -139,23 +109,8 @@ export function FaviconGenerator() {
               Download ZIP
             </>
           )}
-        </Button>
+        </button>
       </motion.div>
-    </div>
-  )
-}
-
-function FileRow({
-  filename,
-  size,
-}: {
-  filename: string
-  size: string
-}) {
-  return (
-    <div className="flex items-center justify-between border-b border-white/5 py-2 last:border-b-0">
-      <span className="text-xs text-white/70">{filename}</span>
-      <span className="text-[10px] text-primary/60">{size}</span>
     </div>
   )
 }

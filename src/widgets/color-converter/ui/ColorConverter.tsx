@@ -15,6 +15,8 @@ function getResultValue(result: ColorResult, label: FormatLabel): string {
   }
 }
 
+const labelCls = 'text-[11px] font-medium text-[#777]'
+
 export function ColorConverter() {
   const [input, setInput] = useState('')
   const [result, setResult] = useState<ColorResult | null>(null)
@@ -52,14 +54,14 @@ export function ColorConverter() {
   const swatchColor = result?.hex ?? '#a78bfa'
 
   return (
-    <div className="space-y-6">
-      {/* 상단: 가로 프리뷰 + 입력 */}
-      <div className="flex flex-col gap-4 md:flex-row md:items-start">
+    <div className="rounded-[14px] border border-[#ffffff15] bg-[#0c0c0c] p-5">
+      {/* 상단: 스와치 + 입력 */}
+      <div className="flex flex-col gap-5 md:flex-row md:items-start">
         <button
           type="button"
           onClick={() => colorPickerRef.current?.click()}
           title="클릭해서 색상 선택"
-          className="w-full cursor-pointer rounded-2xl transition-transform hover:scale-[1.01] h-24 md:h-40 md:w-64 md:shrink-0"
+          className="h-32 w-32 shrink-0 cursor-pointer rounded-[14px] border border-[#ffffff15] transition-transform hover:scale-[1.02]"
           style={{ background: swatchColor }}
         />
         <input
@@ -70,50 +72,49 @@ export function ColorConverter() {
           className="sr-only"
         />
 
-        {/* 입력창 */}
-        <div className="flex-1 space-y-1.5">
-          <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-primary">색상 입력</p>
+        <div className="flex-1 space-y-2">
+          <label className={labelCls}>색상 입력</label>
           <input
             type="text"
             value={input}
             onChange={(e) => handleInput(e.target.value)}
-            placeholder="#3b82f6"
-            className={`w-full rounded-lg border bg-white/[0.04] px-3 py-2 text-sm text-white placeholder-white/20 focus-visible:outline-none ${
+            placeholder="#a78bfa"
+            className={`w-full rounded-[10px] border bg-[#0a0a0a] px-3 py-2.5 text-sm text-[#ddd] placeholder:text-[#444] outline-none transition-colors ${
               !isValid && input.trim() !== ''
                 ? 'border-red-500/60 focus:border-red-400'
-                : 'border-white/10 focus:border-white/20'
+                : 'border-[#ffffff15] focus:border-[#a78bfa55]'
             }`}
           />
-          <p className="text-xs text-white/30">#hex · rgb() · hsl() · oklch()</p>
+          <p className="text-[11px] text-[#555]">#hex · rgb() · hsl() · oklch()</p>
         </div>
       </div>
 
-      {/* 하단: 2x2 결과 카드 */}
-      <div className="space-y-1.5">
-        <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-primary">변환 결과</p>
-        <div className={`grid grid-cols-1 gap-2 sm:grid-cols-2 transition-opacity ${result ? 'opacity-100' : 'opacity-30'}`}>
-          {FORMAT_LABELS.map((label) => {
-            const value = result ? getResultValue(result, label) : '—'
-            const isCopied = copied === label
-            return (
-              <div
-                key={label}
-                className="flex items-center gap-3 rounded-lg border border-white/10 bg-white/[0.04] px-4 py-3"
+      {/* 구분선 */}
+      <div className="my-5 border-t border-[#ffffff08]" />
+
+      {/* 변환 결과 — 속성 리스트 */}
+      <div className={`transition-opacity ${result ? 'opacity-100' : 'opacity-30'}`}>
+        {FORMAT_LABELS.map((label) => {
+          const value = result ? getResultValue(result, label) : '—'
+          const isCopied = copied === label
+          return (
+            <div
+              key={label}
+              className="flex items-center gap-3 border-b border-[#ffffff05] py-3 last:border-b-0"
+            >
+              <span className="w-16 shrink-0 text-[11px] font-semibold tracking-widest text-[#555]">{label}</span>
+              <span className="flex-1 truncate font-mono text-sm text-[#ddd]">{value}</span>
+              <button
+                type="button"
+                onClick={() => result && handleCopy(value, label)}
+                disabled={!result}
+                className="shrink-0 cursor-pointer rounded-md px-2.5 py-1 text-[11px] font-medium text-[#777] transition-colors hover:bg-[#a78bfa10] hover:text-[#a78bfa] disabled:cursor-not-allowed disabled:opacity-30"
               >
-                <span className="w-14 text-[11px] font-semibold tracking-widest text-foreground/35">{label}</span>
-                <span className="flex-1 truncate font-mono text-sm text-slate-200">{value}</span>
-                <button
-                  type="button"
-                  onClick={() => result && handleCopy(value, label)}
-                  disabled={!result}
-                  className="shrink-0 cursor-pointer rounded px-2 py-1 text-xs text-white/40 transition-colors hover:bg-white/10 hover:text-white disabled:cursor-not-allowed disabled:opacity-30"
-                >
-                  {isCopied ? '복사됨' : '복사'}
-                </button>
-              </div>
-            )
-          })}
-        </div>
+                {isCopied ? '복사됨' : '복사'}
+              </button>
+            </div>
+          )
+        })}
       </div>
     </div>
   )

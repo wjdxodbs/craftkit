@@ -73,7 +73,7 @@ export function Sidebar() {
                 animate={{ opacity: 1, width: 'auto' }}
                 exit={{ opacity: 0, width: 0 }}
                 transition={{ duration: 0.15 }}
-                className="overflow-hidden whitespace-nowrap text-sm font-bold tracking-widest text-white font-heading"
+                className="overflow-hidden whitespace-nowrap text-sm font-bold tracking-widest text-white"
               >
                 CRAFTKIT
               </motion.span>
@@ -116,7 +116,7 @@ export function Sidebar() {
                   })()}
                 </span>
                 {!isExpanded && (
-                  <span className="pointer-events-none absolute left-full z-50 ml-2 whitespace-nowrap rounded-md border border-white/10 bg-[#1a1f2e] px-2.5 py-1.5 text-xs text-white/80 opacity-0 shadow-lg transition-opacity group-hover/link:opacity-100">
+                  <span className="pointer-events-none absolute left-full z-50 ml-2 whitespace-nowrap rounded-md border border-white/10 bg-[#111111] px-2.5 py-1.5 text-xs text-white/80 opacity-0 shadow-lg transition-opacity group-hover/link:opacity-100">
                     {tool.name}
                   </span>
                 )}

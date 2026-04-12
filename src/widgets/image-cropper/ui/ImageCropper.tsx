@@ -3,7 +3,6 @@ import { useState, useRef, useEffect } from 'react'
 import { motion } from 'motion/react'
 import { cropImage } from '@/features/image-crop/lib/cropImage'
 import type { CropBox, OutputFormat } from '@/features/image-crop/lib/cropImage'
-import { Button } from '@/shared/ui/button'
 
 const HANDLE_SIZE = 8
 
@@ -149,6 +148,16 @@ const ASPECT_PRESETS: { label: string; value: number | null }[] = [
   { label: '16:9', value: 16 / 9 },
   { label: '4:3', value: 4 / 3 },
 ]
+
+const labelCls = 'text-[11px] font-medium text-[#777]'
+const segBtn = (active: boolean, disabled = false) =>
+  `cursor-pointer rounded-[10px] px-3 py-1.5 text-xs font-medium transition-colors ${
+    disabled ? 'opacity-30 cursor-not-allowed' : ''
+  } ${
+    active
+      ? 'border border-[#a78bfa40] bg-[#a78bfa10] text-[#a78bfa]'
+      : 'border border-[#ffffff15] text-[#777] hover:border-[#ffffff25] hover:text-[#bbb]'
+  }`
 
 export function ImageCropper() {
   const [imageEl, setImageEl] = useState<HTMLImageElement | null>(null)
@@ -300,103 +309,96 @@ export function ImageCropper() {
     : null
 
   return (
-    <div className="space-y-4">
-      {/* 컨트롤 바 */}
-      <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-        {/* 파일 업로드 */}
-        <button
-          onClick={() => inputRef.current?.click()}
-          onDragOver={(e) => { e.preventDefault(); setIsDragging(true) }}
-          onDragLeave={() => setIsDragging(false)}
-          onDrop={(e) => {
-            e.preventDefault()
-            setIsDragging(false)
-            const file = e.dataTransfer.files[0]
-            if (file) handleFile(file)
-          }}
-          className={`flex items-center gap-1.5 rounded-lg border border-dashed px-3 py-1.5 text-xs transition-colors ${
-            isDragging
-              ? 'border-amber-400 bg-amber-500/10 text-amber-300'
-              : 'border-primary/30 text-amber-400 hover:border-primary/50'
-          }`}
-        >
-          <svg className="size-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} aria-hidden="true">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
-          </svg>
-          <span className="max-w-[140px] truncate">{fileName ?? '파일 업로드'}</span>
-        </button>
-        <input
-          ref={inputRef}
-          type="file"
-          accept="image/png,image/jpeg,image/webp"
-          className="hidden"
-          onChange={(e) => {
-            const file = e.target.files?.[0]
-            if (file) handleFile(file)
-          }}
-        />
+    <div className="space-y-5">
+      {/* 파일 input — 항상 존재 */}
+      <input
+        ref={inputRef}
+        type="file"
+        accept="image/png,image/jpeg,image/webp"
+        className="hidden"
+        onChange={(e) => {
+          const file = e.target.files?.[0]
+          if (file) handleFile(file)
+        }}
+      />
 
-        <div className="hidden h-4 w-px bg-white/10 sm:block" />
+      {/* 컨트롤 바 — 이미지 로드된 경우에만 표시 */}
+      {imageEl && (
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-3">
+          {/* 파일 교체 */}
+          <button
+            onClick={() => inputRef.current?.click()}
+            onDragOver={(e) => { e.preventDefault(); setIsDragging(true) }}
+            onDragLeave={() => setIsDragging(false)}
+            onDrop={(e) => {
+              e.preventDefault()
+              setIsDragging(false)
+              const file = e.dataTransfer.files[0]
+              if (file) handleFile(file)
+            }}
+            className={`flex cursor-pointer items-center gap-1.5 rounded-[10px] border border-dashed px-3 py-1.5 text-xs font-medium transition-colors ${
+              isDragging
+                ? 'border-[#a78bfa] bg-[#a78bfa10] text-[#a78bfa]'
+                : 'border-[#a78bfa40] text-[#a78bfa] hover:border-[#a78bfa60] hover:bg-[#a78bfa08]'
+            }`}
+          >
+            <svg className="size-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+            </svg>
+            <span className="max-w-[160px] truncate">{fileName ?? '파일 교체'}</span>
+          </button>
 
-        {/* 비율 */}
-        <div className="flex items-center gap-1.5">
-          <span className="text-[9px] font-semibold uppercase tracking-[0.2em] text-primary">비율</span>
-          <div className="flex gap-1">
-            {ASPECT_PRESETS.map(({ label, value }) => (
-              <button
-                type="button"
-                key={label}
-                onClick={() => handlePresetChange(value)}
-                disabled={!imageEl}
-                className={`cursor-pointer rounded-md px-2.5 py-1 text-xs transition-colors disabled:opacity-30 ${
-                  imageEl && aspectRatio === value
-                    ? 'border border-amber-500 bg-amber-500/20 text-amber-300'
-                    : 'border border-white/10 text-white/40 hover:border-white/20'
-                }`}
-              >
-                {label}
-              </button>
-            ))}
+          <div className="hidden h-4 w-px bg-[#ffffff15] sm:block" />
+
+          {/* 비율 */}
+          <div className="flex items-center gap-2">
+            <span className={labelCls}>비율</span>
+            <div className="flex gap-1.5">
+              {ASPECT_PRESETS.map(({ label, value }) => (
+                <button
+                  type="button"
+                  key={label}
+                  onClick={() => handlePresetChange(value)}
+                  className={segBtn(aspectRatio === value)}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="hidden h-4 w-px bg-[#ffffff15] sm:block" />
+
+          {/* 출력 포맷 */}
+          <div className="flex items-center gap-2">
+            <span className={labelCls}>포맷</span>
+            <div className="flex gap-1.5">
+              {OUTPUT_FORMATS.map(({ label, value }) => (
+                <button
+                  type="button"
+                  key={value}
+                  onClick={() => setOutputFormat(value)}
+                  className={segBtn(outputFormat === value)}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
-
-        <div className="hidden h-4 w-px bg-white/10 sm:block" />
-
-        {/* 출력 포맷 */}
-        <div className="flex items-center gap-1.5">
-          <span className="text-[9px] font-semibold uppercase tracking-[0.2em] text-primary">포맷</span>
-          <div className="flex gap-1">
-            {OUTPUT_FORMATS.map(({ label, value }) => (
-              <button
-                type="button"
-                key={value}
-                onClick={() => setOutputFormat(value)}
-                className={`cursor-pointer rounded-md px-2.5 py-1 text-xs transition-colors ${
-                  outputFormat === value
-                    ? 'border border-amber-500 bg-amber-500/20 text-amber-300'
-                    : 'border border-white/10 text-white/40 hover:border-white/20'
-                }`}
-              >
-                {label}
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
+      )}
 
       {/* 품질 슬라이더 */}
       {outputFormat !== 'image/png' && (
         <div className="flex items-center gap-3">
-          <span className="shrink-0 text-[9px] font-semibold uppercase tracking-[0.2em] text-primary">
-            품질 {quality}%
-          </span>
+          <span className={`shrink-0 ${labelCls}`}>품질 {quality}%</span>
           <input
             type="range"
             min={0}
             max={100}
             value={quality}
             onChange={(e) => setQuality(Number(e.target.value))}
-            className="flex-1 accent-amber-500"
+            className="flex-1 cursor-pointer accent-[#a78bfa]"
           />
         </div>
       )}
@@ -404,7 +406,7 @@ export function ImageCropper() {
       {/* 캔버스 */}
       <div
         ref={containerRef}
-        className="relative min-h-[400px] overflow-hidden rounded-xl border border-white/10 bg-white/[0.04]"
+        className="relative min-h-[500px] overflow-hidden rounded-[14px] border border-[#ffffff15] bg-[#0c0c0c]"
       >
         {imageEl && dataUrl && displaySize ? (
           <>
@@ -437,10 +439,10 @@ export function ImageCropper() {
           <button
             type="button"
             onClick={() => inputRef.current?.click()}
-            className="flex h-full min-h-[400px] w-full flex-col items-center justify-center gap-3 cursor-pointer"
+            className="flex h-full min-h-[500px] w-full cursor-pointer flex-col items-center justify-center gap-3"
           >
             <motion.svg
-              className="size-10 text-white/10"
+              className="size-10 text-[#a78bfa44]"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -451,60 +453,72 @@ export function ImageCropper() {
             >
               <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
             </motion.svg>
-            <p className="text-xs text-white/20">클릭하거나 드래그해서 이미지 업로드</p>
-            <p className="mt-1 text-[10px] text-white/10">자유롭게 크롭하고 비율을 조정하세요</p>
+            <p className="text-sm text-[#777]">클릭하거나 드래그해서 이미지 업로드</p>
+            <p className="text-xs text-[#444]">자유롭게 크롭하고 비율을 조정하세요</p>
           </button>
         )}
       </div>
 
-      {/* 하단 바 */}
-      <div className="space-y-3">
-        {/* 미리보기 + 정보 */}
-        {(previewUrl || cropInfo || previewSize !== null) && (
-          <div className="flex items-center gap-4">
-            {previewUrl && (
-              <div className="h-16 w-24 shrink-0 overflow-hidden rounded-lg border border-white/10 bg-white/[0.04]">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={previewUrl} alt="크롭 미리보기" className="h-full w-full object-contain" />
-              </div>
-            )}
-            <div className="min-w-0 flex-1 space-y-0.5">
-              {cropInfo && <p className="text-xs text-white/30">{cropInfo}</p>}
-              {previewSize !== null && (
-                <p className="text-[11px] text-white/40">
-                  예상 크기:{' '}
-                  <span className="text-primary">
-                    {previewSize >= 1024 * 1024
-                      ? `${(previewSize / 1024 / 1024).toFixed(1)} MB`
-                      : `${Math.round(previewSize / 1024)} KB`}
-                  </span>
-                </p>
-              )}
+      {/* 하단: 미리보기 + 정보 */}
+      {(previewUrl || cropInfo || previewSize !== null) && (
+        <div className="flex items-center gap-4 rounded-[14px] border border-[#ffffff15] bg-[#0c0c0c] p-4">
+          {previewUrl && (
+            <div className="h-16 w-24 shrink-0 overflow-hidden rounded-[10px] border border-[#ffffff15] bg-[#0a0a0a]">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={previewUrl} alt="크롭 미리보기" className="h-full w-full object-contain" />
             </div>
-          </div>
-        )}
-
-        {/* 에러 */}
-        {error && <p className="text-xs text-red-400">{error}</p>}
-
-        {/* 다운로드 */}
-        <motion.div whileTap={{ scale: 0.98 }}>
-          <Button
-            onClick={handleDownload}
-            disabled={!imageEl || isConverting}
-            className="w-full bg-amber-500 hover:bg-amber-400 disabled:opacity-40"
-          >
-            {isConverting ? '처리 중…' : (
-              <>
-                <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                </svg>
-                Download
-              </>
+          )}
+          <div className="min-w-0 flex-1 space-y-1">
+            {cropInfo && (
+              <p className="font-mono text-xs text-[#a78bfa]">{cropInfo}</p>
             )}
-          </Button>
-        </motion.div>
-      </div>
+            {previewSize !== null && (
+              <p className="text-[11px] text-[#555]">
+                예상 크기{' '}
+                <span className="font-mono text-[#bbb]">
+                  {previewSize >= 1024 * 1024
+                    ? `${(previewSize / 1024 / 1024).toFixed(1)} MB`
+                    : `${Math.round(previewSize / 1024)} KB`}
+                </span>
+              </p>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* 에러 */}
+      {error && <p className="text-xs text-red-400">{error}</p>}
+
+      {/* 다운로드 */}
+      <motion.div whileTap={{ scale: 0.98 }}>
+        <button
+          onClick={handleDownload}
+          disabled={!imageEl || isConverting}
+          className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-[#a78bfa40] bg-transparent px-4 py-3.5 text-[13px] font-semibold text-[#a78bfa] transition-all hover:border-[#a78bfa60] hover:bg-[#a78bfa10] disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          {isConverting ? (
+            '처리 중…'
+          ) : (
+            <>
+              <svg
+                className="size-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+                aria-hidden="true"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                />
+              </svg>
+              Download
+            </>
+          )}
+        </button>
+      </motion.div>
     </div>
   )
 }
