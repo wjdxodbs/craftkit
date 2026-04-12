@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 
@@ -7,6 +7,10 @@ const inter = Inter({
   weight: ['400', '500', '600', '700', '800'],
   variable: '--font-inter',
 })
+
+export const viewport: Viewport = {
+  themeColor: '#050505',
+}
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://wjdxodbs-craftkit.vercel.app'),
