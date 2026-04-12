@@ -18,7 +18,7 @@ export default function ToolsLayout({
         className="flex min-w-0 flex-1 flex-col"
         style={{
           background:
-            "radial-gradient(ellipse 80% 45% at 50% -5%, oklch(0.3 0.08 73 / 0.2) 0%, var(--background) 65%)",
+            "radial-gradient(ellipse 80% 45% at 50% -5%, rgba(167,139,250,0.08) 0%, var(--background) 65%)",
         }}
       >
         {children}

@@ -7,11 +7,14 @@ interface ToolHeaderProps {
 export function ToolHeader({ name, description, accentColor }: ToolHeaderProps) {
   return (
     <div className="mb-8">
-      <h1 className="font-heading text-2xl font-black leading-tight tracking-tight text-white sm:text-3xl lg:text-4xl">
+      <h1 className="text-2xl font-extrabold leading-tight tracking-tight text-white sm:text-3xl lg:text-4xl">
         {name}
       </h1>
-      <p className="mt-1.5 text-sm text-white/40">{description}</p>
-      <div className="mt-5 h-[3px]" style={{ background: accentColor }} />
+      <p className="mt-1.5 text-sm text-[#555]">{description}</p>
+      <div
+        className="mt-5 h-px"
+        style={{ background: `linear-gradient(90deg, ${accentColor}50, ${accentColor}20, transparent)` }}
+      />
     </div>
   )
 }

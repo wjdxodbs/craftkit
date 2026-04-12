@@ -13,25 +13,20 @@ interface Props {
 
 export function TemplateTabs({ value, onChange }: Props) {
   return (
-    <div>
-      <p className="mb-2 text-[9px] font-semibold uppercase tracking-[0.2em] text-primary">
-        템플릿
-      </p>
-      <div className="flex gap-2">
-        {TEMPLATES.map((t) => (
-          <button
-            key={t.id}
-            onClick={() => onChange(t.id)}
-            className={`cursor-pointer rounded-lg px-3 py-1.5 text-xs transition-colors ${
-              value === t.id
-                ? 'border border-amber-500 bg-amber-500/20 text-amber-300'
-                : 'border border-white/10 text-white/40 hover:border-white/20'
-            }`}
-          >
-            {t.label}
-          </button>
-        ))}
-      </div>
+    <div className="flex gap-2">
+      {TEMPLATES.map((t) => (
+        <button
+          key={t.id}
+          onClick={() => onChange(t.id)}
+          className={`cursor-pointer rounded-[10px] px-3.5 py-1.5 text-xs font-medium transition-colors ${
+            value === t.id
+              ? 'border border-[#a78bfa40] bg-[#a78bfa10] text-[#a78bfa]'
+              : 'border border-[#ffffff15] text-[#777] hover:border-[#ffffff25] hover:text-[#bbb]'
+          }`}
+        >
+          {t.label}
+        </button>
+      ))}
     </div>
   )
 }

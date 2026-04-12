@@ -99,11 +99,6 @@ export function HomeView() {
           />
         </motion.div>
 
-        {/* Section label */}
-        <p className="mb-4 text-[11px] font-medium uppercase tracking-[0.08em] text-[#444]">
-          All Tools
-        </p>
-
         {/* Card grid */}
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
           {TOOLS.filter((tool) => tool.available).map((tool, i) => {
@@ -114,8 +109,8 @@ export function HomeView() {
                 href={tool.href}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.05 * i, duration: 0.4 }}
-                className="group relative overflow-hidden rounded-[14px] border border-[#ffffff15] bg-[#0c0c0c] p-5 transition-all duration-300 hover:-translate-y-0.5 hover:border-[#a78bfa22] hover:shadow-[0_8px_32px_-8px_#a78bfa14]"
+                transition={{ delay: 0.08 * i, duration: 0.4 }}
+                className="group relative overflow-hidden rounded-[14px] border border-[#ffffff15] bg-[#0c0c0c] p-5 transition-[border-color,box-shadow] duration-300 hover:border-[#a78bfa22] hover:shadow-[0_8px_32px_-8px_#a78bfa14]"
               >
                 {/* Gradient border glow */}
                 <span
