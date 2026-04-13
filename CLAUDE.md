@@ -71,7 +71,42 @@ widgets/<tool>/ui/
 ### 공유 UI 컴포넌트 사용 시 주의
 
 - `ToolHeader` props: `name`, `description`, `accentColor` — `icon` prop은 존재하지 않음
-- `Sidebar`는 뷰포트 너비 768px 미만일 때 접힌 상태(56px)로 시작함
+- `Sidebar`는 항상 접힌 상태(56px)로 시작하며, 하단 토글 버튼으로만 열고 닫힘
+
+#### ImageUpload 두 가지 모드
+
+`features/image-upload/ui/ImageUpload.tsx`는 용도에 따라 두 가지 모드로 동작한다:
+
+- `onFileLoad` 콜백: 파일을 읽어 `HTMLImageElement + dataUrl`로 변환 후 전달 (이미지 미리보기가 필요한 도구에서 사용)
+- `onFiles` 콜백: 원본 `File[]`을 그대로 전달하고 내부 상태를 유지하지 않음 (PDF 등 이미지가 아닌 파일 처리 시 사용)
+
+두 콜백을 동시에 전달하면 `onFiles`가 우선된다.
+
+주요 props: `accept` (기본값: 이미지 포맷들), `hint` (안내 문구), `multiple`, `variant` (`dashed`|`solid`), `size` (`sm`|`lg`)
+
+#### 파일 교체 패턴
+
+파일을 올린 뒤 상태를 초기화하지 않고 바로 교체할 때는 숨김 input + ref 패턴을 사용한다:
+
+```tsx
+const replaceInputRef = useRef<HTMLInputElement>(null)
+
+// JSX
+<button onClick={() => replaceInputRef.current?.click()}>파일 교체</button>
+<input
+  ref={replaceInputRef}
+  type="file"
+  accept="application/pdf"
+  className="sr-only"
+  onChange={(e) => { if (e.target.files?.[0]) handleFile(e.target.files[0]); e.target.value = '' }}
+/>
+```
+
+`pdf-encryptor`의 `PdfEncryptTab`, `PdfDecryptTab`과 `pdf-converter`의 `PdfToImageTab`이 이 패턴을 따른다.
+
+### PDF 암호화 라이브러리
+
+`@cantoo/pdf-lib`을 사용한다. 원본 `pdf-lib`은 암호화를 지원하지 않아서 이 fork를 선택했다. 브라우저에서 기존 PDF에 암호를 거는 대안이 사실상 없다.
 
 ### React Compiler
 
