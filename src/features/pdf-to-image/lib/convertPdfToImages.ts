@@ -48,6 +48,39 @@ export async function renderPdfPageToDataUrl(
   }
 }
 
+export async function renderAllThumbnails(
+  data: ArrayBuffer,
+  scale: number,
+  onCountKnown: (count: number) => void,
+  onPageReady: (pageNumber: number, dataUrl: string) => void
+): Promise<void> {
+  const pdfjsLib = await getPdfjsLib()
+  const pdf = await pdfjsLib.getDocument({ data: data.slice(0) }).promise
+  try {
+    const count = pdf.numPages
+    onCountKnown(count)
+
+    await Promise.all(
+      Array.from({ length: count }, async (_, i) => {
+        const pageNumber = i + 1
+        const page = await pdf.getPage(pageNumber)
+        const viewport = page.getViewport({ scale })
+
+        const canvas = document.createElement('canvas')
+        canvas.width = Math.round(viewport.width)
+        canvas.height = Math.round(viewport.height)
+        const ctx = canvas.getContext('2d')
+        if (!ctx) throw new Error('canvas context 초기화 실패')
+
+        await page.render({ canvas, viewport }).promise
+        onPageReady(pageNumber, canvas.toDataURL())
+      })
+    )
+  } finally {
+    await pdf.destroy()
+  }
+}
+
 export async function convertPdfPageToBlob(
   data: ArrayBuffer,
   pageNumber: number,

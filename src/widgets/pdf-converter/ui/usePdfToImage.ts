@@ -1,8 +1,7 @@
 'use client'
 import { useState } from 'react'
 import {
-  getPdfPageCount,
-  renderPdfPageToDataUrl,
+  renderAllThumbnails,
   convertPdfPageToBlob,
 } from '@/features/pdf-to-image/lib/convertPdfToImages'
 import { createZip, downloadBlob } from '@/shared/lib/zip'
@@ -33,23 +32,27 @@ export function usePdfToImage() {
     try {
       const data = await file.arrayBuffer()
       setPdfData(data)
-      const count = await getPdfPageCount(data)
 
-      const initialPages: PageItem[] = Array.from({ length: count }, (_, i) => ({
-        pageNumber: i + 1,
-        thumbnailUrl: '',
-        isLoading: true,
-      }))
-      setPages(initialPages)
-
-      for (let i = 0; i < count; i++) {
-        const thumbnailUrl = await renderPdfPageToDataUrl(data, i + 1, 0.3)
-        setPages((prev) =>
-          prev.map((p) =>
-            p.pageNumber === i + 1 ? { ...p, thumbnailUrl, isLoading: false } : p
+      await renderAllThumbnails(
+        data,
+        0.3,
+        (count) => {
+          setPages(
+            Array.from({ length: count }, (_, i) => ({
+              pageNumber: i + 1,
+              thumbnailUrl: '',
+              isLoading: true,
+            }))
           )
-        )
-      }
+        },
+        (pageNumber, thumbnailUrl) => {
+          setPages((prev) =>
+            prev.map((p) =>
+              p.pageNumber === pageNumber ? { ...p, thumbnailUrl, isLoading: false } : p
+            )
+          )
+        }
+      )
     } catch (err) {
       console.error('[usePdfToImage] handleFile error:', err)
       setError('PDF 파일을 불러오지 못했습니다. 암호화된 PDF는 지원하지 않습니다.')

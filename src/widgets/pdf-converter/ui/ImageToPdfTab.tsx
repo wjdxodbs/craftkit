@@ -36,7 +36,7 @@ export function ImageToPdfTab() {
         onClick={() => inputRef.current?.click()}
         onDragOver={(e) => e.preventDefault()}
         onDrop={handleDrop}
-        className="flex h-[120px] w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-[14px] border border-dashed border-[#ffffff20] bg-[#0c0c0c] transition-colors hover:border-[#a78bfa66] hover:shadow-[0_0_24px_-4px_#a78bfa15]"
+        className="flex min-h-[300px] w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-[14px] border border-dashed border-[#ffffff20] bg-[#0c0c0c] transition-colors hover:border-[#a78bfa66] hover:shadow-[0_0_24px_-4px_#a78bfa15]"
       >
         <svg
           className="size-8 text-[#a78bfa44]"
