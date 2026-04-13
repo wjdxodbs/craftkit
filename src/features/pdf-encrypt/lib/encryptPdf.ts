@@ -20,3 +20,12 @@ export async function decryptPdf(
   const pdfDoc = await PDFDocument.load(data.slice(0), { password })
   return pdfDoc.save()
 }
+
+export async function isPdfEncrypted(data: ArrayBuffer): Promise<boolean> {
+  try {
+    await PDFDocument.load(data.slice(0))
+    return false
+  } catch {
+    return true
+  }
+}

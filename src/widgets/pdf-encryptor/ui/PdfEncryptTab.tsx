@@ -1,4 +1,5 @@
 'use client'
+import { useRef } from 'react'
 import { motion } from 'motion/react'
 import { usePdfEncrypt } from './usePdfEncrypt'
 import { ImageUpload } from '@/features/image-upload/ui/ImageUpload'
@@ -8,6 +9,8 @@ const inputCls =
   'w-full rounded-[10px] border border-[#ffffff15] bg-[#131313] px-3 py-2 text-sm text-white placeholder-[#555] outline-none transition-colors focus:border-[#a78bfa40]'
 
 export function PdfEncryptTab() {
+  const replaceInputRef = useRef<HTMLInputElement>(null)
+
   const {
     fileName,
     userPassword,
@@ -15,7 +18,6 @@ export function PdfEncryptTab() {
     isProcessing,
     error,
     handleFile,
-    reset,
     setUserPassword,
     setOwnerPassword,
     encrypt,
@@ -39,11 +41,22 @@ export function PdfEncryptTab() {
         <h3 className="text-sm font-medium text-[#fff]">{fileName}</h3>
         <button
           type="button"
-          onClick={reset}
+          onClick={() => replaceInputRef.current?.click()}
           className="text-xs text-[#a78bfa] hover:text-[#c9b0ff]"
         >
           파일 교체
         </button>
+        <input
+          ref={replaceInputRef}
+          type="file"
+          accept="application/pdf"
+          className="sr-only"
+          onChange={(e) => {
+            const file = e.target.files?.[0]
+            if (file) handleFile(file)
+            e.target.value = ''
+          }}
+        />
       </div>
 
       {/* 비밀번호 입력 */}

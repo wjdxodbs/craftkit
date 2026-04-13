@@ -7,7 +7,7 @@
 | 도구 | 설명 |
 |------|------|
 | **Favicon Generator** | 이미지 업로드 → favicon.ico, Apple/Android 아이콘, manifest.json을 ZIP으로 다운로드 |
-| **OG Image Generator** | 배경색, 로고, 제목, 부제목 설정 → 1200×630 PNG 다운로드 |
+| **OG Image Generator** | 3가지 템플릿(Classic · Gradient · Code Snippet)으로 1200×630 OG 이미지 생성 |
 | **Image Resizer** | 이미지 크기 조절 + PNG/JPG/WebP 포맷 변환 |
 | **Image Cropper** | 이미지 크롭 + PNG/JPG/WebP 포맷 변환 |
 | **Color Format Converter** | HEX · RGB · HSL · OKLCH 색상 포맷 상호 변환 |

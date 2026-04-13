@@ -15,6 +15,8 @@ export function usePdfEncrypt() {
       const data = await file.arrayBuffer()
       setPdfData(data)
       setFileName(file.name)
+      setUserPassword('')
+      setOwnerPassword('')
       setError(null)
     } catch {
       setError('파일을 읽는 데 실패했습니다.')

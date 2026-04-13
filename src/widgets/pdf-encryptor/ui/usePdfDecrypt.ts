@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react'
-import { decryptPdf } from '@/features/pdf-encrypt/lib/encryptPdf'
+import { decryptPdf, isPdfEncrypted } from '@/features/pdf-encrypt/lib/encryptPdf'
 
 export function usePdfDecrypt() {
   const [pdfData, setPdfData] = useState<ArrayBuffer | null>(null)
@@ -8,12 +8,16 @@ export function usePdfDecrypt() {
   const [password, setPassword] = useState('')
   const [isProcessing, setIsProcessing] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [isEncrypted, setIsEncrypted] = useState<boolean | null>(null)
 
   const handleFile = async (file: File): Promise<void> => {
     try {
       const data = await file.arrayBuffer()
+      const encrypted = await isPdfEncrypted(data)
       setPdfData(data)
       setFileName(file.name)
+      setIsEncrypted(encrypted)
+      setPassword('')
       setError(null)
     } catch {
       setError('파일을 읽는 데 실패했습니다.')
@@ -24,6 +28,7 @@ export function usePdfDecrypt() {
     setPdfData(null)
     setFileName(null)
     setPassword('')
+    setIsEncrypted(null)
     setError(null)
   }
 
@@ -53,6 +58,7 @@ export function usePdfDecrypt() {
     fileName,
     password,
     isProcessing,
+    isEncrypted,
     error,
     handleFile,
     reset,
