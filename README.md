@@ -11,10 +11,12 @@
 | **Image Resizer** | 이미지 크기 조절 + PNG/JPG/WebP 포맷 변환 |
 | **Image Cropper** | 이미지 크롭 + PNG/JPG/WebP 포맷 변환 |
 | **Color Format Converter** | HEX · RGB · HSL · OKLCH 색상 포맷 상호 변환 |
+| **PDF Converter** | 이미지 → PDF 변환 및 PDF → 이미지 추출 |
+| **PDF Password** | PDF 암호 설정 및 해제 — 브라우저에서 처리, 업로드 없음 |
 
 ## 특징
 
-- 모든 처리는 클라이언트 사이드 (Canvas API) — 서버로 전송되지 않음
+- 모든 처리는 클라이언트 사이드 (Canvas API, pdf-lib) — 서버로 전송되지 않음
 - 회원가입 불필요
 
 ## 시작하기
@@ -33,6 +35,8 @@ pnpm dev
 - **Tailwind CSS v4**
 - **Motion** (애니메이션)
 - **fflate** (ZIP 생성)
+- **pdf-lib** / **@cantoo/pdf-lib** (PDF 생성·암호화)
+- **pdfjs-dist** (PDF → 이미지 변환)
 - **Jest** + **Testing Library** (테스트)
 - **FSD** (Feature-Sliced Design) 폴더 구조
 
