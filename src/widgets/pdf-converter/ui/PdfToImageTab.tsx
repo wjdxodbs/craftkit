@@ -115,16 +115,16 @@ export function PdfToImageTab() {
               <button
                 type="button"
                 onClick={selectAll}
-                className={segBtn}
+                className={segBtn(false)}
               >
-                전체
+                전체 선택
               </button>
               <button
                 type="button"
                 onClick={deselectAll}
-                className={segBtn}
+                className={segBtn(false)}
               >
-                해제
+                전체 해제
               </button>
               <span className="text-xs text-[#777]">
                 {selectedPages.size} / {pages.length} 선택됨
@@ -133,35 +133,36 @@ export function PdfToImageTab() {
           </div>
 
           {/* 포맷 및 품질 설정 */}
-          <div className="space-y-2">
-            <label className={labelCls}>포맷</label>
-            <select
-              value={outputFormat}
-              onChange={(e) => setOutputFormat(e.target.value as Parameters<typeof setOutputFormat>[0])}
-              className="w-full rounded-lg border border-[#ffffff15] bg-[#111] px-3 py-2 text-sm text-[#fff] outline-none hover:border-[#ffffff25] focus:border-[#a78bfa40]"
-            >
-              {OUTPUT_FORMATS.map((fmt) => (
-                <option key={fmt.value} value={fmt.value}>
-                  {fmt.label}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="space-y-2">
-            <label className={labelCls}>품질</label>
-            <div className="flex items-center gap-3">
-              <input
-                type="range"
-                min="10"
-                max="100"
-                step="10"
-                value={quality}
-                onChange={(e) => setQuality(Number(e.target.value))}
-                className="flex-1 cursor-pointer"
-              />
-              <span className="min-w-[40px] text-xs text-[#aaa]">{quality}%</span>
+          <div className="space-y-3 rounded-[14px] border border-[#ffffff15] bg-[#0c0c0c] p-4">
+            <div className="space-y-2">
+              <p className={labelCls}>출력 포맷</p>
+              <div className="flex gap-2">
+                {OUTPUT_FORMATS.map((f) => (
+                  <button
+                    key={f.value}
+                    type="button"
+                    className={segBtn(outputFormat === f.value)}
+                    onClick={() => setOutputFormat(f.value)}
+                  >
+                    {f.label}
+                  </button>
+                ))}
+              </div>
             </div>
+
+            {outputFormat !== 'image/png' && (
+              <div className="space-y-2">
+                <p className={labelCls}>품질 {quality}%</p>
+                <input
+                  type="range"
+                  min={10}
+                  max={100}
+                  value={quality}
+                  onChange={(e) => setQuality(Number(e.target.value))}
+                  className="w-full accent-[#a78bfa]"
+                />
+              </div>
+            )}
           </div>
 
           {/* 에러 메시지 */}
