@@ -11,10 +11,14 @@ export function usePdfEncrypt() {
   const [error, setError] = useState<string | null>(null)
 
   const handleFile = async (file: File): Promise<void> => {
-    const data = await file.arrayBuffer()
-    setPdfData(data)
-    setFileName(file.name)
-    setError(null)
+    try {
+      const data = await file.arrayBuffer()
+      setPdfData(data)
+      setFileName(file.name)
+      setError(null)
+    } catch {
+      setError('파일을 읽는 데 실패했습니다.')
+    }
   }
 
   const reset = (): void => {
