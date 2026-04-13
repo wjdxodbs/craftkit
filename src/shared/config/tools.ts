@@ -78,4 +78,17 @@ export const TOOLS: Tool[] = [
     icon: 'Palette',
     available: true,
   },
+  {
+    id: 'pdf-converter',
+    name: 'PDF Converter',
+    description: '이미지 ↔ PDF 변환',
+    href: '/tools/pdf-converter',
+    tags: ['.pdf', '.png', '.jpg', '.webp'],
+    accentColor: '#a78bfa',
+    borderColor: '#a78bfa22',
+    tagBg: '#a78bfa0c',
+    tagText: '#a78bfa88',
+    icon: 'FileText',
+    available: true,
+  },
 ]
