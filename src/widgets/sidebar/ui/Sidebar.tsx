@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'motion/react'
-import { Globe, Share2, Scaling, Crop, Palette, FileText } from 'lucide-react'
+import { Globe, Share2, Scaling, Crop, Palette, FileText, Lock } from 'lucide-react'
 import { TOOLS } from '@/shared/config/tools'
 import { cn } from '@/shared/lib/utils'
 
@@ -14,6 +14,7 @@ const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
   Crop,
   Palette,
   FileText,
+  Lock,
 }
 
 const EXPANDED_WIDTH = 220

@@ -91,4 +91,17 @@ export const TOOLS: Tool[] = [
     icon: 'FileText',
     available: true,
   },
+  {
+    id: 'pdf-password',
+    name: 'PDF Password',
+    description: 'PDF 암호 설정 및 해제',
+    href: '/tools/pdf-password',
+    tags: ['.pdf', '암호화', '암호해제'],
+    accentColor: '#a78bfa',
+    borderColor: '#a78bfa22',
+    tagBg: '#a78bfa0c',
+    tagText: '#a78bfa88',
+    icon: 'Lock',
+    available: true,
+  },
 ]

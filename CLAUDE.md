@@ -53,6 +53,20 @@ src/
 - `shared/lib/canvas.ts` — `createResizedCanvas`, `canvasToUint8Array` (이미지 처리 기반)
 - `shared/lib/zip.ts` — fflate 기반 ZIP 생성
 - `shared/lib/ico.ts` — ICO 포맷 생성
+- `shared/config/image-formats.ts` — `OutputFormat` 타입, `OUTPUT_FORMATS` 배열, `EXT_MAP` (이미지 포맷 관련 상수 단일 출처)
+- `shared/ui/styles.ts` — `labelCls`, `segBtn` (위젯 공통 Tailwind 스타일 유틸)
+
+### 위젯 내부 구조 패턴
+
+복잡한 위젯은 훅과 컴포넌트로 분리한다. `image-cropper`와 `image-resizer`가 이 패턴을 따른다:
+
+```
+widgets/<tool>/ui/
+  <Tool>.tsx          # 상태 관리 + 레이아웃
+  <Tool>ControlBar.tsx # 컨트롤 UI (파일 교체, 포맷 선택 등)
+  use<Tool>Preview.ts  # 디바운스 미리보기 훅
+  useDragHandling.ts   # (image-cropper 전용) 드래그 인터랙션 훅
+```
 
 ### 공유 UI 컴포넌트 사용 시 주의
 
