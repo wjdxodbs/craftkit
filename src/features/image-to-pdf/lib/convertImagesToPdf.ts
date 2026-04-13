@@ -29,5 +29,5 @@ export async function convertImagesToPdf(files: File[]): Promise<Blob> {
   }
 
   const pdfBytes = await pdfDoc.save()
-  return new Blob([pdfBytes], { type: 'application/pdf' })
+  return new Blob([pdfBytes.buffer as ArrayBuffer], { type: 'application/pdf' })
 }

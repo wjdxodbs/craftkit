@@ -13,14 +13,6 @@ jest.mock('pdf-lib', () => ({
 
 import { PDFDocument } from 'pdf-lib'
 
-beforeAll(() => {
-  ;(PDFDocument.create as jest.Mock).mockResolvedValue({
-    addPage: mockAddPage,
-    embedPng: mockEmbedPng,
-    save: mockSave,
-  })
-})
-
 const mockBitmapClose = jest.fn()
 global.createImageBitmap = jest.fn().mockResolvedValue({
   width: 200,
