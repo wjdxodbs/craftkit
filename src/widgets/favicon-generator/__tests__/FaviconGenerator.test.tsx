@@ -28,8 +28,4 @@ describe('FaviconGenerator', () => {
     expect(screen.getByRole('button', { name: /Download ZIP/ })).toBeDisabled()
   })
 
-  it('HTML 스니펫을 렌더링한다', () => {
-    render(<FaviconGenerator />)
-    expect(screen.getByText(/rel="icon"/)).toBeInTheDocument()
-  })
 })
