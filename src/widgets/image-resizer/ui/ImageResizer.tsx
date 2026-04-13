@@ -97,7 +97,8 @@ export function ImageResizer() {
         })
         setPreviewSize(blob.size)
       } catch {
-        // 미리보기 실패는 무시
+        setPreviewUrl(null)
+        setPreviewSize(null)
       }
     }, 300)
     return () => {
