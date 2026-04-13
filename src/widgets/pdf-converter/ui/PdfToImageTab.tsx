@@ -1,7 +1,8 @@
 'use client'
-import { useRef, useState } from 'react'
+import { useRef } from 'react'
 import { motion } from 'motion/react'
 import { usePdfToImage } from './usePdfToImage'
+import { ImageUpload } from '@/features/image-upload/ui/ImageUpload'
 import { OUTPUT_FORMATS } from '@/shared/config/image-formats'
 import { labelCls, segBtn } from '@/shared/ui/styles'
 
@@ -23,67 +24,20 @@ export function PdfToImageTab() {
     convert,
   } = usePdfToImage()
 
-  const [isDragging, setIsDragging] = useState(false)
-  const inputRef = useRef<HTMLInputElement>(null)
-
-  const handleFileInput = (file: File) => {
-    handleFile(file)
-  }
+  const replaceInputRef = useRef<HTMLInputElement>(null)
 
   return (
     <div className="space-y-5">
-      {/* 파일 input */}
-      <input
-        ref={inputRef}
-        type="file"
-        accept="application/pdf"
-        className="hidden"
-        onChange={(e) => {
-          const file = e.target.files?.[0]
-          if (file) handleFileInput(file)
-        }}
-      />
-
       {/* 업로드 영역 — PDF 로드 전 */}
       {pages.length === 0 ? (
         <div className="flex flex-col gap-4">
-          <button
-            type="button"
-            onClick={() => inputRef.current?.click()}
-            onDragOver={(e) => {
-              e.preventDefault()
-              setIsDragging(true)
-            }}
-            onDragLeave={() => setIsDragging(false)}
-            onDrop={(e) => {
-              e.preventDefault()
-              setIsDragging(false)
-              const file = e.dataTransfer.files[0]
-              if (file) handleFileInput(file)
-            }}
-            className={`flex min-h-[300px] w-full cursor-pointer flex-col items-center justify-center gap-3 rounded-[14px] border border-[#ffffff15] transition-colors ${
-              isDragging ? 'bg-[#a78bfa08] border-[#a78bfa40]' : 'bg-[#0c0c0c]'
-            }`}
-          >
-            <motion.svg
-              className="size-10 text-[#a78bfa44]"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={1}
-              aria-hidden="true"
-              whileHover={{ y: -4 }}
-              transition={{ type: 'spring', stiffness: 300 }}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
-              />
-            </motion.svg>
-            <p className="text-sm text-[#777]">클릭하거나 드래그해서 PDF 업로드</p>
-            <p className="text-xs text-[#444]">암호화되지 않은 PDF만 지원</p>
-          </button>
+          <ImageUpload
+            accept="application/pdf"
+            hint="암호화되지 않은 PDF만 지원"
+            variant="solid"
+            size="lg"
+            onFiles={(files) => { if (files[0]) handleFile(files[0]) }}
+          />
 
           {/* 에러 메시지 */}
           {error && (
@@ -103,11 +57,22 @@ export function PdfToImageTab() {
               </h3>
               <button
                 type="button"
-                onClick={() => inputRef.current?.click()}
+                onClick={() => replaceInputRef.current?.click()}
                 className="text-xs text-[#a78bfa] hover:text-[#c9b0ff]"
               >
                 파일 교체
               </button>
+              <input
+                ref={replaceInputRef}
+                type="file"
+                accept="application/pdf"
+                className="sr-only"
+                onChange={(e) => {
+                  const files = Array.from(e.target.files ?? [])
+                  if (files[0]) handleFile(files[0])
+                  e.target.value = ''
+                }}
+              />
             </div>
 
             {/* 페이지 선택 컨트롤 */}

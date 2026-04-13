@@ -1,67 +1,22 @@
 'use client'
-import { useRef, useState } from 'react'
 import { Reorder, motion } from 'motion/react'
 import { useImageToPdf } from './useImageToPdf'
+import { ImageUpload } from '@/features/image-upload/ui/ImageUpload'
 import type { ImageItem } from './useImageToPdf'
 
 export function ImageToPdfTab() {
   const { items, isConverting, error, addFiles, removeItem, reorder, convert } = useImageToPdf()
-  const inputRef = useRef<HTMLInputElement>(null)
-  const [isDragging, setIsDragging] = useState(false)
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files ?? [])
-    if (files.length > 0) addFiles(files)
-    e.target.value = ''
-  }
-
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault()
-    setIsDragging(false)
-    const files = Array.from(e.dataTransfer.files).filter((f) => f.type.startsWith('image/'))
-    if (files.length > 0) addFiles(files)
-  }
 
   return (
     <div className="space-y-5">
-      <input
-        ref={inputRef}
-        type="file"
+      <ImageUpload
         accept="image/*"
         multiple
-        className="hidden"
-        onChange={handleInputChange}
+        hint="PNG, JPG, WebP 등 — 여러 장 동시 선택 가능"
+        variant="solid"
+        size="lg"
+        onFiles={(files) => addFiles(files.filter((f) => f.type.startsWith('image/')))}
       />
-
-      <button
-        type="button"
-        onClick={() => inputRef.current?.click()}
-        onDragOver={(e) => { e.preventDefault(); setIsDragging(true) }}
-        onDragLeave={() => setIsDragging(false)}
-        onDrop={handleDrop}
-        className={`flex min-h-[300px] w-full cursor-pointer flex-col items-center justify-center gap-3 rounded-[14px] border border-[#ffffff15] transition-colors ${
-          isDragging ? 'bg-[#a78bfa08] border-[#a78bfa40]' : 'bg-[#0c0c0c]'
-        }`}
-      >
-        <motion.svg
-          className="size-10 text-[#a78bfa44]"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          strokeWidth={1}
-          aria-hidden="true"
-          whileHover={{ y: -4 }}
-          transition={{ type: 'spring', stiffness: 300 }}
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
-          />
-        </motion.svg>
-        <p className="text-sm text-[#777]">클릭하거나 드래그해서 이미지 추가</p>
-        <p className="text-xs text-[#444]">PNG, JPG, WebP 등 — 여러 장 동시 선택 가능</p>
-      </button>
 
       {items.length > 0 && (
         <Reorder.Group
