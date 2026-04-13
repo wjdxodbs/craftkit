@@ -50,7 +50,8 @@ export function usePdfToImage() {
           )
         )
       }
-    } catch {
+    } catch (err) {
+      console.error('[usePdfToImage] handleFile error:', err)
       setError('PDF 파일을 불러오지 못했습니다. 암호화된 PDF는 지원하지 않습니다.')
     }
   }

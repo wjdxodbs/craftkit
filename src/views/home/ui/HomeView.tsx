@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { motion } from "motion/react";
-import { Globe, Share2, Scaling, Crop, Palette } from "lucide-react";
+import { Globe, Share2, Scaling, Crop, Palette, FileText } from "lucide-react";
 import { TOOLS } from "@/shared/config/tools";
 
 const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -10,6 +10,7 @@ const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
   Scaling,
   Crop,
   Palette,
+  FileText,
 };
 
 const MotionLink = motion.create(Link);

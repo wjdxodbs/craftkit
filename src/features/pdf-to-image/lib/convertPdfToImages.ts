@@ -17,7 +17,7 @@ async function getPdfjsLib() {
 
 export async function getPdfPageCount(data: ArrayBuffer): Promise<number> {
   const pdfjsLib = await getPdfjsLib()
-  const pdf = await pdfjsLib.getDocument({ data }).promise
+  const pdf = await pdfjsLib.getDocument({ data: data.slice(0) }).promise
   const count = pdf.numPages
   await pdf.destroy()
   return count
@@ -29,7 +29,7 @@ export async function renderPdfPageToDataUrl(
   scale: number
 ): Promise<string> {
   const pdfjsLib = await getPdfjsLib()
-  const pdf = await pdfjsLib.getDocument({ data }).promise
+  const pdf = await pdfjsLib.getDocument({ data: data.slice(0) }).promise
   try {
     const page = await pdf.getPage(pageNumber)
     const viewport = page.getViewport({ scale })
@@ -56,7 +56,7 @@ export async function convertPdfPageToBlob(
   scale = 2
 ): Promise<Blob> {
   const pdfjsLib = await getPdfjsLib()
-  const pdf = await pdfjsLib.getDocument({ data }).promise
+  const pdf = await pdfjsLib.getDocument({ data: data.slice(0) }).promise
   try {
     const page = await pdf.getPage(pageNumber)
     const viewport = page.getViewport({ scale })
