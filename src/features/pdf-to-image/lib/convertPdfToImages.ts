@@ -30,20 +30,23 @@ export async function renderPdfPageToDataUrl(
 ): Promise<string> {
   const pdfjsLib = await getPdfjsLib()
   const pdf = await pdfjsLib.getDocument({ data }).promise
-  const page = await pdf.getPage(pageNumber)
-  const viewport = page.getViewport({ scale })
+  try {
+    const page = await pdf.getPage(pageNumber)
+    const viewport = page.getViewport({ scale })
 
-  const canvas = document.createElement('canvas')
-  canvas.width = Math.round(viewport.width)
-  canvas.height = Math.round(viewport.height)
-  const ctx = canvas.getContext('2d')
-  if (!ctx) throw new Error('canvas context 초기화 실패')
+    const canvas = document.createElement('canvas')
+    canvas.width = Math.round(viewport.width)
+    canvas.height = Math.round(viewport.height)
+    const ctx = canvas.getContext('2d')
+    if (!ctx) throw new Error('canvas context 초기화 실패')
 
-  await page.render({ canvasContext: ctx as unknown as CanvasRenderingContext2D, viewport }).promise
+    // pdfjs-dist의 내부 타입과 DOM 타입이 달라 단언 필요
+    await page.render({ canvasContext: ctx as unknown as CanvasRenderingContext2D, viewport }).promise
 
-  const dataUrl = canvas.toDataURL()
-  await pdf.destroy()
-  return dataUrl
+    return canvas.toDataURL()
+  } finally {
+    await pdf.destroy()
+  }
 }
 
 export async function convertPdfPageToBlob(
@@ -55,25 +58,30 @@ export async function convertPdfPageToBlob(
 ): Promise<Blob> {
   const pdfjsLib = await getPdfjsLib()
   const pdf = await pdfjsLib.getDocument({ data }).promise
-  const page = await pdf.getPage(pageNumber)
-  const viewport = page.getViewport({ scale })
+  try {
+    const page = await pdf.getPage(pageNumber)
+    const viewport = page.getViewport({ scale })
 
-  const canvas = document.createElement('canvas')
-  canvas.width = Math.round(viewport.width)
-  canvas.height = Math.round(viewport.height)
-  const ctx = canvas.getContext('2d')
-  if (!ctx) throw new Error('canvas context 초기화 실패')
+    const canvas = document.createElement('canvas')
+    canvas.width = Math.round(viewport.width)
+    canvas.height = Math.round(viewport.height)
+    const ctx = canvas.getContext('2d')
+    if (!ctx) throw new Error('canvas context 초기화 실패')
 
-  await page.render({ canvasContext: ctx as unknown as CanvasRenderingContext2D, viewport }).promise
+    // pdfjs-dist의 내부 타입과 DOM 타입이 달라 단언 필요
+    await page.render({ canvasContext: ctx as unknown as CanvasRenderingContext2D, viewport }).promise
 
-  return new Promise((resolve, reject) => {
-    canvas.toBlob(
-      (blob) => {
-        if (!blob) return reject(new Error('canvas.toBlob 실패'))
-        pdf.destroy().then(() => resolve(blob))
-      },
-      outputFormat,
-      quality
-    )
-  })
+    return await new Promise((resolve, reject) => {
+      canvas.toBlob(
+        (blob) => {
+          if (!blob) return reject(new Error('canvas.toBlob 실패'))
+          resolve(blob)
+        },
+        outputFormat,
+        quality
+      )
+    })
+  } finally {
+    await pdf.destroy()
+  }
 }
