@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect, useRef } from 'react'
+import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'motion/react'
@@ -22,31 +22,10 @@ const COLLAPSED_WIDTH = 56
 
 export function Sidebar() {
   const [isExpanded, setIsExpanded] = useState(false)
-  const sidebarRef = useRef<HTMLElement>(null)
   const pathname = usePathname()
-
-  // 라우팅 변경 시 접힘
-  const [prevPathname, setPrevPathname] = useState(pathname)
-  if (prevPathname !== pathname) {
-    setPrevPathname(pathname)
-    if (isExpanded) setIsExpanded(false)
-  }
-
-  // 바깥 클릭 시 접힘
-  useEffect(() => {
-    if (!isExpanded) return
-    const handleClickOutside = (e: MouseEvent) => {
-      if (sidebarRef.current && !sidebarRef.current.contains(e.target as Node)) {
-        setIsExpanded(false)
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [isExpanded])
 
   return (
     <motion.nav
-      ref={sidebarRef}
       initial={false}
       animate={{ width: isExpanded ? EXPANDED_WIDTH : COLLAPSED_WIDTH }}
       transition={{ type: 'spring', stiffness: 300, damping: 30 }}
@@ -95,7 +74,7 @@ export function Sidebar() {
                 aria-label={!isExpanded ? tool.name : undefined}
                 aria-current={isActive ? 'page' : undefined}
                 className={cn(
-                  'group/link relative flex h-9 cursor-pointer items-center overflow-hidden rounded-lg text-sm transition-colors',
+                  'group/link relative flex h-9 cursor-pointer items-center rounded-lg text-sm transition-colors',
                   isActive
                     ? ''
                     : 'text-white/50 hover:bg-white/5 hover:text-white/70'
