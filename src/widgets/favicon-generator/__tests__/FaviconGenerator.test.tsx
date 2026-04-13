@@ -13,7 +13,7 @@ jest.mock('@/shared/lib/zip', () => ({
 describe('FaviconGenerator', () => {
   it('업로드 섹션을 렌더링한다', () => {
     render(<FaviconGenerator />)
-    expect(screen.getByText(/이미지 업로드/)).toBeInTheDocument()
+    expect(screen.getByText(/클릭하거나 드래그해서/)).toBeInTheDocument()
   })
 
   it('생성될 파일 목록을 렌더링한다', () => {
