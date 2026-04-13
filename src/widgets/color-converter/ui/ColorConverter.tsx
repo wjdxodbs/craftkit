@@ -2,6 +2,7 @@
 import { useState, useRef } from 'react'
 import { convertColor } from '@/features/color-convert/lib/convertColor'
 import type { ColorResult } from '@/features/color-convert/lib/convertColor'
+import { labelCls } from '@/shared/ui/styles'
 
 const FORMAT_LABELS = ['HEX', 'RGB', 'HSL', 'OKLCH'] as const
 type FormatLabel = typeof FORMAT_LABELS[number]
@@ -14,8 +15,6 @@ function getResultValue(result: ColorResult, label: FormatLabel): string {
     case 'OKLCH': return result.oklch
   }
 }
-
-const labelCls = 'text-[11px] font-medium text-[#777]'
 
 export function ColorConverter() {
   const [input, setInput] = useState('')

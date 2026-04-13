@@ -1,5 +1,6 @@
 'use client'
-import type { OutputFormat } from '@/features/image-crop/lib/cropImage'
+import { OUTPUT_FORMATS, type OutputFormat } from '@/shared/config/image-formats'
+import { labelCls, segBtn } from '@/shared/ui/styles'
 
 const ASPECT_PRESETS: { label: string; value: number | null }[] = [
   { label: 'Free', value: null },
@@ -7,21 +8,6 @@ const ASPECT_PRESETS: { label: string; value: number | null }[] = [
   { label: '16:9', value: 16 / 9 },
   { label: '4:3', value: 4 / 3 },
 ]
-
-const OUTPUT_FORMATS: { label: string; value: OutputFormat }[] = [
-  { label: 'PNG', value: 'image/png' },
-  { label: 'JPG', value: 'image/jpeg' },
-  { label: 'WebP', value: 'image/webp' },
-]
-
-const labelCls = 'text-[11px] font-medium text-[#777]'
-
-const segBtn = (active: boolean) =>
-  `cursor-pointer rounded-[10px] px-3 py-1.5 text-xs font-medium transition-colors ${
-    active
-      ? 'border border-[#a78bfa40] bg-[#a78bfa10] text-[#a78bfa]'
-      : 'border border-[#ffffff15] text-[#777] hover:border-[#ffffff25] hover:text-[#bbb]'
-  }`
 
 interface CropControlBarProps {
   fileName: string | null

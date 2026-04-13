@@ -1,4 +1,6 @@
-export type OutputFormat = 'image/png' | 'image/jpeg' | 'image/webp'
+import type { OutputFormat } from '@/shared/config/image-formats'
+
+export type { OutputFormat }
 
 export interface CropBox {
   x: number

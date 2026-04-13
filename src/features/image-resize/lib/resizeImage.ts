@@ -1,6 +1,7 @@
 import { createResizedCanvas } from '@/shared/lib/canvas'
+import type { OutputFormat } from '@/shared/config/image-formats'
 
-export type OutputFormat = 'image/png' | 'image/jpeg' | 'image/webp'
+export type { OutputFormat }
 
 export async function resizeImage(
   source: HTMLImageElement,

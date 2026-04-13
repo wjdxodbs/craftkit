@@ -3,17 +3,11 @@ import { useState, useRef } from 'react'
 import { motion } from 'motion/react'
 import { cropImage } from '@/features/image-crop/lib/cropImage'
 import type { CropBox, OutputFormat } from '@/features/image-crop/lib/cropImage'
+import { EXT_MAP } from '@/shared/config/image-formats'
+import { labelCls } from '@/shared/ui/styles'
 import { useDragHandling, clamp, MIN_CROP } from './useDragHandling'
 import { useCropPreview } from './useCropPreview'
 import { CropControlBar } from './CropControlBar'
-
-const EXT_MAP: Record<OutputFormat, string> = {
-  'image/png': 'png',
-  'image/jpeg': 'jpg',
-  'image/webp': 'webp',
-}
-
-const labelCls = 'text-[11px] font-medium text-[#777]'
 
 export function ImageCropper() {
   const [imageEl, setImageEl] = useState<HTMLImageElement | null>(null)

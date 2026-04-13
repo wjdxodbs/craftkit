@@ -6,6 +6,7 @@ import { generateOgImage } from '@/features/og-image-export/lib/generateOgImage'
 import { renderOgImageToCanvas } from '@/features/og-image-export/lib/renderOgImageToCanvas'
 import type { OgImageConfig, FontFamily, TemplateName } from '@/features/og-image-export/lib/renderOgImageToCanvas'
 import { TemplateTabs } from './TemplateTabs'
+import { segBtn } from '@/shared/ui/styles'
 
 const PRESET_COLORS = ['#0f172a', '#18181b', '#1e1b4b', '#ffffff']
 const GRADIENT_COLORS = ['#0f172a', '#6366f1', '#ec4899', '#f97316']
@@ -14,12 +15,6 @@ const FONTS: FontFamily[] = ['Inter', 'Serif', 'Mono']
 const labelCls = 'mb-2 block text-[11px] font-medium text-[#777]'
 const inputCls =
   'h-9 w-full rounded-[10px] border border-[#ffffff15] bg-[#0a0a0a] px-3 text-[13px] text-[#ddd] placeholder:text-[#444] outline-none transition-colors focus:border-[#a78bfa55]'
-const segBtn = (active: boolean) =>
-  `cursor-pointer rounded-[10px] px-3 py-1.5 text-xs font-medium transition-colors ${
-    active
-      ? 'border border-[#a78bfa40] bg-[#a78bfa10] text-[#a78bfa]'
-      : 'border border-[#ffffff15] text-[#777] hover:border-[#ffffff25] hover:text-[#bbb]'
-  }`
 const swatchCls = (active: boolean) =>
   `h-7 w-7 cursor-pointer rounded-[8px] transition-transform hover:scale-110 ${
     active ? 'ring-2 ring-[#a78bfa] ring-offset-2 ring-offset-[#0c0c0c]' : ''
@@ -56,6 +51,8 @@ export function OgImageGenerator() {
       a.download = 'og-image.png'
       a.click()
       URL.revokeObjectURL(url)
+    } catch {
+      // 다운로드 실패 시 조용히 무시 (UI 변화 없음)
     } finally {
       setIsDownloading(false)
     }
