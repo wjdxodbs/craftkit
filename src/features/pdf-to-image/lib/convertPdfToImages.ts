@@ -40,8 +40,7 @@ export async function renderPdfPageToDataUrl(
     const ctx = canvas.getContext('2d')
     if (!ctx) throw new Error('canvas context 초기화 실패')
 
-    // pdfjs-dist의 내부 타입과 DOM 타입이 달라 단언 필요
-    await page.render({ canvasContext: ctx as unknown as CanvasRenderingContext2D, viewport }).promise
+    await page.render({ canvas, viewport }).promise
 
     return canvas.toDataURL()
   } finally {
@@ -68,8 +67,7 @@ export async function convertPdfPageToBlob(
     const ctx = canvas.getContext('2d')
     if (!ctx) throw new Error('canvas context 초기화 실패')
 
-    // pdfjs-dist의 내부 타입과 DOM 타입이 달라 단언 필요
-    await page.render({ canvasContext: ctx as unknown as CanvasRenderingContext2D, viewport }).promise
+    await page.render({ canvas, viewport }).promise
 
     return await new Promise((resolve, reject) => {
       canvas.toBlob(
