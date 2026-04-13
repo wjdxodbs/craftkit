@@ -13,7 +13,6 @@ export function ImageToPdfTab() {
         accept="image/*"
         multiple
         hint="PNG, JPG, WebP 등 — 여러 장 동시 선택 가능"
-        variant="solid"
         size="lg"
         onFiles={(files) => addFiles(files.filter((f) => f.type.startsWith('image/')))}
       />

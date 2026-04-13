@@ -34,7 +34,6 @@ export function PdfToImageTab() {
           <ImageUpload
             accept="application/pdf"
             hint="암호화되지 않은 PDF만 지원"
-            variant="solid"
             size="lg"
             onFiles={(files) => { if (files[0]) handleFile(files[0]) }}
           />
