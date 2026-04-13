@@ -85,7 +85,8 @@ export async function renderGradientTemplate(
   canvas: HTMLCanvasElement,
   config: OgImageConfig
 ): Promise<void> {
-  const ctx = canvas.getContext('2d')!
+  const ctx = canvas.getContext('2d')
+  if (!ctx) return
 
   // 그라디언트 색상 결정: preset > 직접 지정 > 자동 밝기 보정
   let color1 = config.backgroundColor
@@ -105,7 +106,7 @@ export async function renderGradientTemplate(
   const grad = ctx.createLinearGradient(x0, y0, x1, y1)
   grad.addColorStop(0, color1)
   grad.addColorStop(1, color2)
-  ctx.fillStyle = grad as unknown as string
+  ctx.fillStyle = grad
   ctx.fillRect(0, 0, W, H)
 
   // 깊이감을 위한 소프트 방사형 오버레이
@@ -114,7 +115,7 @@ export async function renderGradientTemplate(
   radialGrad.addColorStop(1, 'rgba(0,0,0,0)')
   const prevComposite = ctx.globalCompositeOperation
   ctx.globalCompositeOperation = 'screen'
-  ctx.fillStyle = radialGrad as unknown as string
+  ctx.fillStyle = radialGrad
   ctx.fillRect(0, 0, W, H)
   ctx.globalCompositeOperation = prevComposite
 

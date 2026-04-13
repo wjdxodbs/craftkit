@@ -39,7 +39,8 @@ export async function renderCodeSnippetTemplate(
   canvas: HTMLCanvasElement,
   config: OgImageConfig
 ): Promise<void> {
-  const ctx = canvas.getContext('2d')!
+  const ctx = canvas.getContext('2d')
+  if (!ctx) return
   const theme = config.codeTheme ?? 'dark'
   const colors = THEME_COLORS[theme]
   const monoFont = FONT_MAP.Mono

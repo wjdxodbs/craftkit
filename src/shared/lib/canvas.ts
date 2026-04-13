@@ -6,7 +6,8 @@ export function createResizedCanvas(
   const canvas = document.createElement('canvas')
   canvas.width = width
   canvas.height = height
-  const ctx = canvas.getContext('2d')!
+  const ctx = canvas.getContext('2d')
+  if (!ctx) throw new Error('2d context를 가져올 수 없습니다')
   ctx.imageSmoothingEnabled = true
   ctx.imageSmoothingQuality = 'high'
   ctx.drawImage(source as CanvasImageSource, 0, 0, width, height)
