@@ -1,5 +1,5 @@
 "use client";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { motion } from "motion/react";
 import { usePdfSplitter } from "./usePdfSplitter";
 import { ImageUpload } from "@/features/image-upload/ui/ImageUpload";
@@ -13,6 +13,7 @@ export function PdfSplitter() {
     isSplitting,
     error,
     handleFile,
+    renderThumbnail,
     togglePage,
     selectAll,
     deselectAll,
@@ -20,6 +21,28 @@ export function PdfSplitter() {
   } = usePdfSplitter();
 
   const replaceInputRef = useRef<HTMLInputElement>(null);
+  const observerRef = useRef<IntersectionObserver | null>(null);
+
+  useEffect(() => {
+    observerRef.current = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const pageNumber = Number(
+              (entry.target as HTMLElement).dataset.pageNumber,
+            );
+            if (pageNumber) {
+              renderThumbnail(pageNumber);
+              observerRef.current?.unobserve(entry.target);
+            }
+          }
+        });
+      },
+      { rootMargin: "100px" },
+    );
+
+    return () => observerRef.current?.disconnect();
+  }, [renderThumbnail]);
 
   return (
     <div className="space-y-5">
@@ -34,7 +57,10 @@ export function PdfSplitter() {
             }}
           />
           {error && (
-            <div className="rounded-[14px] border border-[#ef444415] bg-[#ef44440a] p-3 text-xs text-[#ff6b6b]">
+            <div
+              role="alert"
+              className="rounded-[14px] border border-[#ef444415] bg-[#ef44440a] p-3 text-xs text-[#ff6b6b]"
+            >
               {error}
             </div>
           )}
@@ -49,7 +75,7 @@ export function PdfSplitter() {
             <button
               type="button"
               onClick={() => replaceInputRef.current?.click()}
-              className="text-xs text-[#a78bfa] hover:text-[#c9b0ff]"
+              className="text-xs text-[#a78bfa] hover:text-[#c9b0ff] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#a78bfa]"
             >
               파일 교체
             </button>
@@ -68,24 +94,31 @@ export function PdfSplitter() {
 
           {/* 선택 컨트롤 */}
           <div className="flex items-center gap-2">
-            <button type="button" onClick={selectAll} className={segBtn(false)}>
+            <button
+              type="button"
+              onClick={selectAll}
+              className={`${segBtn(false)} focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#a78bfa]`}
+            >
               전체 선택
             </button>
             <button
               type="button"
               onClick={deselectAll}
-              className={segBtn(false)}
+              className={`${segBtn(false)} focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#a78bfa]`}
             >
               전체 해제
             </button>
-            <span className="text-xs text-[#777]">
+            <span className="text-xs text-[#999]">
               {selectedPages.size} / {pages.length} 선택됨
             </span>
           </div>
 
           {/* 에러 */}
           {error && (
-            <div className="rounded-[14px] border border-[#ef444415] bg-[#ef44440a] p-3 text-xs text-[#ff6b6b]">
+            <div
+              role="alert"
+              className="rounded-[14px] border border-[#ef444415] bg-[#ef44440a] p-3 text-xs text-[#ff6b6b]"
+            >
               {error}
             </div>
           )}
@@ -96,15 +129,24 @@ export function PdfSplitter() {
               <button
                 key={page.pageNumber}
                 type="button"
+                data-page-number={page.pageNumber}
+                ref={(el) => {
+                  if (el) observerRef.current?.observe(el);
+                }}
                 onClick={() => togglePage(page.pageNumber)}
-                className={`relative overflow-hidden rounded-lg border-2 transition-all ${
+                aria-label={`페이지 ${page.pageNumber}${selectedPages.has(page.pageNumber) ? " 선택됨" : ""}`}
+                aria-pressed={selectedPages.has(page.pageNumber)}
+                className={`relative overflow-hidden rounded-lg border-2 transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#a78bfa] ${
                   selectedPages.has(page.pageNumber)
                     ? "border-[#a78bfa] bg-[#a78bfa10]"
                     : "border-[#ffffff15] bg-[#0c0c0c] hover:border-[#ffffff25]"
                 }`}
               >
                 {page.isLoading ? (
-                  <div className="aspect-[210/297] animate-pulse bg-[#ffffff08]" />
+                  <div
+                    className="aspect-[210/297] animate-shimmer"
+                    aria-label={`페이지 ${page.pageNumber} 로드 중`}
+                  />
                 ) : (
                   <>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -129,7 +171,7 @@ export function PdfSplitter() {
             <button
               onClick={split}
               disabled={selectedPages.size === 0 || isSplitting}
-              className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-[#a78bfa40] bg-transparent px-4 py-3.5 text-[13px] font-semibold text-[#a78bfa] transition-all hover:border-[#a78bfa60] hover:bg-[#a78bfa10] disabled:cursor-not-allowed disabled:opacity-40"
+              className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-[#a78bfa40] bg-transparent px-4 py-3.5 text-[13px] font-semibold text-[#a78bfa] transition-all hover:border-[#a78bfa60] hover:bg-[#a78bfa10] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#a78bfa] disabled:cursor-not-allowed disabled:opacity-40"
             >
               {isSplitting ? (
                 "처리 중…"
