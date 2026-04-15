@@ -1,7 +1,16 @@
 "use client";
 import Link from "next/link";
 import { motion } from "motion/react";
-import { Globe, Share2, Scaling, Crop, Palette, FileText, Lock } from "lucide-react";
+import {
+  Globe,
+  Share2,
+  Scaling,
+  Crop,
+  Palette,
+  FileText,
+  Lock,
+  Stamp,
+} from "lucide-react";
 import { TOOLS } from "@/shared/config/tools";
 
 const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -12,6 +21,7 @@ const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
   Palette,
   FileText,
   Lock,
+  Stamp,
 };
 
 const MotionLink = motion.create(Link);
@@ -154,9 +164,7 @@ export function HomeView() {
                       "linear-gradient(135deg, #a78bfa15 0%, #7c3aed0a 100%)",
                   }}
                 >
-                  {Icon && (
-                    <Icon className="size-4 text-[#a78bfa]" />
-                  )}
+                  {Icon && <Icon className="size-4 text-[#a78bfa]" />}
                 </div>
 
                 {/* Text */}
