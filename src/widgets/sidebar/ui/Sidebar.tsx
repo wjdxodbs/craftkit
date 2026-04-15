@@ -1,11 +1,20 @@
-'use client'
-import { useState } from 'react'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { motion, AnimatePresence } from 'motion/react'
-import { Globe, Share2, Scaling, Crop, Palette, FileText, Lock } from 'lucide-react'
-import { TOOLS } from '@/shared/config/tools'
-import { cn } from '@/shared/lib/utils'
+"use client";
+import { useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { motion, AnimatePresence } from "motion/react";
+import {
+  Globe,
+  Share2,
+  Scaling,
+  Crop,
+  Palette,
+  FileText,
+  Lock,
+  Stamp,
+} from "lucide-react";
+import { TOOLS } from "@/shared/config/tools";
+import { cn } from "@/shared/lib/utils";
 
 const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
   Globe,
@@ -15,20 +24,21 @@ const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
   Palette,
   FileText,
   Lock,
-}
+  Stamp,
+};
 
-const EXPANDED_WIDTH = 220
-const COLLAPSED_WIDTH = 56
+const EXPANDED_WIDTH = 220;
+const COLLAPSED_WIDTH = 56;
 
 export function Sidebar() {
-  const [isExpanded, setIsExpanded] = useState(false)
-  const pathname = usePathname()
+  const [isExpanded, setIsExpanded] = useState(false);
+  const pathname = usePathname();
 
   return (
     <motion.nav
       initial={false}
       animate={{ width: isExpanded ? EXPANDED_WIDTH : COLLAPSED_WIDTH }}
-      transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+      transition={{ type: "spring", stiffness: 300, damping: 30 }}
       className="fixed left-0 top-0 z-50 flex h-screen flex-col border-r border-white/15 bg-sidebar shadow-[4px_0_24px_rgba(0,0,0,0.3)]"
     >
       {/* Noise texture */}
@@ -51,7 +61,7 @@ export function Sidebar() {
               <motion.span
                 key="wordmark"
                 initial={{ opacity: 0, width: 0 }}
-                animate={{ opacity: 1, width: 'auto' }}
+                animate={{ opacity: 1, width: "auto" }}
                 exit={{ opacity: 0, width: 0 }}
                 transition={{ duration: 0.15 }}
                 className="overflow-hidden whitespace-nowrap text-sm font-bold tracking-widest text-white"
@@ -66,23 +76,27 @@ export function Sidebar() {
       {/* Tool List */}
       <ul className="flex flex-1 flex-col gap-1 p-2">
         {TOOLS.filter((t) => t.available).map((tool) => {
-          const isActive = pathname === tool.href
+          const isActive = pathname === tool.href;
           return (
             <li key={tool.id}>
               <Link
                 href={tool.href}
                 aria-label={!isExpanded ? tool.name : undefined}
-                aria-current={isActive ? 'page' : undefined}
+                aria-current={isActive ? "page" : undefined}
                 className={cn(
-                  'group/link relative flex h-9 cursor-pointer items-center rounded-lg text-sm transition-colors',
+                  "group/link relative flex h-9 cursor-pointer items-center rounded-lg text-sm transition-colors",
                   isActive
-                    ? ''
-                    : 'text-white/50 hover:bg-white/5 hover:text-white/70'
+                    ? ""
+                    : "text-white/50 hover:bg-white/5 hover:text-white/70",
                 )}
-                style={isActive ? {
-                  backgroundColor: `${tool.accentColor}15`,
-                  color: tool.accentColor,
-                } : undefined}
+                style={
+                  isActive
+                    ? {
+                        backgroundColor: `${tool.accentColor}15`,
+                        color: tool.accentColor,
+                      }
+                    : undefined
+                }
               >
                 {isActive && (
                   <span
@@ -92,8 +106,8 @@ export function Sidebar() {
                 )}
                 <span className="flex w-10 shrink-0 items-center justify-center">
                   {(() => {
-                    const Icon = ICON_MAP[tool.icon]
-                    return Icon ? <Icon className="size-4 shrink-0" /> : null
+                    const Icon = ICON_MAP[tool.icon];
+                    return Icon ? <Icon className="size-4 shrink-0" /> : null;
                   })()}
                 </span>
                 {!isExpanded && (
@@ -106,7 +120,7 @@ export function Sidebar() {
                     <motion.span
                       key={`label-${tool.id}`}
                       initial={{ opacity: 0, width: 0 }}
-                      animate={{ opacity: 1, width: 'auto' }}
+                      animate={{ opacity: 1, width: "auto" }}
                       exit={{ opacity: 0, width: 0 }}
                       transition={{ duration: 0.12 }}
                       className="overflow-hidden whitespace-nowrap"
@@ -117,7 +131,7 @@ export function Sidebar() {
                 </AnimatePresence>
               </Link>
             </li>
-          )
+          );
         })}
       </ul>
 
@@ -125,19 +139,26 @@ export function Sidebar() {
       <div className="border-t border-white/10 p-2">
         <button
           onClick={() => setIsExpanded((prev) => !prev)}
-          aria-label={isExpanded ? 'Collapse sidebar' : 'Expand sidebar'}
+          aria-label={isExpanded ? "Collapse sidebar" : "Expand sidebar"}
           className="flex h-9 w-full cursor-pointer items-center overflow-hidden rounded-lg text-white/40 transition-colors hover:bg-white/5 hover:text-white/60"
         >
           <span className="flex w-10 shrink-0 items-center justify-center">
             <svg
-              className={cn('size-4 shrink-0 transition-transform duration-200', !isExpanded && 'rotate-180')}
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-            aria-hidden="true"
-          >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+              className={cn(
+                "size-4 shrink-0 transition-transform duration-200",
+                !isExpanded && "rotate-180",
+              )}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M15 19l-7-7 7-7"
+              />
             </svg>
           </span>
           <AnimatePresence initial={false}>
@@ -145,7 +166,7 @@ export function Sidebar() {
               <motion.span
                 key="collapse-label"
                 initial={{ opacity: 0, width: 0 }}
-                animate={{ opacity: 1, width: 'auto' }}
+                animate={{ opacity: 1, width: "auto" }}
                 exit={{ opacity: 0, width: 0 }}
                 transition={{ duration: 0.12 }}
                 className="overflow-hidden whitespace-nowrap text-xs"
@@ -157,5 +178,5 @@ export function Sidebar() {
         </button>
       </div>
     </motion.nav>
-  )
+  );
 }
