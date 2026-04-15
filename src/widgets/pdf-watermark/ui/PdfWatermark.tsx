@@ -81,6 +81,8 @@ function TileOverlay({
   return (
     <canvas
       ref={canvasRef}
+      role="img"
+      aria-label="워터마크 미리보기"
       style={{
         position: "absolute",
         top: 0,
@@ -191,7 +193,7 @@ export function PdfWatermark() {
         <button
           type="button"
           onClick={() => replaceInputRef.current?.click()}
-          className="text-xs text-[#a78bfa] hover:text-[#c9b0ff]"
+          className="text-xs text-[#a78bfa] hover:text-[#c9b0ff] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#a78bfa]"
         >
           파일 교체
         </button>
@@ -237,6 +239,7 @@ export function PdfWatermark() {
                       scale: img.offsetWidth / img.naturalWidth,
                     });
                   }}
+                  onError={() => setDisplayedSize(null)}
                 />
                 {text.trim() &&
                   displayedSize &&
@@ -262,7 +265,7 @@ export function PdfWatermark() {
               </div>
             </div>
           ) : null}
-          <p className="bg-[#0c0c0c] px-3 py-1.5 text-center text-[10px] text-[#444]">
+          <p className="bg-[#0c0c0c] px-3 py-1.5 text-center text-[10px] text-[#666]">
             미리보기 — 실제 결과와 다소 다를 수 있습니다
           </p>
         </div>
@@ -278,6 +281,7 @@ export function PdfWatermark() {
             value={text}
             onChange={(e) => setText(e.target.value)}
             placeholder="예: CONFIDENTIAL"
+            aria-label="워터마크 텍스트"
             className={inputCls}
           />
         </div>
@@ -288,14 +292,14 @@ export function PdfWatermark() {
           <div className="flex gap-2">
             <button
               type="button"
-              className={segBtn(mode === "tile")}
+              className={`${segBtn(mode === "tile")} focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#a78bfa]`}
               onClick={() => setMode("tile")}
             >
               대각 반복
             </button>
             <button
               type="button"
-              className={segBtn(mode === "single")}
+              className={`${segBtn(mode === "single")} focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#a78bfa]`}
               onClick={() => setMode("single")}
             >
               단일 위치
@@ -312,7 +316,7 @@ export function PdfWatermark() {
                 <button
                   key={p.value}
                   type="button"
-                  className={segBtn(position === p.value)}
+                  className={`${segBtn(position === p.value)} focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#a78bfa]`}
                   onClick={() => setPosition(p.value)}
                 >
                   {p.label}
@@ -334,6 +338,8 @@ export function PdfWatermark() {
               max={200}
               value={Math.round(spacing * 100)}
               onChange={(e) => setSpacing(Number(e.target.value) / 100)}
+              aria-label="간격"
+              aria-valuetext={`${spacing.toFixed(1)}x`}
               className="w-full accent-[#a78bfa]"
             />
           </div>
@@ -350,6 +356,8 @@ export function PdfWatermark() {
             max={72}
             value={fontSize}
             onChange={(e) => setFontSize(Number(e.target.value))}
+            aria-label="폰트 크기"
+            aria-valuetext={`${fontSize}pt`}
             className="w-full accent-[#a78bfa]"
           />
         </div>
@@ -366,6 +374,8 @@ export function PdfWatermark() {
             max={100}
             value={Math.round(opacity * 100)}
             onChange={(e) => setOpacity(Number(e.target.value) / 100)}
+            aria-label="불투명도"
+            aria-valuetext={`${Math.round(opacity * 100)}%`}
             className="w-full accent-[#a78bfa]"
           />
         </div>
@@ -378,6 +388,7 @@ export function PdfWatermark() {
               type="color"
               value={color}
               onChange={(e) => setColor(e.target.value)}
+              aria-label="워터마크 색상"
               className="h-8 w-12 cursor-pointer rounded-[6px] border border-[#ffffff15] bg-transparent"
             />
             <span className="font-mono text-xs text-[#777]">
@@ -399,7 +410,7 @@ export function PdfWatermark() {
         <button
           onClick={apply}
           disabled={!text.trim() || isProcessing}
-          className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-[#a78bfa40] bg-transparent px-4 py-3.5 text-[13px] font-semibold text-[#a78bfa] transition-all hover:border-[#a78bfa60] hover:bg-[#a78bfa10] disabled:cursor-not-allowed disabled:opacity-40"
+          className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-[#a78bfa40] bg-transparent px-4 py-3.5 text-[13px] font-semibold text-[#a78bfa] transition-all hover:border-[#a78bfa60] hover:bg-[#a78bfa10] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#a78bfa] disabled:cursor-not-allowed disabled:opacity-40"
         >
           {isProcessing ? "처리 중…" : "워터마크 적용 · 다운로드"}
         </button>
