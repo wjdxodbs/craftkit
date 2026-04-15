@@ -45,13 +45,6 @@ export function usePdfWatermark() {
     }
   };
 
-  const reset = (): void => {
-    setPdfData(null);
-    setFileName(null);
-    setError(null);
-    setPreviewUrl(null);
-  };
-
   const apply = async (): Promise<void> => {
     if (!pdfData || !text.trim()) return;
     setIsProcessing(true);
@@ -66,9 +59,11 @@ export function usePdfWatermark() {
         position,
         spacing,
       });
-      const blob = new Blob([result.buffer as ArrayBuffer], {
-        type: "application/pdf",
-      });
+      const buffer = result.buffer.slice(
+        result.byteOffset,
+        result.byteOffset + result.byteLength,
+      ) as ArrayBuffer;
+      const blob = new Blob([buffer], { type: "application/pdf" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
@@ -78,7 +73,7 @@ export function usePdfWatermark() {
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
-      setTimeout(() => URL.revokeObjectURL(url), 100);
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
     } catch (err) {
       if (err instanceof Error && err.message === "폰트 로드 실패") {
         setError(
