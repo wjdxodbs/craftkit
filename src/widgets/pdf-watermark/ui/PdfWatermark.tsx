@@ -57,9 +57,11 @@ function TileOverlay({
     const textWidthPx = ctx.measureText(text).width;
 
     // PDF와 동일한 step 공식 (screen px 단위로 변환)
-    const stepPx =
+    const stepPx = Math.max(
       Math.max(textWidthPx * 0.7 + 50 * scaleFactor, 100 * scaleFactor) *
-      spacing;
+        spacing,
+      1,
+    );
 
     ctx.fillStyle = color;
     ctx.globalAlpha = opacity;
@@ -200,7 +202,10 @@ export function PdfWatermark() {
           className="sr-only"
           onChange={(e) => {
             const file = e.target.files?.[0];
-            if (file) handleFile(file);
+            if (file) {
+              setDisplayedSize(null);
+              handleFile(file);
+            }
             e.target.value = "";
           }}
         />
@@ -213,11 +218,11 @@ export function PdfWatermark() {
             <div className="flex h-32 items-center justify-center bg-[#0c0c0c] text-xs text-[#555]">
               미리보기 생성 중…
             </div>
-          ) : (
+          ) : previewUrl ? (
             <div className="flex justify-center bg-[#080808] py-4">
               <div className="relative">
                 <img
-                  src={previewUrl!}
+                  src={previewUrl}
                   alt="PDF 미리보기"
                   style={{
                     maxHeight: "480px",
@@ -256,7 +261,7 @@ export function PdfWatermark() {
                   ))}
               </div>
             </div>
-          )}
+          ) : null}
           <p className="bg-[#0c0c0c] px-3 py-1.5 text-center text-[10px] text-[#444]">
             미리보기 — 실제 결과와 다소 다를 수 있습니다
           </p>
@@ -282,12 +287,14 @@ export function PdfWatermark() {
           <p className={labelCls}>배치 모드</p>
           <div className="flex gap-2">
             <button
+              type="button"
               className={segBtn(mode === "tile")}
               onClick={() => setMode("tile")}
             >
               대각 반복
             </button>
             <button
+              type="button"
               className={segBtn(mode === "single")}
               onClick={() => setMode("single")}
             >
@@ -304,6 +311,7 @@ export function PdfWatermark() {
               {POSITIONS.map((p) => (
                 <button
                   key={p.value}
+                  type="button"
                   className={segBtn(position === p.value)}
                   onClick={() => setPosition(p.value)}
                 >
@@ -334,7 +342,7 @@ export function PdfWatermark() {
         {/* 폰트 크기 */}
         <div className="space-y-2">
           <p className={labelCls}>
-            폰트 크기 <span className="text-[#aaa]">{fontSize}px</span>
+            폰트 크기 <span className="text-[#aaa]">{fontSize}pt</span>
           </p>
           <input
             type="range"

@@ -66,7 +66,7 @@ export function usePdfWatermark() {
         position,
         spacing,
       });
-      const blob = new Blob([result as Uint8Array<ArrayBuffer>], {
+      const blob = new Blob([result.buffer as ArrayBuffer], {
         type: "application/pdf",
       });
       const url = URL.createObjectURL(blob);
@@ -75,12 +75,20 @@ export function usePdfWatermark() {
       a.download = fileName
         ? fileName.replace(/\.pdf$/i, "_watermarked.pdf")
         : "watermarked.pdf";
+      document.body.appendChild(a);
       a.click();
-      URL.revokeObjectURL(url);
-    } catch {
-      setError(
-        "워터마크 추가에 실패했습니다. PDF가 손상되었거나 암호화되어 있을 수 있습니다.",
-      );
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 100);
+    } catch (err) {
+      if (err instanceof Error && err.message === "폰트 로드 실패") {
+        setError(
+          "폰트를 불러오는 데 실패했습니다. 잠시 후 다시 시도해 주세요.",
+        );
+      } else {
+        setError(
+          "워터마크 추가에 실패했습니다. PDF가 손상되었거나 암호화되어 있을 수 있습니다.",
+        );
+      }
     } finally {
       setIsProcessing(false);
     }
@@ -107,7 +115,6 @@ export function usePdfWatermark() {
     spacing,
     setSpacing,
     handleFile,
-    reset,
     apply,
   };
 }
