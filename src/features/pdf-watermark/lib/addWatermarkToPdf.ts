@@ -28,13 +28,12 @@ export interface WatermarkOptions {
 
 function hexToRgb(hex: string): { r: number; g: number; b: number } {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result
-    ? {
-        r: parseInt(result[1], 16) / 255,
-        g: parseInt(result[2], 16) / 255,
-        b: parseInt(result[3], 16) / 255,
-      }
-    : { r: 0.5, g: 0.5, b: 0.5 };
+  if (!result) throw new Error(`유효하지 않은 색상 값: ${hex}`);
+  return {
+    r: parseInt(result[1], 16) / 255,
+    g: parseInt(result[2], 16) / 255,
+    b: parseInt(result[3], 16) / 255,
+  };
 }
 
 export async function addWatermarkToPdf(
@@ -44,7 +43,7 @@ export async function addWatermarkToPdf(
   const { text, fontSize, opacity, color, mode, position, spacing } = options;
   const { r, g, b } = hexToRgb(color);
 
-  const pdfDoc = await PDFDocument.load(data.slice(0));
+  const pdfDoc = await PDFDocument.load(data);
   pdfDoc.registerFontkit(fontkit);
   const fontBytes = await loadFont();
   const font = await pdfDoc.embedFont(fontBytes);
@@ -56,7 +55,7 @@ export async function addWatermarkToPdf(
     const { width, height } = page.getSize();
 
     if (mode === "tile") {
-      const step = Math.max(Math.max(textWidth * 0.7 + 50, 100) * spacing, 10);
+      const step = Math.max(Math.max(textWidth * 0.7 + 50, 100) * spacing, 30);
       for (let x = -width; x < width * 2; x += step) {
         for (let y = -height; y < height * 2; y += step) {
           page.drawText(text, {
