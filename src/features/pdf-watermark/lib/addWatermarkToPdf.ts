@@ -1,4 +1,15 @@
-import { PDFDocument, StandardFonts, rgb, degrees } from "pdf-lib";
+import { PDFDocument, rgb, degrees } from "pdf-lib";
+import fontkit from "@pdf-lib/fontkit";
+
+let _fontBytesCache: ArrayBuffer | null = null;
+
+async function loadFont(): Promise<ArrayBuffer> {
+  if (_fontBytesCache) return _fontBytesCache;
+  const res = await fetch("/fonts/NanumGothic.ttf");
+  if (!res.ok) throw new Error("폰트 로드 실패");
+  _fontBytesCache = await res.arrayBuffer();
+  return _fontBytesCache;
+}
 
 export interface WatermarkOptions {
   text: string;
@@ -34,15 +45,18 @@ export async function addWatermarkToPdf(
   const { r, g, b } = hexToRgb(color);
 
   const pdfDoc = await PDFDocument.load(data.slice(0));
-  const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+  pdfDoc.registerFontkit(fontkit);
+  const fontBytes = await loadFont();
+  const font = await pdfDoc.embedFont(fontBytes);
+
+  const textWidth = font.widthOfTextAtSize(text, fontSize);
+  const textHeight = font.heightAtSize(fontSize);
 
   for (const page of pdfDoc.getPages()) {
     const { width, height } = page.getSize();
-    const textWidth = font.widthOfTextAtSize(text, fontSize);
-    const textHeight = font.heightAtSize(fontSize);
 
     if (mode === "tile") {
-      const step = Math.max(textWidth * 0.7 + 50, 100) * spacing;
+      const step = Math.max(Math.max(textWidth * 0.7 + 50, 100) * spacing, 10);
       for (let x = -width; x < width * 2; x += step) {
         for (let y = -height; y < height * 2; y += step) {
           page.drawText(text, {
@@ -64,7 +78,7 @@ export async function addWatermarkToPdf(
       switch (position) {
         case "center":
           x = width / 2 - textWidth / 2;
-          y = height / 2;
+          y = height / 2 - textHeight / 2;
           break;
         case "top-left":
           x = margin;
@@ -84,7 +98,7 @@ export async function addWatermarkToPdf(
           break;
         default:
           x = width / 2 - textWidth / 2;
-          y = height / 2;
+          y = height / 2 - textHeight / 2;
       }
 
       page.drawText(text, {
