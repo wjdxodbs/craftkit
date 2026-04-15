@@ -117,4 +117,17 @@ export const TOOLS: Tool[] = [
     icon: "Stamp",
     available: true,
   },
+  {
+    id: "pdf-splitter",
+    name: "PDF Splitter",
+    description: "PDF에서 원하는 페이지만 추출",
+    href: "/tools/pdf-splitter",
+    tags: [".pdf", "페이지 추출", "분할"],
+    accentColor: "#a78bfa",
+    borderColor: "#a78bfa22",
+    tagBg: "#a78bfa0c",
+    tagText: "#a78bfa88",
+    icon: "Scissors",
+    available: true,
+  },
 ];
