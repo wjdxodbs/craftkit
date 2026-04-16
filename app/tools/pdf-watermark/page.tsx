@@ -4,6 +4,9 @@ import { PdfWatermarkToolView } from "@/views/pdf-watermark-tool/ui/PdfWatermark
 export const metadata: Metadata = {
   title: "PDF Watermark — Craftkit",
   description: "PDF에 텍스트 워터마크 추가. 브라우저에서 처리, 업로드 없음.",
+  alternates: {
+    canonical: "https://wjdxodbs-craftkit.vercel.app/tools/pdf-watermark",
+  },
   openGraph: {
     title: "PDF Watermark — Craftkit",
     description: "PDF에 텍스트 워터마크 추가. 브라우저에서 처리, 업로드 없음.",
