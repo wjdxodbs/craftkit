@@ -98,7 +98,7 @@ export function ImageUpload({
               d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
             />
           </motion.svg>
-          <p className="text-sm text-[#777]">
+          <p className="text-sm text-[#888]">
             클릭하거나 드래그해서 파일 업로드
           </p>
           <p className="mt-1 text-xs text-white/20">{hint}</p>

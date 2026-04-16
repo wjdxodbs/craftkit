@@ -1,4 +1,4 @@
-export const labelCls = "text-[11px] font-medium text-[#777]";
+export const labelCls = "text-[11px] font-medium text-[#888]";
 
 export const segBtn = (active: boolean): string =>
   `cursor-pointer rounded-[10px] px-3 py-1.5 text-xs font-medium transition-colors ${
