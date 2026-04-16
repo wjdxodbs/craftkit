@@ -1,71 +1,80 @@
-'use client'
-import { useRef, useState } from 'react'
-import { motion } from 'motion/react'
-import { cn } from '@/shared/lib/utils'
+"use client";
+import { useRef, useState } from "react";
+import { motion } from "motion/react";
+import { cn } from "@/shared/lib/utils";
 
 interface Props {
-  onFileLoad?: (img: HTMLImageElement, dataUrl: string) => void
-  onFiles?: (files: File[]) => void
-  accept?: string
-  hint?: string
-  multiple?: boolean
-  variant?: 'dashed' | 'solid'
-  size?: 'sm' | 'lg'
+  onFileLoad?: (img: HTMLImageElement, dataUrl: string) => void;
+  onFiles?: (files: File[]) => void;
+  accept?: string;
+  hint?: string;
+  multiple?: boolean;
+  variant?: "dashed" | "solid";
+  size?: "sm" | "lg";
 }
 
 export function ImageUpload({
   onFileLoad,
   onFiles,
-  accept = 'image/png,image/jpeg,image/svg+xml,image/webp',
-  hint = 'PNG, JPG, SVG, WebP — 권장: 512×512 이상',
+  accept = "image/png,image/jpeg,image/svg+xml,image/webp",
+  hint = "PNG, JPG, SVG, WebP — 권장: 512×512 이상",
   multiple,
-  variant = 'dashed',
-  size = 'sm',
+  variant = "dashed",
+  size = "sm",
 }: Props) {
-  const inputRef = useRef<HTMLInputElement>(null)
-  const [isDragging, setIsDragging] = useState(false)
-  const [fileName, setFileName] = useState<string | null>(null)
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [fileName, setFileName] = useState<string | null>(null);
 
   const handleFiles = (files: File[]) => {
-    if (files.length === 0) return
+    if (files.length === 0) return;
     if (onFiles) {
-      onFiles(files)
-      return
+      onFiles(files);
+      return;
     }
-    const file = files[0]
-    setFileName(file.name)
-    const reader = new FileReader()
+    const file = files[0];
+    setFileName(file.name);
+    const reader = new FileReader();
     reader.onload = (e) => {
-      const dataUrl = e.target?.result as string
-      const img = new Image()
-      img.onload = () => onFileLoad?.(img, dataUrl)
-      img.src = dataUrl
-    }
-    reader.readAsDataURL(file)
-  }
+      const dataUrl = e.target?.result as string;
+      const img = new Image();
+      img.onload = () => onFileLoad?.(img, dataUrl);
+      img.onerror = () => {
+        // 이미지 로드 실패 — 콜백 호출 생략
+      };
+      img.src = dataUrl;
+    };
+    reader.onerror = () => {
+      // 파일 읽기 실패 — 이 컴포넌트는 에러 상태를 노출하지 않음
+    };
+    reader.readAsDataURL(file);
+  };
 
   const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault()
-    setIsDragging(false)
-    handleFiles(Array.from(e.dataTransfer.files))
-  }
+    e.preventDefault();
+    setIsDragging(false);
+    handleFiles(Array.from(e.dataTransfer.files));
+  };
 
   return (
     <button
       aria-label="파일 업로드"
       onClick={() => inputRef.current?.click()}
-      onDragOver={(e) => { e.preventDefault(); setIsDragging(true) }}
+      onDragOver={(e) => {
+        e.preventDefault();
+        setIsDragging(true);
+      }}
       onDragLeave={() => setIsDragging(false)}
       onDrop={handleDrop}
       className={cn(
-        'group relative flex w-full overflow-hidden flex-col items-center justify-center cursor-pointer rounded-[14px] border px-6 text-center transition-all duration-300',
-        size === 'sm' ? 'h-[120px]' : 'min-h-[300px]',
-        variant === 'dashed' ? 'border-dashed' : 'border-solid',
+        "group relative flex w-full overflow-hidden flex-col items-center justify-center cursor-pointer rounded-[14px] border px-6 text-center transition-all duration-300",
+        size === "sm" ? "h-[120px]" : "min-h-[300px]",
+        variant === "dashed" ? "border-dashed" : "border-solid",
         isDragging
-          ? 'border-[#a78bfa40] bg-[#a78bfa08]'
-          : variant === 'dashed'
-            ? 'border-[#ffffff20] bg-[#0c0c0c] hover:border-[#a78bfa66] hover:shadow-[0_0_24px_-4px_#a78bfa15]'
-            : 'border-[#ffffff15] bg-[#0c0c0c]'
+          ? "border-[#a78bfa40] bg-[#a78bfa08]"
+          : variant === "dashed"
+            ? "border-[#ffffff20] bg-[#0c0c0c] hover:border-[#a78bfa66] hover:shadow-[0_0_24px_-4px_#a78bfa15]"
+            : "border-[#ffffff15] bg-[#0c0c0c]",
       )}
     >
       {fileName && !onFiles ? (
@@ -83,7 +92,7 @@ export function ImageUpload({
             strokeWidth={1.5}
             aria-hidden="true"
             whileHover={{ y: -3 }}
-            transition={{ type: 'spring', stiffness: 300 }}
+            transition={{ type: "spring", stiffness: 300 }}
           >
             <path
               strokeLinecap="round"
@@ -91,7 +100,9 @@ export function ImageUpload({
               d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
             />
           </motion.svg>
-          <p className="text-sm text-[#777]">클릭하거나 드래그해서 파일 업로드</p>
+          <p className="text-sm text-[#777]">
+            클릭하거나 드래그해서 파일 업로드
+          </p>
           <p className="mt-1 text-xs text-white/20">{hint}</p>
         </>
       )}
@@ -102,10 +113,10 @@ export function ImageUpload({
         multiple={multiple}
         className="sr-only"
         onChange={(e) => {
-          handleFiles(Array.from(e.target.files ?? []))
-          e.target.value = ''
+          handleFiles(Array.from(e.target.files ?? []));
+          e.target.value = "";
         }}
       />
     </button>
-  )
+  );
 }

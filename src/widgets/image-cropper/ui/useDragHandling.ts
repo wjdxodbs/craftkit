@@ -1,53 +1,54 @@
-import { useEffect, useRef } from 'react'
-import type React from 'react'
-import type { CropBox } from '@/features/image-crop/lib/cropImage'
+import { useEffect, useRef } from "react";
+import type React from "react";
+import type { CropBox } from "@/features/image-crop/lib/cropImage";
 
-export const MIN_CROP = 20
-const HANDLE_SIZE = 8
+export const MIN_CROP = 20;
+const HANDLE_SIZE = 8;
 
 export function clamp(v: number, min: number, max: number): number {
-  return Math.max(min, Math.min(max, v))
+  return Math.max(min, Math.min(max, v));
 }
 
 function drawOverlay(canvas: HTMLCanvasElement, box: CropBox): void {
-  const ctx = canvas.getContext('2d')
-  if (!ctx) return
-  const { width, height } = canvas
-  ctx.clearRect(0, 0, width, height)
-  ctx.fillStyle = 'rgba(0,0,0,0.5)'
-  ctx.fillRect(0, 0, width, height)
-  ctx.clearRect(box.x, box.y, box.w, box.h)
-  ctx.strokeStyle = 'rgba(255,255,255,0.8)'
-  ctx.lineWidth = 1
-  ctx.strokeRect(box.x, box.y, box.w, box.h)
-  ctx.fillStyle = 'white'
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+  const { width, height } = canvas;
+  ctx.clearRect(0, 0, width, height);
+  ctx.fillStyle = "rgba(0,0,0,0.5)";
+  ctx.fillRect(0, 0, width, height);
+  ctx.clearRect(box.x, box.y, box.w, box.h);
+  ctx.strokeStyle = "rgba(255,255,255,0.8)";
+  ctx.lineWidth = 1;
+  ctx.strokeRect(box.x, box.y, box.w, box.h);
+  ctx.fillStyle = "white";
   const corners: [number, number][] = [
     [box.x, box.y],
     [box.x + box.w - HANDLE_SIZE, box.y],
     [box.x, box.y + box.h - HANDLE_SIZE],
     [box.x + box.w - HANDLE_SIZE, box.y + box.h - HANDLE_SIZE],
-  ]
-  corners.forEach(([cx, cy]) => ctx.fillRect(cx, cy, HANDLE_SIZE, HANDLE_SIZE))
+  ];
+  corners.forEach(([cx, cy]) => ctx.fillRect(cx, cy, HANDLE_SIZE, HANDLE_SIZE));
 }
 
-type HandleType = 'nw' | 'ne' | 'sw' | 'se' | 'move'
+type HandleType = "nw" | "ne" | "sw" | "se" | "move";
 
 interface DragState {
-  type: HandleType
-  startX: number
-  startY: number
-  startBox: CropBox
+  type: HandleType;
+  startX: number;
+  startY: number;
+  startBox: CropBox;
 }
 
 function hitTest(x: number, y: number, box: CropBox): HandleType | null {
-  const { x: bx, y: by, w, h } = box
-  const hs = HANDLE_SIZE
-  if (x >= bx && x <= bx + hs && y >= by && y <= by + hs) return 'nw'
-  if (x >= bx + w - hs && x <= bx + w && y >= by && y <= by + hs) return 'ne'
-  if (x >= bx && x <= bx + hs && y >= by + h - hs && y <= by + h) return 'sw'
-  if (x >= bx + w - hs && x <= bx + w && y >= by + h - hs && y <= by + h) return 'se'
-  if (x >= bx && x <= bx + w && y >= by && y <= by + h) return 'move'
-  return null
+  const { x: bx, y: by, w, h } = box;
+  const hs = HANDLE_SIZE;
+  if (x >= bx && x <= bx + hs && y >= by && y <= by + hs) return "nw";
+  if (x >= bx + w - hs && x <= bx + w && y >= by && y <= by + hs) return "ne";
+  if (x >= bx && x <= bx + hs && y >= by + h - hs && y <= by + h) return "sw";
+  if (x >= bx + w - hs && x <= bx + w && y >= by + h - hs && y <= by + h)
+    return "se";
+  if (x >= bx && x <= bx + w && y >= by && y <= by + h) return "move";
+  return null;
 }
 
 function applyDrag(
@@ -56,75 +57,94 @@ function applyDrag(
   dy: number,
   canvasW: number,
   canvasH: number,
-  aspectRatio: number | null
+  aspectRatio: number | null,
 ): CropBox {
-  const sb = drag.startBox
-  let { x, y, w, h } = sb
+  const sb = drag.startBox;
+  let { x, y, w, h } = sb;
 
-  if (drag.type === 'move') {
+  if (drag.type === "move") {
     return {
       x: clamp(sb.x + dx, 0, canvasW - sb.w),
       y: clamp(sb.y + dy, 0, canvasH - sb.h),
       w: sb.w,
       h: sb.h,
-    }
+    };
   }
 
-  if (drag.type === 'se') {
+  if (drag.type === "se") {
     if (aspectRatio) {
-      w = clamp(sb.w + dx, MIN_CROP, canvasW - sb.x)
-      h = w / aspectRatio
-      if (h > canvasH - sb.y) { h = canvasH - sb.y; w = h * aspectRatio }
-      w = Math.max(w, MIN_CROP); h = Math.max(h, MIN_CROP)
+      w = clamp(sb.w + dx, MIN_CROP, canvasW - sb.x);
+      h = w / aspectRatio;
+      if (h > canvasH - sb.y) {
+        h = canvasH - sb.y;
+        w = h * aspectRatio;
+      }
+      w = Math.max(w, MIN_CROP);
+      h = Math.max(h, MIN_CROP);
     } else {
-      w = clamp(sb.w + dx, MIN_CROP, canvasW - sb.x)
-      h = clamp(sb.h + dy, MIN_CROP, canvasH - sb.y)
+      w = clamp(sb.w + dx, MIN_CROP, canvasW - sb.x);
+      h = clamp(sb.h + dy, MIN_CROP, canvasH - sb.y);
     }
-  } else if (drag.type === 'sw') {
+  } else if (drag.type === "sw") {
     if (aspectRatio) {
-      w = clamp(sb.w - dx, MIN_CROP, sb.x + sb.w)
-      h = w / aspectRatio
-      if (h > canvasH - sb.y) { h = canvasH - sb.y; w = h * aspectRatio }
-      w = Math.max(w, MIN_CROP); h = Math.max(h, MIN_CROP)
+      w = clamp(sb.w - dx, MIN_CROP, sb.x + sb.w);
+      h = w / aspectRatio;
+      if (h > canvasH - sb.y) {
+        h = canvasH - sb.y;
+        w = h * aspectRatio;
+      }
+      w = Math.max(w, MIN_CROP);
+      h = Math.max(h, MIN_CROP);
     } else {
-      w = clamp(sb.w - dx, MIN_CROP, sb.x + sb.w)
-      h = clamp(sb.h + dy, MIN_CROP, canvasH - sb.y)
+      w = clamp(sb.w - dx, MIN_CROP, sb.x + sb.w);
+      h = clamp(sb.h + dy, MIN_CROP, canvasH - sb.y);
     }
-    x = sb.x + sb.w - w
-  } else if (drag.type === 'ne') {
+    x = sb.x + sb.w - w;
+  } else if (drag.type === "ne") {
     if (aspectRatio) {
-      w = clamp(sb.w + dx, MIN_CROP, canvasW - sb.x)
-      h = w / aspectRatio
-      if (h > sb.y + sb.h) { h = sb.y + sb.h; w = h * aspectRatio }
-      w = Math.max(w, MIN_CROP); h = Math.max(h, MIN_CROP)
+      w = clamp(sb.w + dx, MIN_CROP, canvasW - sb.x);
+      h = w / aspectRatio;
+      if (h > sb.y + sb.h) {
+        h = sb.y + sb.h;
+        w = h * aspectRatio;
+      }
+      w = Math.max(w, MIN_CROP);
+      h = Math.max(h, MIN_CROP);
     } else {
-      w = clamp(sb.w + dx, MIN_CROP, canvasW - sb.x)
-      h = clamp(sb.h - dy, MIN_CROP, sb.y + sb.h)
+      w = clamp(sb.w + dx, MIN_CROP, canvasW - sb.x);
+      h = clamp(sb.h - dy, MIN_CROP, sb.y + sb.h);
     }
-    y = sb.y + sb.h - h
-  } else if (drag.type === 'nw') {
+    y = sb.y + sb.h - h;
+  } else if (drag.type === "nw") {
     if (aspectRatio) {
-      w = clamp(sb.w - dx, MIN_CROP, sb.x + sb.w)
-      h = w / aspectRatio
-      if (h > sb.y + sb.h) { h = sb.y + sb.h; w = h * aspectRatio }
-      w = Math.max(w, MIN_CROP); h = Math.max(h, MIN_CROP)
+      w = clamp(sb.w - dx, MIN_CROP, sb.x + sb.w);
+      h = w / aspectRatio;
+      if (h > sb.y + sb.h) {
+        h = sb.y + sb.h;
+        w = h * aspectRatio;
+      }
+      w = Math.max(w, MIN_CROP);
+      h = Math.max(h, MIN_CROP);
     } else {
-      w = clamp(sb.w - dx, MIN_CROP, sb.x + sb.w)
-      h = clamp(sb.h - dy, MIN_CROP, sb.y + sb.h)
+      w = clamp(sb.w - dx, MIN_CROP, sb.x + sb.w);
+      h = clamp(sb.h - dy, MIN_CROP, sb.y + sb.h);
     }
-    x = sb.x + sb.w - w
-    y = sb.y + sb.h - h
+    x = sb.x + sb.w - w;
+    y = sb.y + sb.h - h;
   }
 
-  return { x, y, w, h }
+  return { x, y, w, h };
 }
 
-function getCanvasPos(e: React.PointerEvent<HTMLCanvasElement>, canvas: HTMLCanvasElement) {
-  const rect = canvas.getBoundingClientRect()
+function getCanvasPos(
+  e: React.PointerEvent<HTMLCanvasElement>,
+  canvas: HTMLCanvasElement,
+) {
+  const rect = canvas.getBoundingClientRect();
   return {
     x: (e.clientX - rect.left) * (canvas.width / rect.width),
     y: (e.clientY - rect.top) * (canvas.height / rect.height),
-  }
+  };
 }
 
 export function useDragHandling({
@@ -133,50 +153,71 @@ export function useDragHandling({
   aspectRatio,
   setCropBox,
 }: {
-  cropBox: CropBox | null
-  canvasRef: React.RefObject<HTMLCanvasElement | null>
-  aspectRatio: number | null
-  setCropBox: (box: CropBox) => void
+  cropBox: CropBox | null;
+  canvasRef: React.RefObject<HTMLCanvasElement | null>;
+  aspectRatio: number | null;
+  setCropBox: (box: CropBox) => void;
 }): {
-  handlePointerDown: (e: React.PointerEvent<HTMLCanvasElement>) => void
-  handlePointerMove: (e: React.PointerEvent<HTMLCanvasElement>) => void
-  handlePointerUp: (e: React.PointerEvent<HTMLCanvasElement>) => void
+  handlePointerDown: (e: React.PointerEvent<HTMLCanvasElement>) => void;
+  handlePointerMove: (e: React.PointerEvent<HTMLCanvasElement>) => void;
+  handlePointerUp: (e: React.PointerEvent<HTMLCanvasElement>) => void;
 } {
-  const dragRef = useRef<DragState | null>(null)
+  const dragRef = useRef<DragState | null>(null);
+  const rafRef = useRef<number | null>(null);
 
   useEffect(() => {
-    const canvas = canvasRef.current
-    if (!canvas || !cropBox) return
-    if (dragRef.current) return
-    drawOverlay(canvas, cropBox)
-  }, [cropBox, canvasRef])
+    const canvas = canvasRef.current;
+    if (!canvas || !cropBox) return;
+    if (dragRef.current) return;
+    drawOverlay(canvas, cropBox);
+  }, [cropBox, canvasRef]);
 
   const handlePointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
-    if (!cropBox || !canvasRef.current) return
-    const canvas = canvasRef.current
-    const pos = getCanvasPos(e, canvas)
-    const type = hitTest(pos.x, pos.y, cropBox)
-    if (!type) return
-    e.currentTarget.setPointerCapture(e.pointerId)
-    dragRef.current = { type, startX: pos.x, startY: pos.y, startBox: { ...cropBox } }
-  }
+    if (!cropBox || !canvasRef.current) return;
+    const canvas = canvasRef.current;
+    const pos = getCanvasPos(e, canvas);
+    const type = hitTest(pos.x, pos.y, cropBox);
+    if (!type) return;
+    e.currentTarget.setPointerCapture(e.pointerId);
+    dragRef.current = {
+      type,
+      startX: pos.x,
+      startY: pos.y,
+      startBox: { ...cropBox },
+    };
+  };
 
   const handlePointerMove = (e: React.PointerEvent<HTMLCanvasElement>) => {
-    if (!dragRef.current || !canvasRef.current) return
-    const canvas = canvasRef.current
-    const pos = getCanvasPos(e, canvas)
-    const dx = pos.x - dragRef.current.startX
-    const dy = pos.y - dragRef.current.startY
-    const newBox = applyDrag(dragRef.current, dx, dy, canvas.width, canvas.height, aspectRatio)
-    setCropBox(newBox)
-    drawOverlay(canvas, newBox)
-  }
+    if (!dragRef.current || !canvasRef.current) return;
+    const canvas = canvasRef.current;
+    const pos = getCanvasPos(e, canvas);
+    const dx = pos.x - dragRef.current.startX;
+    const dy = pos.y - dragRef.current.startY;
+    const newBox = applyDrag(
+      dragRef.current,
+      dx,
+      dy,
+      canvas.width,
+      canvas.height,
+      aspectRatio,
+    );
+    setCropBox(newBox);
+    if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
+    rafRef.current = requestAnimationFrame(() => {
+      drawOverlay(canvas, newBox);
+      rafRef.current = null;
+    });
+  };
 
   const handlePointerUp = (e: React.PointerEvent<HTMLCanvasElement>) => {
-    if (!dragRef.current) return
-    dragRef.current = null
-    e.currentTarget.releasePointerCapture(e.pointerId)
-  }
+    if (!dragRef.current) return;
+    if (rafRef.current !== null) {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
+    }
+    dragRef.current = null;
+    e.currentTarget.releasePointerCapture(e.pointerId);
+  };
 
-  return { handlePointerDown, handlePointerMove, handlePointerUp }
+  return { handlePointerDown, handlePointerMove, handlePointerUp };
 }
