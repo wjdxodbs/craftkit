@@ -1,9 +1,9 @@
 "use client";
 import { useRef, useState, useEffect } from "react";
-import { motion } from "motion/react";
 import { usePdfWatermark } from "./usePdfWatermark";
 import { ImageUpload } from "@/features/image-upload/ui/ImageUpload";
 import { labelCls, segBtn } from "@/shared/ui/styles";
+import { DownloadButton } from "@/shared/ui/DownloadButton";
 import type { WatermarkOptions } from "@/features/pdf-watermark/lib/addWatermarkToPdf";
 
 const inputCls =
@@ -406,15 +406,13 @@ export function PdfWatermark() {
       )}
 
       {/* 실행 버튼 */}
-      <motion.div whileTap={{ scale: 0.98 }}>
-        <button
-          onClick={apply}
-          disabled={!text.trim() || isProcessing}
-          className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-[#a78bfa40] bg-transparent px-4 py-3.5 text-[13px] font-semibold text-[#a78bfa] transition-all hover:border-[#a78bfa60] hover:bg-[#a78bfa10] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#a78bfa] disabled:cursor-not-allowed disabled:opacity-40"
-        >
-          {isProcessing ? "처리 중…" : "워터마크 적용 · 다운로드"}
-        </button>
-      </motion.div>
+      <DownloadButton
+        onClick={apply}
+        disabled={!text.trim() || isProcessing}
+        isProcessing={isProcessing}
+      >
+        워터마크 적용 · 다운로드
+      </DownloadButton>
     </div>
   );
 }

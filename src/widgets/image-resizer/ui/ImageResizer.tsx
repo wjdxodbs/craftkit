@@ -5,6 +5,7 @@ import { resizeImage } from "@/features/image-resize/lib/resizeImage";
 import { EXT_MAP, type OutputFormat } from "@/shared/config/image-formats";
 import { useResizePreview } from "./useResizePreview";
 import { ResizeControlBar } from "./ResizeControlBar";
+import { DownloadButton } from "@/shared/ui/DownloadButton";
 
 const CHECKER_BG = `url("data:image/svg+xml,%3Csvg width='16' height='16' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='8' height='8' fill='%23111'/%3E%3Crect x='8' y='0' width='8' height='8' fill='%230c0c0c'/%3E%3Crect x='0' y='8' width='8' height='8' fill='%230c0c0c'/%3E%3Crect x='8' y='8' width='8' height='8' fill='%23111'/%3E%3C/svg%3E")`;
 
@@ -216,35 +217,27 @@ export function ImageResizer() {
       {error && <p className="text-xs text-red-400">{error}</p>}
 
       {/* 다운로드 */}
-      <motion.div whileTap={{ scale: 0.98 }}>
-        <button
-          onClick={handleDownload}
-          disabled={!imageEl || isConverting}
-          className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-[#a78bfa40] bg-transparent px-4 py-3.5 text-[13px] font-semibold text-[#a78bfa] transition-all hover:border-[#a78bfa60] hover:bg-[#a78bfa10] disabled:cursor-not-allowed disabled:opacity-40"
+      <DownloadButton
+        onClick={handleDownload}
+        disabled={!imageEl || isConverting}
+        isProcessing={isConverting}
+      >
+        <svg
+          className="size-4"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth={2}
+          aria-hidden="true"
         >
-          {isConverting ? (
-            "처리 중…"
-          ) : (
-            <>
-              <svg
-                className="size-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-                aria-hidden="true"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                />
-              </svg>
-              Download
-            </>
-          )}
-        </button>
-      </motion.div>
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+          />
+        </svg>
+        Download
+      </DownloadButton>
     </div>
   );
 }

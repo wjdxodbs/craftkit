@@ -1,15 +1,15 @@
-'use client'
-import { useRef } from 'react'
-import { motion } from 'motion/react'
-import { usePdfEncrypt } from './usePdfEncrypt'
-import { ImageUpload } from '@/features/image-upload/ui/ImageUpload'
-import { labelCls } from '@/shared/ui/styles'
+"use client";
+import { useRef } from "react";
+import { usePdfEncrypt } from "./usePdfEncrypt";
+import { ImageUpload } from "@/features/image-upload/ui/ImageUpload";
+import { labelCls } from "@/shared/ui/styles";
+import { DownloadButton } from "@/shared/ui/DownloadButton";
 
 const inputCls =
-  'w-full rounded-[10px] border border-[#ffffff15] bg-[#131313] px-3 py-2 text-sm text-white placeholder-[#555] outline-none transition-colors focus:border-[#a78bfa40]'
+  "w-full rounded-[10px] border border-[#ffffff15] bg-[#131313] px-3 py-2 text-sm text-white placeholder-[#555] outline-none transition-colors focus:border-[#a78bfa40]";
 
 export function PdfEncryptTab() {
-  const replaceInputRef = useRef<HTMLInputElement>(null)
+  const replaceInputRef = useRef<HTMLInputElement>(null);
 
   const {
     fileName,
@@ -21,7 +21,7 @@ export function PdfEncryptTab() {
     setUserPassword,
     setOwnerPassword,
     encrypt,
-  } = usePdfEncrypt()
+  } = usePdfEncrypt();
 
   if (!fileName) {
     return (
@@ -29,9 +29,11 @@ export function PdfEncryptTab() {
         accept="application/pdf"
         hint="암호를 설정할 PDF 업로드"
         size="lg"
-        onFiles={(files) => { if (files[0]) handleFile(files[0]) }}
+        onFiles={(files) => {
+          if (files[0]) handleFile(files[0]);
+        }}
       />
-    )
+    );
   }
 
   return (
@@ -52,9 +54,9 @@ export function PdfEncryptTab() {
           accept="application/pdf"
           className="sr-only"
           onChange={(e) => {
-            const file = e.target.files?.[0]
-            if (file) handleFile(file)
-            e.target.value = ''
+            const file = e.target.files?.[0];
+            if (file) handleFile(file);
+            e.target.value = "";
           }}
         />
       </div>
@@ -91,15 +93,13 @@ export function PdfEncryptTab() {
       )}
 
       {/* 다운로드 버튼 */}
-      <motion.div whileTap={{ scale: 0.98 }}>
-        <button
-          onClick={encrypt}
-          disabled={!userPassword || isProcessing}
-          className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-[#a78bfa40] bg-transparent px-4 py-3.5 text-[13px] font-semibold text-[#a78bfa] transition-all hover:border-[#a78bfa60] hover:bg-[#a78bfa10] disabled:cursor-not-allowed disabled:opacity-40"
-        >
-          {isProcessing ? '처리 중…' : '암호 설정 · 다운로드'}
-        </button>
-      </motion.div>
+      <DownloadButton
+        onClick={encrypt}
+        disabled={!userPassword || isProcessing}
+        isProcessing={isProcessing}
+      >
+        암호 설정 · 다운로드
+      </DownloadButton>
     </div>
-  )
+  );
 }

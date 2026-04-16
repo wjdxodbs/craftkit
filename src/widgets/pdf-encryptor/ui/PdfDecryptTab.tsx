@@ -1,15 +1,15 @@
-'use client'
-import { useRef } from 'react'
-import { motion } from 'motion/react'
-import { usePdfDecrypt } from './usePdfDecrypt'
-import { ImageUpload } from '@/features/image-upload/ui/ImageUpload'
-import { labelCls } from '@/shared/ui/styles'
+"use client";
+import { useRef } from "react";
+import { usePdfDecrypt } from "./usePdfDecrypt";
+import { ImageUpload } from "@/features/image-upload/ui/ImageUpload";
+import { labelCls } from "@/shared/ui/styles";
+import { DownloadButton } from "@/shared/ui/DownloadButton";
 
 const inputCls =
-  'w-full rounded-[10px] border border-[#ffffff15] bg-[#131313] px-3 py-2 text-sm text-white placeholder-[#555] outline-none transition-colors focus:border-[#a78bfa40]'
+  "w-full rounded-[10px] border border-[#ffffff15] bg-[#131313] px-3 py-2 text-sm text-white placeholder-[#555] outline-none transition-colors focus:border-[#a78bfa40]";
 
 export function PdfDecryptTab() {
-  const replaceInputRef = useRef<HTMLInputElement>(null)
+  const replaceInputRef = useRef<HTMLInputElement>(null);
 
   const {
     fileName,
@@ -20,7 +20,7 @@ export function PdfDecryptTab() {
     handleFile,
     setPassword,
     decrypt,
-  } = usePdfDecrypt()
+  } = usePdfDecrypt();
 
   if (!fileName) {
     return (
@@ -28,9 +28,11 @@ export function PdfDecryptTab() {
         accept="application/pdf"
         hint="암호를 해제할 PDF 업로드"
         size="lg"
-        onFiles={(files) => { if (files[0]) handleFile(files[0]) }}
+        onFiles={(files) => {
+          if (files[0]) handleFile(files[0]);
+        }}
       />
-    )
+    );
   }
 
   return (
@@ -51,9 +53,9 @@ export function PdfDecryptTab() {
           accept="application/pdf"
           className="sr-only"
           onChange={(e) => {
-            const file = e.target.files?.[0]
-            if (file) handleFile(file)
-            e.target.value = ''
+            const file = e.target.files?.[0];
+            if (file) handleFile(file);
+            e.target.value = "";
           }}
         />
       </div>
@@ -72,7 +74,9 @@ export function PdfDecryptTab() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              onKeyDown={(e) => { if (e.key === 'Enter') decrypt() }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") decrypt();
+              }}
               placeholder="PDF 비밀번호 입력"
               className={inputCls}
             />
@@ -86,17 +90,15 @@ export function PdfDecryptTab() {
           )}
 
           {/* 다운로드 버튼 */}
-          <motion.div whileTap={{ scale: 0.98 }}>
-            <button
-              onClick={decrypt}
-              disabled={!password || isProcessing}
-              className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-[#a78bfa40] bg-transparent px-4 py-3.5 text-[13px] font-semibold text-[#a78bfa] transition-all hover:border-[#a78bfa60] hover:bg-[#a78bfa10] disabled:cursor-not-allowed disabled:opacity-40"
-            >
-              {isProcessing ? '처리 중…' : '암호 해제 · 다운로드'}
-            </button>
-          </motion.div>
+          <DownloadButton
+            onClick={decrypt}
+            disabled={!password || isProcessing}
+            isProcessing={isProcessing}
+          >
+            암호 해제 · 다운로드
+          </DownloadButton>
         </>
       )}
     </div>
-  )
+  );
 }
