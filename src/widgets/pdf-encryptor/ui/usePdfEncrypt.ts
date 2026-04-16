@@ -47,9 +47,10 @@ export function usePdfEncrypt() {
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = fileName
+      const rawName = fileName
         ? fileName.replace(/\.pdf$/i, "_encrypted.pdf")
         : "encrypted.pdf";
+      a.download = rawName.replace(/[/\\?%*:|"<>\x00]/g, "_");
       a.click();
       URL.revokeObjectURL(url);
     } catch {

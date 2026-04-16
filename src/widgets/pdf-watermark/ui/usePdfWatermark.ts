@@ -67,13 +67,14 @@ export function usePdfWatermark() {
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = fileName
+      const rawName = fileName
         ? fileName.replace(/\.pdf$/i, "_watermarked.pdf")
         : "watermarked.pdf";
+      a.download = rawName.replace(/[/\\?%*:|"<>\x00]/g, "_");
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
-      setTimeout(() => URL.revokeObjectURL(url), 1000);
+      setTimeout(() => URL.revokeObjectURL(url), 100);
     } catch (err) {
       if (err instanceof Error && err.message === "폰트 로드 실패") {
         setError(
