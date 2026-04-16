@@ -61,7 +61,7 @@ export function FaviconGenerator() {
                   className="rounded border border-[#ffffff20] bg-[#0a0a0a]"
                 />
               )}
-              <span className="rounded bg-[#0c0c0c]/80 px-1.5 py-0.5 text-[10px] text-[#555]">{size}px</span>
+              <span className="rounded bg-[#0c0c0c]/80 px-1.5 py-0.5 text-[10px] text-[#888]">{size}px</span>
             </div>
           )
         })}
@@ -70,14 +70,14 @@ export function FaviconGenerator() {
       {/* File list */}
       <div className="rounded-[14px] border border-[#ffffff15] bg-[#0c0c0c] px-5 py-4">
         <div className="mb-3 flex items-center justify-between">
-          <span className="text-[11px] font-medium text-[#555]">생성 파일</span>
+          <span className="text-[11px] font-medium text-[#888]">생성 파일</span>
           <span className="rounded-md border border-[#a78bfa14] bg-[#a78bfa0c] px-2 py-0.5 text-[10px] font-medium text-[#a78bfa]/55">
             {FAVICON_SIZES.length + 2}개
           </span>
         </div>
         <div className="flex items-center justify-between border-b border-[#ffffff08] py-[7px]">
           <span className="font-mono text-xs text-[#ccc]">favicon.ico</span>
-          <span className="text-[10px] text-[#555]">16, 32, 48px</span>
+          <span className="text-[10px] text-[#888]">16, 32, 48px</span>
         </div>
         {FAVICON_SIZES.map(({ filename, size }) => (
           <div
@@ -85,12 +85,12 @@ export function FaviconGenerator() {
             className="flex items-center justify-between border-b border-[#ffffff08] py-[7px] last:border-b-0"
           >
             <span className="font-mono text-xs text-[#ccc]">{filename}</span>
-            <span className="text-[10px] text-[#555]">{size} x {size}</span>
+            <span className="text-[10px] text-[#888]">{size} x {size}</span>
           </div>
         ))}
         <div className="flex items-center justify-between pt-[7px]">
           <span className="font-mono text-xs text-[#ccc]">manifest.json</span>
-          <span className="text-[10px] text-[#555]">PWA</span>
+          <span className="text-[10px] text-[#888]">PWA</span>
         </div>
       </div>
 

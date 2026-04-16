@@ -217,7 +217,7 @@ export function PdfWatermark() {
       {(previewUrl || isRenderingPreview) && (
         <div className="overflow-hidden rounded-[14px] border border-[#ffffff15]">
           {isRenderingPreview && !previewUrl ? (
-            <div className="flex h-32 items-center justify-center bg-[#0c0c0c] text-xs text-[#555]">
+            <div className="flex h-32 items-center justify-center bg-[#0c0c0c] text-xs text-[#888]">
               미리보기 생성 중…
             </div>
           ) : previewUrl ? (

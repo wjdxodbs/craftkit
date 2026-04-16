@@ -209,7 +209,7 @@ export function ImageCropper() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
             </motion.svg>
             <p className="text-sm text-[#777]">클릭하거나 드래그해서 이미지 업로드</p>
-            <p className="text-xs text-[#444]">자유롭게 크롭하고 비율을 조정하세요</p>
+            <p className="text-xs text-[#888]">자유롭게 크롭하고 비율을 조정하세요</p>
           </button>
         )}
       </div>
@@ -228,7 +228,7 @@ export function ImageCropper() {
               <p className="font-mono text-xs text-[#a78bfa]">{cropInfo}</p>
             )}
             {previewSize !== null && (
-              <p className="text-[11px] text-[#555]">
+              <p className="text-[11px] text-[#888]">
                 예상 크기{' '}
                 <span className="font-mono text-[#bbb]">
                   {previewSize >= 1024 * 1024

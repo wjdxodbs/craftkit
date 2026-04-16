@@ -6,6 +6,7 @@ import { cn } from "@/shared/lib/utils";
 interface Props {
   onFileLoad?: (img: HTMLImageElement, dataUrl: string) => void;
   onFiles?: (files: File[]) => void;
+  onError?: () => void;
   accept?: string;
   hint?: string;
   multiple?: boolean;
@@ -16,6 +17,7 @@ interface Props {
 export function ImageUpload({
   onFileLoad,
   onFiles,
+  onError,
   accept = "image/png,image/jpeg,image/svg+xml,image/webp",
   hint = "PNG, JPG, SVG, WebP — 권장: 512×512 이상",
   multiple,
@@ -39,14 +41,10 @@ export function ImageUpload({
       const dataUrl = e.target?.result as string;
       const img = new Image();
       img.onload = () => onFileLoad?.(img, dataUrl);
-      img.onerror = () => {
-        // 이미지 로드 실패 — 콜백 호출 생략
-      };
+      img.onerror = () => onError?.();
       img.src = dataUrl;
     };
-    reader.onerror = () => {
-      // 파일 읽기 실패 — 이 컴포넌트는 에러 상태를 노출하지 않음
-    };
+    reader.onerror = () => onError?.();
     reader.readAsDataURL(file);
   };
 
