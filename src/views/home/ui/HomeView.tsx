@@ -100,7 +100,7 @@ export function HomeView() {
           >
             Craftkit
           </h1>
-          <p className="mt-2.5 text-base text-[#555]">
+          <p className="mt-2.5 text-base text-[#888]">
             Browser-based tools for developers
           </p>
           <div

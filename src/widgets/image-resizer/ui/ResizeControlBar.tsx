@@ -1,26 +1,29 @@
-import { OUTPUT_FORMATS, type OutputFormat } from '@/shared/config/image-formats'
-import { labelCls, segBtn } from '@/shared/ui/styles'
+import {
+  OUTPUT_FORMATS,
+  type OutputFormat,
+} from "@/shared/config/image-formats";
+import { labelCls, segBtn } from "@/shared/ui/styles";
 
 const numInputCls =
-  'w-20 rounded-[10px] border border-[#ffffff15] bg-[#0a0a0a] px-2.5 py-1.5 text-center text-sm text-[#ddd] placeholder:text-[#444] outline-none transition-colors focus:border-[#a78bfa55] disabled:opacity-30'
+  "w-20 rounded-[10px] border border-[#ffffff15] bg-[#0a0a0a] px-2.5 py-1.5 text-center text-sm text-[#ddd] placeholder:text-[#444] outline-none transition-colors focus:border-[#a78bfa55] disabled:opacity-30";
 
 interface ResizeControlBarProps {
-  fileName: string | null
-  isDragging: boolean
-  width: number
-  height: number
-  locked: boolean
-  outputFormat: OutputFormat
-  quality: number
-  onFileReplace: () => void
-  onFileDrop: (file: File) => void
-  onDragOver: () => void
-  onDragLeave: () => void
-  onWidthChange: (val: number) => void
-  onHeightChange: (val: number) => void
-  onLockToggle: () => void
-  onFormatChange: (format: OutputFormat) => void
-  onQualityChange: (quality: number) => void
+  fileName: string | null;
+  isDragging: boolean;
+  width: number;
+  height: number;
+  locked: boolean;
+  outputFormat: OutputFormat;
+  quality: number;
+  onFileReplace: () => void;
+  onFileDrop: (file: File) => void;
+  onDragOver: () => void;
+  onDragLeave: () => void;
+  onWidthChange: (val: number) => void;
+  onHeightChange: (val: number) => void;
+  onLockToggle: () => void;
+  onFormatChange: (format: OutputFormat) => void;
+  onQualityChange: (quality: number) => void;
 }
 
 export function ResizeControlBar({
@@ -48,19 +51,19 @@ export function ResizeControlBar({
         <button
           onClick={onFileReplace}
           onDragOver={(e) => {
-            e.preventDefault()
-            onDragOver()
+            e.preventDefault();
+            onDragOver();
           }}
           onDragLeave={onDragLeave}
           onDrop={(e) => {
-            e.preventDefault()
-            const file = e.dataTransfer.files[0]
-            if (file) onFileDrop(file)
+            e.preventDefault();
+            const file = e.dataTransfer.files[0];
+            if (file) onFileDrop(file);
           }}
           className={`flex cursor-pointer items-center gap-1.5 rounded-[10px] border border-dashed px-3 py-1.5 text-xs font-medium transition-colors ${
             isDragging
-              ? 'border-[#a78bfa] bg-[#a78bfa10] text-[#a78bfa]'
-              : 'border-[#a78bfa40] text-[#a78bfa] hover:border-[#a78bfa60] hover:bg-[#a78bfa08]'
+              ? "border-[#a78bfa] bg-[#a78bfa10] text-[#a78bfa]"
+              : "border-[#a78bfa40] text-[#a78bfa] hover:border-[#a78bfa60] hover:bg-[#a78bfa08]"
           }`}
         >
           <svg
@@ -77,7 +80,9 @@ export function ResizeControlBar({
               d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
             />
           </svg>
-          <span className="max-w-[160px] truncate">{fileName ?? '파일 교체'}</span>
+          <span className="max-w-[160px] truncate">
+            {fileName ?? "파일 교체"}
+          </span>
         </button>
 
         <div className="hidden h-4 w-px bg-[#ffffff15] sm:block" />
@@ -89,19 +94,21 @@ export function ResizeControlBar({
             type="number"
             min={1}
             max={8192}
-            value={width || ''}
+            value={width || ""}
             onChange={(e) => onWidthChange(Number(e.target.value))}
             className={numInputCls}
             placeholder="W"
+            aria-label="너비 (px)"
           />
           <button
             onClick={onLockToggle}
             className={`shrink-0 cursor-pointer rounded-[10px] border px-2 py-1.5 transition-colors ${
               locked
-                ? 'border-[#a78bfa40] bg-[#a78bfa10] text-[#a78bfa]'
-                : 'border-[#ffffff15] text-[#777] hover:border-[#ffffff25] hover:text-[#bbb]'
+                ? "border-[#a78bfa40] bg-[#a78bfa10] text-[#a78bfa]"
+                : "border-[#ffffff15] text-[#777] hover:border-[#ffffff25] hover:text-[#bbb]"
             }`}
-            title={locked ? '비율 잠금 켜짐' : '비율 잠금 꺼짐'}
+            title={locked ? "비율 잠금 켜짐" : "비율 잠금 꺼짐"}
+            aria-label={locked ? "비율 잠금 켜짐" : "비율 잠금 꺼짐"}
           >
             {locked ? (
               <svg
@@ -139,10 +146,11 @@ export function ResizeControlBar({
             type="number"
             min={1}
             max={8192}
-            value={height || ''}
+            value={height || ""}
             onChange={(e) => onHeightChange(Number(e.target.value))}
             className={numInputCls}
             placeholder="H"
+            aria-label="높이 (px)"
           />
         </div>
 
@@ -166,7 +174,7 @@ export function ResizeControlBar({
       </div>
 
       {/* 품질 슬라이더 */}
-      {outputFormat !== 'image/png' && (
+      {outputFormat !== "image/png" && (
         <div className="flex items-center gap-3">
           <span className={`shrink-0 ${labelCls}`}>품질 {quality}%</span>
           <input
@@ -180,5 +188,5 @@ export function ResizeControlBar({
         </div>
       )}
     </>
-  )
+  );
 }

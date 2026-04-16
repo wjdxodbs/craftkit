@@ -16,7 +16,7 @@
   --secondary: #111111;
   --secondary-foreground: #fafafa;
   --muted: #111111;
-  --muted-foreground: #777777;
+  --muted-foreground: #999999;
   --accent: #111111;
   --accent-foreground: #fafafa;
   --destructive: oklch(0.6 0.22 27);
@@ -94,21 +94,33 @@
   html {
     @apply font-sans;
   }
-  h1, h2, h3 {
+  h1,
+  h2,
+  h3 {
     font-family: var(--font-inter);
     letter-spacing: -0.02em;
   }
 }
 
 @keyframes aurora-drift {
-  0% { transform: translate(0, 0) scale(1); }
-  50% { transform: translate(20px, 10px) scale(1.03); }
-  100% { transform: translate(-10px, -8px) scale(0.98); }
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(20px, 10px) scale(1.03);
+  }
+  100% {
+    transform: translate(-10px, -8px) scale(0.98);
+  }
 }
 
 @keyframes shimmer {
-  from { background-position: -200% center; }
-  to   { background-position:  200% center; }
+  from {
+    background-position: -200% center;
+  }
+  to {
+    background-position: 200% center;
+  }
 }
 
 @utility animate-shimmer {

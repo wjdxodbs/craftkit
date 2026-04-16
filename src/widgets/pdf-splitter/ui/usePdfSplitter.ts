@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import {
   getPdfPageCount,
   renderPdfPageToDataUrl,
@@ -68,31 +68,28 @@ export function usePdfSplitter() {
     }
   };
 
-  const renderThumbnail = useCallback(
-    async (pageNumber: number): Promise<void> => {
-      const data = pdfDataRef.current;
-      if (!data || renderingSet.current.has(pageNumber)) return;
-      renderingSet.current.add(pageNumber);
+  const renderThumbnail = async (pageNumber: number): Promise<void> => {
+    const data = pdfDataRef.current;
+    if (!data || renderingSet.current.has(pageNumber)) return;
+    renderingSet.current.add(pageNumber);
 
-      try {
-        const url = await renderPdfPageToDataUrl(data, pageNumber, 0.3);
-        setPages((prev) =>
-          prev.map((p) =>
-            p.pageNumber === pageNumber
-              ? { ...p, thumbnailUrl: url, isLoading: false }
-              : p,
-          ),
-        );
-      } catch {
-        setPages((prev) =>
-          prev.map((p) =>
-            p.pageNumber === pageNumber ? { ...p, isLoading: false } : p,
-          ),
-        );
-      }
-    },
-    [],
-  );
+    try {
+      const url = await renderPdfPageToDataUrl(data, pageNumber, 0.3);
+      setPages((prev) =>
+        prev.map((p) =>
+          p.pageNumber === pageNumber
+            ? { ...p, thumbnailUrl: url, isLoading: false }
+            : p,
+        ),
+      );
+    } catch {
+      setPages((prev) =>
+        prev.map((p) =>
+          p.pageNumber === pageNumber ? { ...p, isLoading: false } : p,
+        ),
+      );
+    }
+  };
 
   const togglePage = (pageNumber: number): void => {
     setSelectedPages((prev) => {

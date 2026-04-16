@@ -1,80 +1,94 @@
-'use client'
-import { useState, useEffect, useRef } from 'react'
-import { motion } from 'motion/react'
-import { ImageUpload } from '@/features/image-upload/ui/ImageUpload'
-import { generateOgImage } from '@/features/og-image-export/lib/generateOgImage'
-import { renderOgImageToCanvas } from '@/features/og-image-export/lib/renderOgImageToCanvas'
-import type { OgImageConfig, FontFamily, TemplateName } from '@/features/og-image-export/lib/renderOgImageToCanvas'
-import { TemplateTabs } from './TemplateTabs'
-import { segBtn } from '@/shared/ui/styles'
+"use client";
+import { useState, useEffect, useRef } from "react";
+import { motion } from "motion/react";
+import { ImageUpload } from "@/features/image-upload/ui/ImageUpload";
+import { generateOgImage } from "@/features/og-image-export/lib/generateOgImage";
+import { renderOgImageToCanvas } from "@/features/og-image-export/lib/renderOgImageToCanvas";
+import type {
+  OgImageConfig,
+  FontFamily,
+  TemplateName,
+} from "@/features/og-image-export/lib/renderOgImageToCanvas";
+import { TemplateTabs } from "./TemplateTabs";
+import { segBtn } from "@/shared/ui/styles";
 
-const PRESET_COLORS = ['#0f172a', '#18181b', '#1e1b4b', '#ffffff']
-const GRADIENT_COLORS = ['#0f172a', '#6366f1', '#ec4899', '#f97316']
-const FONTS: FontFamily[] = ['Inter', 'Serif', 'Mono']
+const PRESET_COLORS = ["#0f172a", "#18181b", "#1e1b4b", "#ffffff"];
+const GRADIENT_COLORS = ["#0f172a", "#6366f1", "#ec4899", "#f97316"];
+const FONTS: FontFamily[] = ["Inter", "Serif", "Mono"];
 
-const labelCls = 'mb-2 block text-[11px] font-medium text-[#777]'
+const labelCls = "mb-2 block text-[11px] font-medium text-[#777]";
 const inputCls =
-  'h-9 w-full rounded-[10px] border border-[#ffffff15] bg-[#0a0a0a] px-3 text-[13px] text-[#ddd] placeholder:text-[#444] outline-none transition-colors focus:border-[#a78bfa55]'
+  "h-9 w-full rounded-[10px] border border-[#ffffff15] bg-[#0a0a0a] px-3 text-[13px] text-[#ddd] placeholder:text-[#444] outline-none transition-colors focus-visible:border-[#a78bfa55] focus-visible:ring-2 focus-visible:ring-[#a78bfa] focus-visible:ring-offset-1 focus-visible:ring-offset-[#0c0c0c]";
 const swatchCls = (active: boolean) =>
   `h-7 w-7 cursor-pointer rounded-[8px] transition-transform hover:scale-110 ${
-    active ? 'ring-2 ring-[#a78bfa] ring-offset-2 ring-offset-[#0c0c0c]' : ''
-  }`
+    active ? "ring-2 ring-[#a78bfa] ring-offset-2 ring-offset-[#0c0c0c]" : ""
+  }`;
 
 export function OgImageGenerator() {
   const [config, setConfig] = useState<OgImageConfig>({
-    template: 'classic',
-    backgroundColor: '#0f172a',
-    title: 'My Awesome Project',
-    subtitle: 'A short description of your project',
-    fontFamily: 'Inter',
-    gradientColor2: '#ec4899',
+    template: "classic",
+    backgroundColor: "#0f172a",
+    title: "My Awesome Project",
+    subtitle: "A short description of your project",
+    fontFamily: "Inter",
+    gradientColor2: "#ec4899",
     gradientAngle: 135,
-    codeTheme: 'dark',
-  })
-  const [logoDataUrl, setLogoDataUrl] = useState<string | undefined>()
-  const [isDownloading, setIsDownloading] = useState(false)
-  const canvasRef = useRef<HTMLCanvasElement>(null)
+    codeTheme: "dark",
+  });
+  const [logoDataUrl, setLogoDataUrl] = useState<string | undefined>();
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [downloadError, setDownloadError] = useState<string | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
     if (canvasRef.current) {
-      renderOgImageToCanvas(canvasRef.current, { ...config, logoDataUrl })
+      renderOgImageToCanvas(canvasRef.current, { ...config, logoDataUrl });
     }
-  }, [config, logoDataUrl])
+  }, [config, logoDataUrl]);
 
   const handleDownload = async () => {
-    setIsDownloading(true)
+    setIsDownloading(true);
+    setDownloadError(null);
     try {
-      const blob = await generateOgImage({ ...config, logoDataUrl })
-      const url = URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = url
-      a.download = 'og-image.png'
-      a.click()
-      URL.revokeObjectURL(url)
+      const blob = await generateOgImage({ ...config, logoDataUrl });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "og-image.png";
+      a.click();
+      URL.revokeObjectURL(url);
     } catch {
-      // 다운로드 실패 시 조용히 무시 (UI 변화 없음)
+      setDownloadError("다운로드에 실패했습니다. 다시 시도해 주세요.");
     } finally {
-      setIsDownloading(false)
+      setIsDownloading(false);
     }
-  }
+  };
 
   const handleTemplateChange = (template: TemplateName) => {
-    setConfig((c) => ({ ...c, template }))
-  }
+    setConfig((c) => ({ ...c, template }));
+  };
 
-  const showFont = config.template !== 'code-snippet'
+  const showFont = config.template !== "code-snippet";
 
   return (
     <div className="space-y-5">
       {/* 템플릿 */}
-      <TemplateTabs value={config.template ?? 'classic'} onChange={handleTemplateChange} />
+      <TemplateTabs
+        value={config.template ?? "classic"}
+        onChange={handleTemplateChange}
+      />
 
       {/* 미리보기 */}
       <div
         className="overflow-hidden rounded-[14px] border border-[#ffffff15] bg-[#0a0a0a]"
-        style={{ aspectRatio: '1200/630' }}
+        style={{ aspectRatio: "1200/630" }}
       >
-        <canvas ref={canvasRef} width={1200} height={630} className="h-full w-full" />
+        <canvas
+          ref={canvasRef}
+          width={1200}
+          height={630}
+          className="h-full w-full"
+        />
       </div>
 
       {/* 다운로드 */}
@@ -85,7 +99,7 @@ export function OgImageGenerator() {
           className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-[#a78bfa40] bg-transparent px-4 py-3.5 text-[13px] font-semibold text-[#a78bfa] transition-all hover:border-[#a78bfa60] hover:bg-[#a78bfa10] disabled:cursor-not-allowed disabled:opacity-40"
         >
           {isDownloading ? (
-            '생성 중…'
+            "생성 중…"
           ) : (
             <>
               <svg
@@ -107,20 +121,28 @@ export function OgImageGenerator() {
           )}
         </button>
       </motion.div>
+      {downloadError && (
+        <p className="text-center text-[12px] text-red-400">{downloadError}</p>
+      )}
 
       {/* 컨트롤 */}
       <div className="rounded-[14px] border border-[#ffffff15] bg-[#0c0c0c] p-5">
         <div
           className={`grid grid-cols-1 gap-5 sm:grid-cols-2 ${
-            config.template === 'gradient' ? 'lg:grid-cols-3' : 'lg:grid-cols-2'
+            config.template === "gradient" ? "lg:grid-cols-3" : "lg:grid-cols-2"
           }`}
         >
           {/* 제목 */}
           <div>
-            <label className={labelCls}>제목</label>
+            <label htmlFor="og-title" className={labelCls}>
+              제목
+            </label>
             <input
+              id="og-title"
               value={config.title}
-              onChange={(e) => setConfig((c) => ({ ...c, title: e.target.value }))}
+              onChange={(e) =>
+                setConfig((c) => ({ ...c, title: e.target.value }))
+              }
               className={inputCls}
               placeholder="제목을 입력해주세요…"
             />
@@ -128,34 +150,53 @@ export function OgImageGenerator() {
 
           {/* 부제목 */}
           <div>
-            <label className={labelCls}>부제목</label>
+            <label htmlFor="og-subtitle" className={labelCls}>
+              부제목
+            </label>
             <input
+              id="og-subtitle"
               value={config.subtitle}
-              onChange={(e) => setConfig((c) => ({ ...c, subtitle: e.target.value }))}
+              onChange={(e) =>
+                setConfig((c) => ({ ...c, subtitle: e.target.value }))
+              }
               className={inputCls}
               placeholder="부제목 입력…"
             />
           </div>
 
           {/* 배경색 — classic 전용 */}
-          {config.template === 'classic' && (
+          {config.template === "classic" && (
             <div>
               <label className={labelCls}>배경색</label>
               <div className="flex flex-wrap items-center gap-2">
                 {PRESET_COLORS.map((color) => (
                   <button
                     key={color}
-                    onClick={() => setConfig((c) => ({ ...c, backgroundColor: color }))}
+                    onClick={() =>
+                      setConfig((c) => ({ ...c, backgroundColor: color }))
+                    }
                     className={swatchCls(config.backgroundColor === color)}
-                    style={{ background: color, border: '1px solid #ffffff15' }}
+                    style={{ background: color, border: "1px solid #ffffff15" }}
                     aria-label={color}
                   />
                 ))}
-                <label className="relative h-7 w-7 cursor-pointer" title="커스텀 색상">
+                <label
+                  className="relative h-7 w-7 cursor-pointer"
+                  title="커스텀 색상"
+                >
                   <input
                     type="color"
-                    value={config.backgroundColor.startsWith('#') ? config.backgroundColor : '#0f172a'}
-                    onChange={(e) => setConfig((c) => ({ ...c, backgroundColor: e.target.value }))}
+                    value={
+                      config.backgroundColor.startsWith("#")
+                        ? config.backgroundColor
+                        : "#0f172a"
+                    }
+                    onChange={(e) =>
+                      setConfig((c) => ({
+                        ...c,
+                        backgroundColor: e.target.value,
+                      }))
+                    }
                     className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
                   />
                   {PRESET_COLORS.includes(config.backgroundColor) ? (
@@ -165,7 +206,10 @@ export function OgImageGenerator() {
                   ) : (
                     <span
                       className="block h-7 w-7 rounded-[8px] ring-2 ring-[#a78bfa] ring-offset-2 ring-offset-[#0c0c0c]"
-                      style={{ background: config.backgroundColor, border: '1px solid #ffffff15' }}
+                      style={{
+                        background: config.backgroundColor,
+                        border: "1px solid #ffffff15",
+                      }}
                     />
                   )}
                 </label>
@@ -181,7 +225,9 @@ export function OgImageGenerator() {
                 {FONTS.map((font) => (
                   <button
                     key={font}
-                    onClick={() => setConfig((c) => ({ ...c, fontFamily: font }))}
+                    onClick={() =>
+                      setConfig((c) => ({ ...c, fontFamily: font }))
+                    }
                     className={segBtn(config.fontFamily === font)}
                   >
                     {font}
@@ -192,24 +238,38 @@ export function OgImageGenerator() {
           )}
 
           {/* 첫 번째 색상 — gradient 전용 */}
-          {config.template === 'gradient' && (
+          {config.template === "gradient" && (
             <div>
               <label className={labelCls}>첫 번째 색상</label>
               <div className="flex flex-wrap items-center gap-2">
                 {GRADIENT_COLORS.map((color) => (
                   <button
                     key={color}
-                    onClick={() => setConfig((c) => ({ ...c, backgroundColor: color }))}
+                    onClick={() =>
+                      setConfig((c) => ({ ...c, backgroundColor: color }))
+                    }
                     className={swatchCls(config.backgroundColor === color)}
-                    style={{ background: color, border: '1px solid #ffffff15' }}
+                    style={{ background: color, border: "1px solid #ffffff15" }}
                     aria-label={`첫 번째 ${color}`}
                   />
                 ))}
-                <label className="relative h-7 w-7 cursor-pointer" title="커스텀 색상">
+                <label
+                  className="relative h-7 w-7 cursor-pointer"
+                  title="커스텀 색상"
+                >
                   <input
                     type="color"
-                    value={config.backgroundColor.startsWith('#') ? config.backgroundColor : '#0f172a'}
-                    onChange={(e) => setConfig((c) => ({ ...c, backgroundColor: e.target.value }))}
+                    value={
+                      config.backgroundColor.startsWith("#")
+                        ? config.backgroundColor
+                        : "#0f172a"
+                    }
+                    onChange={(e) =>
+                      setConfig((c) => ({
+                        ...c,
+                        backgroundColor: e.target.value,
+                      }))
+                    }
                     className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
                   />
                   {GRADIENT_COLORS.includes(config.backgroundColor) ? (
@@ -219,7 +279,10 @@ export function OgImageGenerator() {
                   ) : (
                     <span
                       className="block h-7 w-7 rounded-[8px] ring-2 ring-[#a78bfa] ring-offset-2 ring-offset-[#0c0c0c]"
-                      style={{ background: config.backgroundColor, border: '1px solid #ffffff15' }}
+                      style={{
+                        background: config.backgroundColor,
+                        border: "1px solid #ffffff15",
+                      }}
                     />
                   )}
                 </label>
@@ -228,34 +291,53 @@ export function OgImageGenerator() {
           )}
 
           {/* 두 번째 색상 — gradient 전용 */}
-          {config.template === 'gradient' && (
+          {config.template === "gradient" && (
             <div>
               <label className={labelCls}>두 번째 색상</label>
               <div className="flex flex-wrap items-center gap-2">
                 {GRADIENT_COLORS.map((color) => (
                   <button
                     key={color}
-                    onClick={() => setConfig((c) => ({ ...c, gradientColor2: color }))}
-                    className={swatchCls((config.gradientColor2 ?? '#ec4899') === color)}
-                    style={{ background: color, border: '1px solid #ffffff15' }}
+                    onClick={() =>
+                      setConfig((c) => ({ ...c, gradientColor2: color }))
+                    }
+                    className={swatchCls(
+                      (config.gradientColor2 ?? "#ec4899") === color,
+                    )}
+                    style={{ background: color, border: "1px solid #ffffff15" }}
                     aria-label={`두 번째 ${color}`}
                   />
                 ))}
-                <label className="relative h-7 w-7 cursor-pointer" title="커스텀 색상">
+                <label
+                  className="relative h-7 w-7 cursor-pointer"
+                  title="커스텀 색상"
+                >
                   <input
                     type="color"
-                    value={(config.gradientColor2 ?? '#ec4899').startsWith('#') ? (config.gradientColor2 ?? '#ec4899') : '#ec4899'}
-                    onChange={(e) => setConfig((c) => ({ ...c, gradientColor2: e.target.value }))}
+                    value={
+                      (config.gradientColor2 ?? "#ec4899").startsWith("#")
+                        ? (config.gradientColor2 ?? "#ec4899")
+                        : "#ec4899"
+                    }
+                    onChange={(e) =>
+                      setConfig((c) => ({
+                        ...c,
+                        gradientColor2: e.target.value,
+                      }))
+                    }
                     className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
                   />
-                  {GRADIENT_COLORS.includes(config.gradientColor2 ?? '') ? (
+                  {GRADIENT_COLORS.includes(config.gradientColor2 ?? "") ? (
                     <span className="flex h-7 w-7 items-center justify-center rounded-[8px] border border-dashed border-[#ffffff25] text-[11px] text-[#666]">
                       +
                     </span>
                   ) : (
                     <span
                       className="block h-7 w-7 rounded-[8px] ring-2 ring-[#a78bfa] ring-offset-2 ring-offset-[#0c0c0c]"
-                      style={{ background: config.gradientColor2 ?? '#ec4899', border: '1px solid #ffffff15' }}
+                      style={{
+                        background: config.gradientColor2 ?? "#ec4899",
+                        border: "1px solid #ffffff15",
+                      }}
                     />
                   )}
                 </label>
@@ -264,32 +346,41 @@ export function OgImageGenerator() {
           )}
 
           {/* 각도 — gradient 전용 */}
-          {config.template === 'gradient' && (
+          {config.template === "gradient" && (
             <div>
-              <label className={labelCls}>각도: {config.gradientAngle ?? 135}°</label>
+              <label className={labelCls}>
+                각도: {config.gradientAngle ?? 135}°
+              </label>
               <input
                 type="range"
                 min={0}
                 max={360}
                 value={config.gradientAngle ?? 135}
-                onChange={(e) => setConfig((c) => ({ ...c, gradientAngle: Number(e.target.value) }))}
+                onChange={(e) =>
+                  setConfig((c) => ({
+                    ...c,
+                    gradientAngle: Number(e.target.value),
+                  }))
+                }
                 className="w-full cursor-pointer accent-[#a78bfa]"
               />
             </div>
           )}
 
           {/* 테마 — code-snippet 전용 */}
-          {config.template === 'code-snippet' && (
+          {config.template === "code-snippet" && (
             <div>
               <label className={labelCls}>테마</label>
               <div className="flex gap-2">
-                {(['dark', 'light'] as const).map((theme) => (
+                {(["dark", "light"] as const).map((theme) => (
                   <button
                     key={theme}
-                    onClick={() => setConfig((c) => ({ ...c, codeTheme: theme }))}
+                    onClick={() =>
+                      setConfig((c) => ({ ...c, codeTheme: theme }))
+                    }
                     className={segBtn(config.codeTheme === theme)}
                   >
-                    {theme === 'dark' ? 'Dark' : 'Light'}
+                    {theme === "dark" ? "Dark" : "Light"}
                   </button>
                 ))}
               </div>
@@ -308,5 +399,5 @@ export function OgImageGenerator() {
         />
       </div>
     </div>
-  )
+  );
 }
