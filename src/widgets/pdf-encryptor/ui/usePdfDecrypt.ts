@@ -41,7 +41,9 @@ export function usePdfDecrypt() {
     setError(null);
     try {
       const decrypted = await decryptPdf(pdfData, password);
-      const blob = new Blob([decrypted], { type: "application/pdf" });
+      const blob = new Blob([decrypted.buffer as ArrayBuffer], {
+        type: "application/pdf",
+      });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
