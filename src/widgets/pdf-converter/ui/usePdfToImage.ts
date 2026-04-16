@@ -1,11 +1,12 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   renderAllThumbnails,
   convertPdfPageToBlob,
 } from "@/features/pdf-to-image/lib/convertPdfToImages";
 import { createZip, downloadBlob } from "@/shared/lib/zip";
 import { EXT_MAP, type OutputFormat } from "@/shared/config/image-formats";
+import { usePageSelection } from "@/shared/lib/usePageSelection";
 
 export interface PageItem {
   pageNumber: number;
@@ -17,26 +18,43 @@ export function usePdfToImage() {
   const [pdfData, setPdfData] = useState<ArrayBuffer | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
   const [pages, setPages] = useState<PageItem[]>([]);
-  const [selectedPages, setSelectedPages] = useState<Set<number>>(new Set());
   const [outputFormat, setOutputFormat] = useState<OutputFormat>("image/png");
   const [quality, setQuality] = useState(90);
   const [isConverting, setIsConverting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const mountedRef = useRef(true);
+
+  const {
+    selectedPages,
+    deselectAll,
+    togglePage,
+    selectAll: _selectAll,
+  } = usePageSelection();
+
+  useEffect(() => {
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
+
+  const selectAll = (): void => _selectAll(pages);
 
   const handleFile = async (file: File): Promise<void> => {
     setError(null);
     setPages([]);
-    setSelectedPages(new Set());
+    deselectAll();
     setFileName(file.name);
 
     try {
       const data = await file.arrayBuffer();
+      if (!mountedRef.current) return;
       setPdfData(data);
 
       await renderAllThumbnails(
         data,
         0.3,
         (count) => {
+          if (!mountedRef.current) return;
           setPages(
             Array.from({ length: count }, (_, i) => ({
               pageNumber: i + 1,
@@ -46,6 +64,7 @@ export function usePdfToImage() {
           );
         },
         (pageNumber, thumbnailUrl) => {
+          if (!mountedRef.current) return;
           setPages((prev) =>
             prev.map((p) =>
               p.pageNumber === pageNumber
@@ -56,28 +75,15 @@ export function usePdfToImage() {
         },
       );
     } catch {
-      setError(
-        "PDF 파일을 불러오지 못했습니다. 암호화된 PDF는 지원하지 않습니다.",
-      );
+      if (mountedRef.current) {
+        setError(
+          "PDF 파일을 불러오지 못했습니다. 암호화된 PDF는 지원하지 않습니다.",
+        );
+      }
     }
   };
 
-  const togglePage = (pageNumber: number): void => {
-    setSelectedPages((prev) => {
-      const next = new Set(prev);
-      if (next.has(pageNumber)) next.delete(pageNumber);
-      else next.add(pageNumber);
-      return next;
-    });
-  };
-
-  const selectAll = (): void => {
-    setSelectedPages(new Set(pages.map((p) => p.pageNumber)));
-  };
-
-  const deselectAll = (): void => {
-    setSelectedPages(new Set());
-  };
+  const deselectAllPages = (): void => deselectAll();
 
   const convert = async (): Promise<void> => {
     if (!pdfData || selectedPages.size === 0) return;
@@ -133,7 +139,7 @@ export function usePdfToImage() {
     handleFile,
     togglePage,
     selectAll,
-    deselectAll,
+    deselectAll: deselectAllPages,
     setOutputFormat,
     setQuality,
     convert,

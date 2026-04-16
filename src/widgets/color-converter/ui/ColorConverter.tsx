@@ -25,15 +25,19 @@ export function ColorConverter() {
   const [result, setResult] = useState<ColorResult | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
   const colorPickerRef = useRef<HTMLInputElement>(null);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const isValid = input.trim() === "" || !!convertColor(input.trim());
 
   const handleInput = (value: string) => {
     setInput(value);
-    const converted = convertColor(value.trim());
-    if (converted) {
-      setResult(converted);
-    }
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      const converted = convertColor(value.trim());
+      if (converted) {
+        setResult(converted);
+      }
+    }, 300);
   };
 
   const handlePickerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -120,7 +124,7 @@ export function ColorConverter() {
                 type="button"
                 onClick={() => result && handleCopy(value, label)}
                 disabled={!result}
-                className="shrink-0 cursor-pointer rounded-md px-2.5 py-1 text-[11px] font-medium text-[#777] transition-colors hover:bg-[#a78bfa10] hover:text-[#a78bfa] disabled:cursor-not-allowed disabled:opacity-30"
+                className="shrink-0 cursor-pointer rounded-md px-2.5 py-1 text-[11px] font-medium text-[#888] transition-colors hover:bg-[#a78bfa10] hover:text-[#a78bfa] disabled:cursor-not-allowed disabled:opacity-30"
               >
                 {isCopied ? "복사됨" : "복사"}
               </button>

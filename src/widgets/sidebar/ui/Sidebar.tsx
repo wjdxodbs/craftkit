@@ -142,7 +142,7 @@ export function Sidebar() {
         <button
           onClick={() => setIsExpanded((prev) => !prev)}
           aria-label={isExpanded ? "Collapse sidebar" : "Expand sidebar"}
-          className="flex h-9 w-full cursor-pointer items-center overflow-hidden rounded-lg text-white/40 transition-colors hover:bg-white/5 hover:text-white/60"
+          className="flex h-9 w-full cursor-pointer items-center overflow-hidden rounded-lg text-white/40 transition-colors hover:bg-white/5 hover:text-white/60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#a78bfa]"
         >
           <span className="flex w-10 shrink-0 items-center justify-center">
             <svg

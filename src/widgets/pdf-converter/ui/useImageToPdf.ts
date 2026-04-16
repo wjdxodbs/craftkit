@@ -54,7 +54,7 @@ export function useImageToPdf() {
       a.href = url;
       a.download = "converted.pdf";
       a.click();
-      URL.revokeObjectURL(url);
+      setTimeout(() => URL.revokeObjectURL(url), 100);
     } catch {
       setError("PDF 변환에 실패했습니다. 다시 시도해 주세요.");
     } finally {

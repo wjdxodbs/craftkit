@@ -47,11 +47,12 @@ export function usePdfEncrypt() {
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = fileName
+      const rawName = fileName
         ? fileName.replace(/\.pdf$/i, "_encrypted.pdf")
         : "encrypted.pdf";
+      a.download = rawName.replace(/[/\\?%*:|"<>\x00]/g, "_");
       a.click();
-      URL.revokeObjectURL(url);
+      setTimeout(() => URL.revokeObjectURL(url), 100);
     } catch {
       setError("PDF 암호 설정에 실패했습니다.");
     } finally {

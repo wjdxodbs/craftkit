@@ -173,7 +173,7 @@ export function HomeView() {
                 <p className="relative z-10 mb-1 text-sm font-semibold text-[#fafafa]">
                   {tool.name}
                 </p>
-                <p className="relative z-10 mb-4 text-xs leading-relaxed text-[#777]">
+                <p className="relative z-10 mb-4 text-xs leading-relaxed text-[#888]">
                   {tool.description}
                 </p>
 

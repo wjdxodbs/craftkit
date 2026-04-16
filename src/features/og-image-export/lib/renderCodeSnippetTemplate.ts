@@ -35,6 +35,27 @@ const TITLE_BAR_H = 44
 const TRAFFIC_RADIUS = 6
 const TRAFFIC_SPACING = 22
 
+function roundRectPath(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  radii: number | number[]
+): void {
+  const [tl, tr, br, bl] = Array.isArray(radii) ? radii : [radii, radii, radii, radii]
+  ctx.moveTo(x + tl, y)
+  ctx.lineTo(x + w - tr, y)
+  ctx.arcTo(x + w, y, x + w, y + tr, tr)
+  ctx.lineTo(x + w, y + h - br)
+  ctx.arcTo(x + w, y + h, x + w - br, y + h, br)
+  ctx.lineTo(x + bl, y + h)
+  ctx.arcTo(x, y + h, x, y + h - bl, bl)
+  ctx.lineTo(x, y + tl)
+  ctx.arcTo(x, y, x + tl, y, tl)
+  ctx.closePath()
+}
+
 export async function renderCodeSnippetTemplate(
   canvas: HTMLCanvasElement,
   config: OgImageConfig
@@ -59,13 +80,13 @@ export async function renderCodeSnippetTemplate(
   // 에디터 프레임 배경
   ctx.fillStyle = colors.editorBg
   ctx.beginPath()
-  ctx.roundRect(frameX, frameY, frameW, frameH, frameRadius)
+  roundRectPath(ctx, frameX, frameY, frameW, frameH, frameRadius)
   ctx.fill()
 
   // 타이틀 바
   ctx.fillStyle = colors.titleBarBg
   ctx.beginPath()
-  ctx.roundRect(frameX, frameY, frameW, TITLE_BAR_H, [frameRadius, frameRadius, 0, 0])
+  roundRectPath(ctx, frameX, frameY, frameW, TITLE_BAR_H, [frameRadius, frameRadius, 0, 0])
   ctx.fill()
 
   // 트래픽 라이트 (타이틀 바 좌측)

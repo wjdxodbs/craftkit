@@ -6,6 +6,7 @@ import {
 } from "@/features/pdf-to-image/lib/convertPdfToImages";
 import { downloadBlob } from "@/shared/lib/zip";
 import { splitPdf } from "@/features/pdf-split/lib/splitPdf";
+import { usePageSelection } from "@/shared/lib/usePageSelection";
 
 const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB
 
@@ -20,14 +21,23 @@ export function usePdfSplitter() {
   const renderingSet = useRef<Set<number>>(new Set());
   const [fileName, setFileName] = useState<string | null>(null);
   const [pages, setPages] = useState<PageItem[]>([]);
-  const [selectedPages, setSelectedPages] = useState<Set<number>>(new Set());
   const [isSplitting, setIsSplitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const {
+    selectedPages,
+    setSelectedPages,
+    togglePage,
+    selectAll: _selectAll,
+    deselectAll,
+  } = usePageSelection();
+
+  const selectAll = (): void => _selectAll(pages);
 
   const handleFile = async (file: File): Promise<void> => {
     setError(null);
     setPages([]);
-    setSelectedPages(new Set());
+    deselectAll();
     setFileName(file.name);
     pdfDataRef.current = null;
     renderingSet.current.clear();
@@ -91,23 +101,6 @@ export function usePdfSplitter() {
     }
   };
 
-  const togglePage = (pageNumber: number): void => {
-    setSelectedPages((prev) => {
-      const next = new Set(prev);
-      if (next.has(pageNumber)) next.delete(pageNumber);
-      else next.add(pageNumber);
-      return next;
-    });
-  };
-
-  const selectAll = (): void => {
-    setSelectedPages(new Set(pages.map((p) => p.pageNumber)));
-  };
-
-  const deselectAll = (): void => {
-    setSelectedPages(new Set());
-  };
-
   const split = async (): Promise<void> => {
     const data = pdfDataRef.current;
     if (!data || selectedPages.size === 0) return;
@@ -117,8 +110,9 @@ export function usePdfSplitter() {
     try {
       const sorted = [...selectedPages].sort((a, b) => a - b);
       const result = await splitPdf(data, sorted);
-      const baseName = fileName?.replace(/\.pdf$/i, "") ?? "document";
-      downloadBlob(`${baseName}-split.pdf`, result, "application/pdf");
+      const rawName = fileName?.replace(/\.pdf$/i, "") ?? "document";
+      const safeName = rawName.replace(/[/\\?%*:|"<>\x00]/g, "_");
+      downloadBlob(`${safeName}-split.pdf`, result, "application/pdf");
     } catch {
       setError("PDF 추출에 실패했습니다. 다시 시도해 주세요.");
     } finally {

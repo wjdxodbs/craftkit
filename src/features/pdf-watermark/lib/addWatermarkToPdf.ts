@@ -1,5 +1,6 @@
 import { PDFDocument, rgb, degrees } from "pdf-lib";
 import fontkit from "@pdf-lib/fontkit";
+import { hexToRgb } from "@/shared/lib/color";
 
 let _fontBytesCache: ArrayBuffer | null = null;
 
@@ -26,22 +27,15 @@ export interface WatermarkOptions {
   spacing: number;
 }
 
-function hexToRgb(hex: string): { r: number; g: number; b: number } {
-  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  if (!result) throw new Error(`유효하지 않은 색상 값: ${hex}`);
-  return {
-    r: parseInt(result[1], 16) / 255,
-    g: parseInt(result[2], 16) / 255,
-    b: parseInt(result[3], 16) / 255,
-  };
-}
-
 export async function addWatermarkToPdf(
   data: ArrayBuffer,
   options: WatermarkOptions,
 ): Promise<Uint8Array> {
   const { text, fontSize, opacity, color, mode, position, spacing } = options;
-  const { r, g, b } = hexToRgb(color);
+  const [r255, g255, b255] = hexToRgb(color);
+  const r = r255 / 255;
+  const g = g255 / 255;
+  const b = b255 / 255;
 
   const pdfDoc = await PDFDocument.load(data);
   pdfDoc.registerFontkit(fontkit);

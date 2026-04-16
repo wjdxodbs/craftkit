@@ -7,6 +7,7 @@ import {
   loadLogo,
   drawAutoSizedText,
 } from "./renderOgImageToCanvas";
+import { hexToRgb } from "@/shared/lib/color";
 
 const GRADIENT_PRESETS: Record<string, [string, string]> = {
   sunset: ["#f97316", "#ec4899"],
@@ -14,18 +15,6 @@ const GRADIENT_PRESETS: Record<string, [string, string]> = {
   cyberpunk: ["#a855f7", "#ec4899"],
   forest: ["#10b981", "#06b6d4"],
 };
-
-/**
- * 16진수 색상을 각 채널의 숫자 값으로 분해한다.
- */
-function hexToRgb(hex: string): [number, number, number] {
-  const c = hex.replace("#", "");
-  return [
-    parseInt(c.substring(0, 2), 16),
-    parseInt(c.substring(2, 4), 16),
-    parseInt(c.substring(4, 6), 16),
-  ];
-}
 
 /**
  * 숫자 채널 값을 16진수 색상 문자열로 변환한다.
