@@ -16,10 +16,12 @@ export function PdfConverter() {
   return (
     <div className="space-y-5">
       {/* 탭 네비게이션 */}
-      <div className="flex gap-2 border-b border-[#ffffff15]">
+      <div role="tablist" className="flex gap-2 border-b border-[#ffffff15]">
         {TABS.map((tab) => (
           <button
             key={tab.id}
+            role="tab"
+            aria-selected={activeTab === tab.id}
             onClick={() => setActiveTab(tab.id)}
             className={`px-4 py-3 text-sm font-medium transition-colors ${
               activeTab === tab.id
