@@ -85,7 +85,7 @@ export function HomeView() {
           transition={{ duration: 0.5 }}
           className="mb-14"
         >
-          <p className="mb-4 text-xs font-medium uppercase tracking-[0.08em] text-[#a78bfa]/55">
+          <p className="mb-4 text-xs font-medium uppercase tracking-[0.08em] text-[#a78bfa]">
             {availableCount} tools
           </p>
           <h1
@@ -182,7 +182,7 @@ export function HomeView() {
                   {tool.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="rounded-md border border-[#a78bfa14] bg-[#a78bfa0c] px-2 py-0.5 font-mono text-[10px] font-medium text-[#a78bfa]/55"
+                      className="rounded-md border border-[#a78bfa14] bg-[#a78bfa0c] px-2 py-0.5 font-mono text-[10px] font-medium text-[#a78bfa]"
                     >
                       {tag}
                     </span>

@@ -1,10 +1,10 @@
-'use client'
-import { useRef } from 'react'
-import { motion } from 'motion/react'
-import { usePdfToImage } from './usePdfToImage'
-import { ImageUpload } from '@/features/image-upload/ui/ImageUpload'
-import { OUTPUT_FORMATS } from '@/shared/config/image-formats'
-import { labelCls, segBtn } from '@/shared/ui/styles'
+"use client";
+import { useRef } from "react";
+import { usePdfToImage } from "./usePdfToImage";
+import { ImageUpload } from "@/features/image-upload/ui/ImageUpload";
+import { OUTPUT_FORMATS } from "@/shared/config/image-formats";
+import { labelCls, segBtn } from "@/shared/ui/styles";
+import { DownloadButton } from "@/shared/ui/DownloadButton";
 
 export function PdfToImageTab() {
   const {
@@ -22,9 +22,9 @@ export function PdfToImageTab() {
     setOutputFormat,
     setQuality,
     convert,
-  } = usePdfToImage()
+  } = usePdfToImage();
 
-  const replaceInputRef = useRef<HTMLInputElement>(null)
+  const replaceInputRef = useRef<HTMLInputElement>(null);
 
   return (
     <div className="space-y-5">
@@ -35,7 +35,9 @@ export function PdfToImageTab() {
             accept="application/pdf"
             hint="암호화되지 않은 PDF만 지원"
             size="lg"
-            onFiles={(files) => { if (files[0]) handleFile(files[0]) }}
+            onFiles={(files) => {
+              if (files[0]) handleFile(files[0]);
+            }}
           />
 
           {/* 에러 메시지 */}
@@ -67,9 +69,9 @@ export function PdfToImageTab() {
                 accept="application/pdf"
                 className="sr-only"
                 onChange={(e) => {
-                  const files = Array.from(e.target.files ?? [])
-                  if (files[0]) handleFile(files[0])
-                  e.target.value = ''
+                  const files = Array.from(e.target.files ?? []);
+                  if (files[0]) handleFile(files[0]);
+                  e.target.value = "";
                 }}
               />
             </div>
@@ -114,7 +116,7 @@ export function PdfToImageTab() {
               </div>
             </div>
 
-            {outputFormat !== 'image/png' && (
+            {outputFormat !== "image/png" && (
               <div className="space-y-2">
                 <p className={labelCls}>품질 {quality}%</p>
                 <input
@@ -147,8 +149,8 @@ export function PdfToImageTab() {
                   onClick={() => togglePage(page.pageNumber)}
                   className={`relative overflow-hidden rounded-lg border-2 transition-all ${
                     selectedPages.has(page.pageNumber)
-                      ? 'border-[#a78bfa] bg-[#a78bfa10]'
-                      : 'border-[#ffffff15] bg-[#0c0c0c] hover:border-[#ffffff25]'
+                      ? "border-[#a78bfa] bg-[#a78bfa10]"
+                      : "border-[#ffffff15] bg-[#0c0c0c] hover:border-[#ffffff25]"
                   }`}
                 >
                   {page.isLoading ? (
@@ -162,7 +164,9 @@ export function PdfToImageTab() {
                         className="aspect-[210/297] w-full object-cover"
                       />
                       <div className="absolute inset-0 flex items-center justify-center bg-[#00000040]">
-                        <span className="text-xs font-semibold text-[#fff]">{page.pageNumber}</span>
+                        <span className="text-xs font-semibold text-[#fff]">
+                          {page.pageNumber}
+                        </span>
                       </div>
                     </>
                   )}
@@ -172,37 +176,30 @@ export function PdfToImageTab() {
           </div>
 
           {/* 다운로드 버튼 */}
-          <motion.div whileTap={{ scale: 0.98 }}>
-            <button
-              onClick={convert}
-              disabled={selectedPages.size === 0 || isConverting}
-              className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-[#a78bfa40] bg-transparent px-4 py-3.5 text-[13px] font-semibold text-[#a78bfa] transition-all hover:border-[#a78bfa60] hover:bg-[#a78bfa10] disabled:cursor-not-allowed disabled:opacity-40"
+          <DownloadButton
+            onClick={convert}
+            disabled={selectedPages.size === 0 || isConverting}
+            isProcessing={isConverting}
+            processingText="변환 중…"
+          >
+            <svg
+              className="size-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+              aria-hidden="true"
             >
-              {isConverting ? (
-                '변환 중…'
-              ) : (
-                <>
-                  <svg
-                    className="size-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                    aria-hidden="true"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                    />
-                  </svg>
-                  Download ({selectedPages.size})
-                </>
-              )}
-            </button>
-          </motion.div>
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+              />
+            </svg>
+            Download ({selectedPages.size})
+          </DownloadButton>
         </div>
       )}
     </div>
-  )
+  );
 }

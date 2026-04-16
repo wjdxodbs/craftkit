@@ -41,7 +41,9 @@ export function usePdfEncrypt() {
         userPassword,
         ownerPassword || undefined,
       );
-      const blob = new Blob([encrypted], { type: "application/pdf" });
+      const blob = new Blob([encrypted.buffer as ArrayBuffer], {
+        type: "application/pdf",
+      });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;

@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import { motion } from "motion/react";
 import { ImageUpload } from "@/features/image-upload/ui/ImageUpload";
 import { generateOgImage } from "@/features/og-image-export/lib/generateOgImage";
 import { renderOgImageToCanvas } from "@/features/og-image-export/lib/renderOgImageToCanvas";
@@ -11,6 +10,7 @@ import type {
 } from "@/features/og-image-export/lib/renderOgImageToCanvas";
 import { TemplateTabs } from "./TemplateTabs";
 import { segBtn } from "@/shared/ui/styles";
+import { DownloadButton } from "@/shared/ui/DownloadButton";
 
 const PRESET_COLORS = ["#0f172a", "#18181b", "#1e1b4b", "#ffffff"];
 const GRADIENT_COLORS = ["#0f172a", "#6366f1", "#ec4899", "#f97316"];
@@ -92,35 +92,28 @@ export function OgImageGenerator() {
       </div>
 
       {/* 다운로드 */}
-      <motion.div whileTap={{ scale: 0.98 }}>
-        <button
-          onClick={handleDownload}
-          disabled={isDownloading}
-          className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-[#a78bfa40] bg-transparent px-4 py-3.5 text-[13px] font-semibold text-[#a78bfa] transition-all hover:border-[#a78bfa60] hover:bg-[#a78bfa10] disabled:cursor-not-allowed disabled:opacity-40"
+      <DownloadButton
+        onClick={handleDownload}
+        disabled={isDownloading}
+        isProcessing={isDownloading}
+        processingText="생성 중…"
+      >
+        <svg
+          className="size-4"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          strokeWidth={2}
+          aria-hidden="true"
         >
-          {isDownloading ? (
-            "생성 중…"
-          ) : (
-            <>
-              <svg
-                className="size-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-                aria-hidden="true"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                />
-              </svg>
-              Download PNG
-            </>
-          )}
-        </button>
-      </motion.div>
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+          />
+        </svg>
+        Download PNG
+      </DownloadButton>
       {downloadError && (
         <p className="text-center text-[12px] text-red-400">{downloadError}</p>
       )}

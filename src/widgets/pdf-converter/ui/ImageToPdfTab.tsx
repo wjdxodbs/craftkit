@@ -1,11 +1,13 @@
-'use client'
-import { Reorder, motion } from 'motion/react'
-import { useImageToPdf } from './useImageToPdf'
-import { ImageUpload } from '@/features/image-upload/ui/ImageUpload'
-import type { ImageItem } from './useImageToPdf'
+"use client";
+import { Reorder } from "motion/react";
+import { useImageToPdf } from "./useImageToPdf";
+import { ImageUpload } from "@/features/image-upload/ui/ImageUpload";
+import type { ImageItem } from "./useImageToPdf";
+import { DownloadButton } from "@/shared/ui/DownloadButton";
 
 export function ImageToPdfTab() {
-  const { items, isConverting, error, addFiles, removeItem, reorder, convert } = useImageToPdf()
+  const { items, isConverting, error, addFiles, removeItem, reorder, convert } =
+    useImageToPdf();
 
   return (
     <div className="space-y-5">
@@ -14,7 +16,9 @@ export function ImageToPdfTab() {
         multiple
         hint="PNG, JPG, WebP 등 — 여러 장 동시 선택 가능"
         size="lg"
-        onFiles={(files) => addFiles(files.filter((f) => f.type.startsWith('image/')))}
+        onFiles={(files) =>
+          addFiles(files.filter((f) => f.type.startsWith("image/")))
+        }
       />
 
       {items.length > 0 && (
@@ -37,7 +41,9 @@ export function ImageToPdfTab() {
                   alt={item.file.name}
                   className="h-12 w-12 rounded-[8px] object-cover"
                 />
-                <span className="flex-1 truncate text-sm text-[#bbb]">{item.file.name}</span>
+                <span className="flex-1 truncate text-sm text-[#bbb]">
+                  {item.file.name}
+                </span>
                 <button
                   type="button"
                   onClick={() => removeItem(item.id)}
@@ -52,7 +58,11 @@ export function ImageToPdfTab() {
                     strokeWidth={2}
                     aria-hidden="true"
                   >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
                   </svg>
                 </button>
               </div>
@@ -63,15 +73,13 @@ export function ImageToPdfTab() {
 
       {error && <p className="text-xs text-red-400">{error}</p>}
 
-      <motion.div whileTap={{ scale: 0.98 }}>
-        <button
-          onClick={convert}
-          disabled={items.length === 0 || isConverting}
-          className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-[#a78bfa40] bg-transparent px-4 py-3.5 text-[13px] font-semibold text-[#a78bfa] transition-all hover:border-[#a78bfa60] hover:bg-[#a78bfa10] disabled:cursor-not-allowed disabled:opacity-40"
-        >
-          {isConverting ? '처리 중…' : `PDF로 변환 · 다운로드 (${items.length}장)`}
-        </button>
-      </motion.div>
+      <DownloadButton
+        onClick={convert}
+        disabled={items.length === 0 || isConverting}
+        isProcessing={isConverting}
+      >
+        {`PDF로 변환 · 다운로드 (${items.length}장)`}
+      </DownloadButton>
     </div>
-  )
+  );
 }

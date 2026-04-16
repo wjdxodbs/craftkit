@@ -1,9 +1,9 @@
 "use client";
 import { useEffect, useRef } from "react";
-import { motion } from "motion/react";
 import { usePdfSplitter } from "./usePdfSplitter";
 import { ImageUpload } from "@/features/image-upload/ui/ImageUpload";
 import { segBtn } from "@/shared/ui/styles";
+import { DownloadButton } from "@/shared/ui/DownloadButton";
 
 export function PdfSplitter() {
   const {
@@ -167,35 +167,27 @@ export function PdfSplitter() {
           </div>
 
           {/* 다운로드 버튼 */}
-          <motion.div whileTap={{ scale: 0.98 }}>
-            <button
-              onClick={split}
-              disabled={selectedPages.size === 0 || isSplitting}
-              className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-[#a78bfa40] bg-transparent px-4 py-3.5 text-[13px] font-semibold text-[#a78bfa] transition-all hover:border-[#a78bfa60] hover:bg-[#a78bfa10] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#a78bfa] disabled:cursor-not-allowed disabled:opacity-40"
+          <DownloadButton
+            onClick={split}
+            disabled={selectedPages.size === 0 || isSplitting}
+            isProcessing={isSplitting}
+          >
+            <svg
+              className="size-4"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+              aria-hidden="true"
             >
-              {isSplitting ? (
-                "처리 중…"
-              ) : (
-                <>
-                  <svg
-                    className="size-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                    aria-hidden="true"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                    />
-                  </svg>
-                  페이지 추출 · 다운로드 ({selectedPages.size})
-                </>
-              )}
-            </button>
-          </motion.div>
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+              />
+            </svg>
+            페이지 추출 · 다운로드 ({selectedPages.size})
+          </DownloadButton>
         </div>
       )}
     </div>
