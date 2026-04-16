@@ -13,7 +13,7 @@ async function fileToNormalizedPngBytes(file: File): Promise<Uint8Array> {
   return new Promise((resolve, reject) => {
     canvas.toBlob((blob) => {
       if (!blob) return reject(new Error('canvas.toBlob 실패'))
-      blob.arrayBuffer().then((buf) => resolve(new Uint8Array(buf)))
+      blob.arrayBuffer().then((buf) => resolve(new Uint8Array(buf))).catch(reject)
     }, 'image/png')
   })
 }
