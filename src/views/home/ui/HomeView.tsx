@@ -153,7 +153,7 @@ export function HomeView() {
                 {/* Arrow */}
                 <span
                   aria-hidden="true"
-                  className="absolute right-5 top-5 text-sm text-[#444] transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-[#a78bfa]"
+                  className="absolute right-5 top-5 text-sm text-[#888] transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-[#a78bfa]"
                 >
                   ↗
                 </span>

@@ -5,7 +5,7 @@ import {
 import { labelCls, segBtn } from "@/shared/ui/styles";
 
 const numInputCls =
-  "w-20 rounded-[10px] border border-[#ffffff15] bg-[#0a0a0a] px-2.5 py-1.5 text-center text-sm text-[#ddd] placeholder:text-[#444] outline-none transition-colors focus:border-[#a78bfa55] disabled:opacity-30";
+  "w-20 rounded-[10px] border border-[#ffffff15] bg-[#0a0a0a] px-2.5 py-1.5 text-center text-sm text-[#ddd] placeholder:text-[#666] outline-none transition-colors focus:border-[#a78bfa55] disabled:opacity-30";
 
 interface ResizeControlBarProps {
   fileName: string | null;

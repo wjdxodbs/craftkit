@@ -18,7 +18,7 @@ const FONTS: FontFamily[] = ["Inter", "Serif", "Mono"];
 
 const labelCls = "mb-2 block text-[11px] font-medium text-[#777]";
 const inputCls =
-  "h-9 w-full rounded-[10px] border border-[#ffffff15] bg-[#0a0a0a] px-3 text-[13px] text-[#ddd] placeholder:text-[#444] outline-none transition-colors focus-visible:border-[#a78bfa55] focus-visible:ring-2 focus-visible:ring-[#a78bfa] focus-visible:ring-offset-1 focus-visible:ring-offset-[#0c0c0c]";
+  "h-9 w-full rounded-[10px] border border-[#ffffff15] bg-[#0a0a0a] px-3 text-[13px] text-[#ddd] placeholder:text-[#666] outline-none transition-colors focus-visible:border-[#a78bfa55] focus-visible:ring-2 focus-visible:ring-[#a78bfa] focus-visible:ring-offset-1 focus-visible:ring-offset-[#0c0c0c]";
 const swatchCls = (active: boolean) =>
   `h-7 w-7 cursor-pointer rounded-[8px] transition-transform hover:scale-110 ${
     active ? "ring-2 ring-[#a78bfa] ring-offset-2 ring-offset-[#0c0c0c]" : ""

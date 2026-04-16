@@ -83,13 +83,13 @@ export function ColorConverter() {
             value={input}
             onChange={(e) => handleInput(e.target.value)}
             placeholder="#a78bfa"
-            className={`w-full rounded-[10px] border bg-[#0a0a0a] px-3 py-2.5 text-sm text-[#ddd] placeholder:text-[#444] outline-none transition-colors ${
+            className={`w-full rounded-[10px] border bg-[#0a0a0a] px-3 py-2.5 text-sm text-[#ddd] placeholder:text-[#666] outline-none transition-colors ${
               !isValid && input.trim() !== ""
                 ? "border-red-500/60 focus:border-red-400"
                 : "border-[#ffffff15] focus:border-[#a78bfa55]"
             }`}
           />
-          <p className="text-[11px] text-[#555]">
+          <p className="text-[11px] text-[#888]">
             #hex · rgb() · hsl() · oklch()
           </p>
         </div>
@@ -110,7 +110,7 @@ export function ColorConverter() {
               key={label}
               className="flex items-center gap-3 border-b border-[#ffffff05] py-3 last:border-b-0"
             >
-              <span className="w-16 shrink-0 text-[11px] font-semibold tracking-widest text-[#555]">
+              <span className="w-16 shrink-0 text-[11px] font-semibold tracking-widest text-[#888]">
                 {label}
               </span>
               <span className="flex-1 truncate font-mono text-sm text-[#ddd]">

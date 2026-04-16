@@ -41,7 +41,7 @@ export function ImageToPdfTab() {
                 <button
                   type="button"
                   onClick={() => removeItem(item.id)}
-                  className="text-[#555] transition-colors hover:text-[#ff6b6b]"
+                  className="text-[#888] transition-colors hover:text-[#ff6b6b]"
                   aria-label={`${item.file.name} 삭제`}
                 >
                   <svg
