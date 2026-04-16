@@ -16,11 +16,11 @@ const PRESET_COLORS = ["#0f172a", "#18181b", "#1e1b4b", "#ffffff"];
 const GRADIENT_COLORS = ["#0f172a", "#6366f1", "#ec4899", "#f97316"];
 const FONTS: FontFamily[] = ["Inter", "Serif", "Mono"];
 
-const labelCls = "mb-2 block text-[11px] font-medium text-[#777]";
+const labelCls = "mb-2 block text-[11px] font-medium text-[#888]";
 const inputCls =
   "h-9 w-full rounded-[10px] border border-[#ffffff15] bg-[#0a0a0a] px-3 text-[13px] text-[#ddd] placeholder:text-[#666] outline-none transition-colors focus-visible:border-[#a78bfa55] focus-visible:ring-2 focus-visible:ring-[#a78bfa] focus-visible:ring-offset-1 focus-visible:ring-offset-[#0c0c0c]";
 const swatchCls = (active: boolean) =>
-  `h-7 w-7 cursor-pointer rounded-[8px] transition-transform hover:scale-110 ${
+  `size-11 cursor-pointer rounded-[8px] transition-transform hover:scale-110 ${
     active ? "ring-2 ring-[#a78bfa] ring-offset-2 ring-offset-[#0c0c0c]" : ""
   }`;
 
@@ -174,7 +174,7 @@ export function OgImageGenerator() {
                   />
                 ))}
                 <label
-                  className="relative h-7 w-7 cursor-pointer"
+                  className="relative size-11 cursor-pointer"
                   title="커스텀 색상"
                 >
                   <input
@@ -193,12 +193,12 @@ export function OgImageGenerator() {
                     className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
                   />
                   {PRESET_COLORS.includes(config.backgroundColor) ? (
-                    <span className="flex h-7 w-7 items-center justify-center rounded-[8px] border border-dashed border-[#ffffff25] text-[11px] text-[#666]">
+                    <span className="flex size-11 items-center justify-center rounded-[8px] border border-dashed border-[#ffffff25] text-[11px] text-[#888]">
                       +
                     </span>
                   ) : (
                     <span
-                      className="block h-7 w-7 rounded-[8px] ring-2 ring-[#a78bfa] ring-offset-2 ring-offset-[#0c0c0c]"
+                      className="block size-11 rounded-[8px] ring-2 ring-[#a78bfa] ring-offset-2 ring-offset-[#0c0c0c]"
                       style={{
                         background: config.backgroundColor,
                         border: "1px solid #ffffff15",
@@ -247,7 +247,7 @@ export function OgImageGenerator() {
                   />
                 ))}
                 <label
-                  className="relative h-7 w-7 cursor-pointer"
+                  className="relative size-11 cursor-pointer"
                   title="커스텀 색상"
                 >
                   <input
@@ -266,12 +266,12 @@ export function OgImageGenerator() {
                     className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
                   />
                   {GRADIENT_COLORS.includes(config.backgroundColor) ? (
-                    <span className="flex h-7 w-7 items-center justify-center rounded-[8px] border border-dashed border-[#ffffff25] text-[11px] text-[#666]">
+                    <span className="flex size-11 items-center justify-center rounded-[8px] border border-dashed border-[#ffffff25] text-[11px] text-[#888]">
                       +
                     </span>
                   ) : (
                     <span
-                      className="block h-7 w-7 rounded-[8px] ring-2 ring-[#a78bfa] ring-offset-2 ring-offset-[#0c0c0c]"
+                      className="block size-11 rounded-[8px] ring-2 ring-[#a78bfa] ring-offset-2 ring-offset-[#0c0c0c]"
                       style={{
                         background: config.backgroundColor,
                         border: "1px solid #ffffff15",
@@ -302,7 +302,7 @@ export function OgImageGenerator() {
                   />
                 ))}
                 <label
-                  className="relative h-7 w-7 cursor-pointer"
+                  className="relative size-11 cursor-pointer"
                   title="커스텀 색상"
                 >
                   <input
@@ -321,12 +321,12 @@ export function OgImageGenerator() {
                     className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
                   />
                   {GRADIENT_COLORS.includes(config.gradientColor2 ?? "") ? (
-                    <span className="flex h-7 w-7 items-center justify-center rounded-[8px] border border-dashed border-[#ffffff25] text-[11px] text-[#666]">
+                    <span className="flex size-11 items-center justify-center rounded-[8px] border border-dashed border-[#ffffff25] text-[11px] text-[#888]">
                       +
                     </span>
                   ) : (
                     <span
-                      className="block h-7 w-7 rounded-[8px] ring-2 ring-[#a78bfa] ring-offset-2 ring-offset-[#0c0c0c]"
+                      className="block size-11 rounded-[8px] ring-2 ring-[#a78bfa] ring-offset-2 ring-offset-[#0c0c0c]"
                       style={{
                         background: config.gradientColor2 ?? "#ec4899",
                         border: "1px solid #ffffff15",

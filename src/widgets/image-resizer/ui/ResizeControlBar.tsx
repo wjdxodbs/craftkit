@@ -102,10 +102,10 @@ export function ResizeControlBar({
           />
           <button
             onClick={onLockToggle}
-            className={`shrink-0 cursor-pointer rounded-[10px] border px-2 py-1.5 transition-colors ${
+            className={`flex shrink-0 cursor-pointer items-center justify-center rounded-[10px] border min-h-[44px] min-w-[44px] transition-colors ${
               locked
                 ? "border-[#a78bfa40] bg-[#a78bfa10] text-[#a78bfa]"
-                : "border-[#ffffff15] text-[#777] hover:border-[#ffffff25] hover:text-[#bbb]"
+                : "border-[#ffffff15] text-[#888] hover:border-[#ffffff25] hover:text-[#bbb]"
             }`}
             title={locked ? "비율 잠금 켜짐" : "비율 잠금 꺼짐"}
             aria-label={locked ? "비율 잠금 켜짐" : "비율 잠금 꺼짐"}

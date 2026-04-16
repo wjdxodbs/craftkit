@@ -92,7 +92,7 @@ export function PdfToImageTab() {
               >
                 전체 해제
               </button>
-              <span className="text-xs text-[#777]">
+              <span className="text-xs text-[#888]">
                 {selectedPages.size} / {pages.length} 선택됨
               </span>
             </div>
@@ -125,6 +125,7 @@ export function PdfToImageTab() {
                   max={100}
                   value={quality}
                   onChange={(e) => setQuality(Number(e.target.value))}
+                  aria-label={`품질 ${quality}%`}
                   className="w-full accent-[#a78bfa]"
                 />
               </div>
@@ -140,7 +141,7 @@ export function PdfToImageTab() {
 
           {/* 페이지 썸네일 그리드 */}
           <div className="space-y-2">
-            <p className="text-xs text-[#777]">페이지 선택</p>
+            <p className="text-xs text-[#888]">페이지 선택</p>
             <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6">
               {pages.map((page) => (
                 <button

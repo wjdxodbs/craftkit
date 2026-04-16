@@ -265,7 +265,7 @@ export function PdfWatermark() {
               </div>
             </div>
           ) : null}
-          <p className="bg-[#0c0c0c] px-3 py-1.5 text-center text-[10px] text-[#666]">
+          <p className="bg-[#0c0c0c] px-3 py-1.5 text-center text-[10px] text-[#888]">
             미리보기 — 실제 결과와 다소 다를 수 있습니다
           </p>
         </div>
@@ -391,7 +391,7 @@ export function PdfWatermark() {
               aria-label="워터마크 색상"
               className="h-8 w-12 cursor-pointer rounded-[6px] border border-[#ffffff15] bg-transparent"
             />
-            <span className="font-mono text-xs text-[#777]">
+            <span className="font-mono text-xs text-[#888]">
               {color.toUpperCase()}
             </span>
           </div>

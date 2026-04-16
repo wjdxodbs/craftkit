@@ -22,6 +22,11 @@ export function PdfSplitter() {
 
   const replaceInputRef = useRef<HTMLInputElement>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
+  const renderThumbnailRef = useRef(renderThumbnail);
+
+  useEffect(() => {
+    renderThumbnailRef.current = renderThumbnail;
+  });
 
   useEffect(() => {
     observerRef.current = new IntersectionObserver(
@@ -32,7 +37,7 @@ export function PdfSplitter() {
               (entry.target as HTMLElement).dataset.pageNumber,
             );
             if (pageNumber) {
-              renderThumbnail(pageNumber);
+              renderThumbnailRef.current(pageNumber);
               observerRef.current?.unobserve(entry.target);
             }
           }
@@ -42,7 +47,7 @@ export function PdfSplitter() {
     );
 
     return () => observerRef.current?.disconnect();
-  }, [renderThumbnail]);
+  }, []);
 
   return (
     <div className="space-y-5">
