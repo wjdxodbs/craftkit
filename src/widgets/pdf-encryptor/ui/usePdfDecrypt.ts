@@ -52,7 +52,7 @@ export function usePdfDecrypt() {
         : "decrypted.pdf";
       a.download = rawName.replace(/[/\\?%*:|"<>\x00]/g, "_");
       a.click();
-      URL.revokeObjectURL(url);
+      setTimeout(() => URL.revokeObjectURL(url), 100);
     } catch {
       setError("비밀번호가 올바르지 않거나 암호화된 PDF가 아닙니다.");
     } finally {

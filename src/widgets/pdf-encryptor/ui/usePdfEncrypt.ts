@@ -52,7 +52,7 @@ export function usePdfEncrypt() {
         : "encrypted.pdf";
       a.download = rawName.replace(/[/\\?%*:|"<>\x00]/g, "_");
       a.click();
-      URL.revokeObjectURL(url);
+      setTimeout(() => URL.revokeObjectURL(url), 100);
     } catch {
       setError("PDF 암호 설정에 실패했습니다.");
     } finally {
