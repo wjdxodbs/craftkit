@@ -18,6 +18,7 @@ export function FaviconGenerator() {
   const [imageEl, setImageEl] = useState<HTMLImageElement | null>(null);
   const [dataUrl, setDataUrl] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleFileLoad = (img: HTMLImageElement, url: string) => {
     setImageEl(img);
@@ -27,9 +28,12 @@ export function FaviconGenerator() {
   const handleDownload = async () => {
     if (!imageEl) return;
     setIsGenerating(true);
+    setError(null);
     try {
       const zip = await generateFavicons(imageEl);
       downloadBlob("favicon-package.zip", zip);
+    } catch {
+      setError("생성에 실패했습니다. 다시 시도해 주세요.");
     } finally {
       setIsGenerating(false);
     }
@@ -102,6 +106,9 @@ export function FaviconGenerator() {
           <span className="text-[10px] text-[#888]">PWA</span>
         </div>
       </div>
+
+      {/* 에러 */}
+      {error && <p className="text-xs text-red-400">{error}</p>}
 
       {/* Download */}
       <DownloadButton
