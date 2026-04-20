@@ -11,6 +11,7 @@ import {
   Lock,
   Stamp,
   Scissors,
+  Signature,
 } from "lucide-react";
 import { TOOLS } from "@/shared/config/tools";
 
@@ -24,6 +25,7 @@ const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
   Lock,
   Stamp,
   Scissors,
+  Signature,
 };
 
 const MotionLink = motion.create(Link);
