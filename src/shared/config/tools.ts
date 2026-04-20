@@ -130,4 +130,17 @@ export const TOOLS: Tool[] = [
     icon: "Scissors",
     available: true,
   },
+  {
+    id: "signature-maker",
+    name: "Signature Maker",
+    description: "서명을 그려 투명 PNG로 다운로드",
+    href: "/tools/signature-maker",
+    tags: ["signature", ".png", "transparent"],
+    accentColor: "#a78bfa",
+    borderColor: "#a78bfa22",
+    tagBg: "#a78bfa0c",
+    tagText: "#a78bfa88",
+    icon: "Signature",
+    available: true,
+  },
 ];

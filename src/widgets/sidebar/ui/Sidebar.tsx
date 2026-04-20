@@ -13,6 +13,7 @@ import {
   Lock,
   Stamp,
   Scissors,
+  Signature,
 } from "lucide-react";
 import { TOOLS } from "@/shared/config/tools";
 import { cn } from "@/shared/lib/utils";
@@ -27,6 +28,7 @@ const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
   Lock,
   Stamp,
   Scissors,
+  Signature,
 };
 
 const EXPANDED_WIDTH = 220;
