@@ -1,6 +1,5 @@
 "use client";
 import { useState, useRef } from "react";
-import { motion } from "motion/react";
 import { cropImage } from "@/features/image-crop/lib/cropImage";
 import type {
   CropBox,
@@ -9,6 +8,7 @@ import type {
 import { EXT_MAP } from "@/shared/config/image-formats";
 import { labelCls } from "@/shared/ui/styles";
 import { DownloadButton } from "@/shared/ui/DownloadButton";
+import { ImageUpload } from "@/features/image-upload/ui/ImageUpload";
 import { useDragHandling, clamp, MIN_CROP } from "./useDragHandling";
 import { useCropPreview } from "./useCropPreview";
 import { CropControlBar } from "./CropControlBar";
@@ -31,7 +31,7 @@ export function ImageCropper() {
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const replaceInputRef = useRef<HTMLInputElement>(null);
 
   const { handlePointerDown, handlePointerMove, handlePointerUp } =
     useDragHandling({
@@ -49,19 +49,12 @@ export function ImageCropper() {
     quality,
   });
 
-  const handleFile = (file: File): void => {
+  const handleFileLoad = (
+    img: HTMLImageElement,
+    url: string,
+    file: File,
+  ): void => {
     setFileName(file.name);
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const url = e.target?.result as string;
-      const img = new Image();
-      img.onload = () => handleFileLoad(img, url);
-      img.src = url;
-    };
-    reader.readAsDataURL(file);
-  };
-
-  const handleFileLoad = (img: HTMLImageElement, url: string): void => {
     setImageEl(img);
     setDataUrl(url);
     setError(null);
@@ -77,6 +70,17 @@ export function ImageCropper() {
     setDisplaySize({ w: displayW, h: displayH });
     setCropBox({ x: 0, y: 0, w: displayW, h: displayH });
     setAspectRatio(null);
+  };
+
+  const handleReplaceFile = (file: File): void => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const url = e.target?.result as string;
+      const img = new Image();
+      img.onload = () => handleFileLoad(img, url, file);
+      img.src = url;
+    };
+    reader.readAsDataURL(file);
   };
 
   const handlePresetChange = (ratio: number | null): void => {
@@ -140,15 +144,15 @@ export function ImageCropper() {
 
   return (
     <div className="space-y-5">
-      {/* 파일 input — 항상 존재 */}
+      {/* 파일 교체용 input */}
       <input
-        ref={inputRef}
+        ref={replaceInputRef}
         type="file"
         accept="image/png,image/jpeg,image/webp"
         className="hidden"
         onChange={(e) => {
           const file = e.target.files?.[0];
-          if (file) handleFile(file);
+          if (file) handleReplaceFile(file);
         }}
       />
 
@@ -159,8 +163,8 @@ export function ImageCropper() {
           isDragging={isDragging}
           aspectRatio={aspectRatio}
           outputFormat={outputFormat}
-          onFileReplace={() => inputRef.current?.click()}
-          onFileDrop={handleFile}
+          onFileReplace={() => replaceInputRef.current?.click()}
+          onFileDrop={handleReplaceFile}
           onDragOver={() => setIsDragging(true)}
           onDragLeave={() => setIsDragging(false)}
           onPresetChange={handlePresetChange}
@@ -184,69 +188,47 @@ export function ImageCropper() {
         </div>
       )}
 
-      {/* 캔버스 */}
-      <div
-        ref={containerRef}
-        className="relative min-h-[500px] overflow-hidden rounded-[14px] border border-[#ffffff15] bg-[#0c0c0c]"
-      >
-        {imageEl && dataUrl && displaySize ? (
-          <>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={dataUrl}
-              alt="크롭 대상"
-              width={displaySize.w}
-              height={displaySize.h}
-              style={{ display: "block", margin: "0 auto" }}
-            />
-            <canvas
-              ref={canvasRef}
-              width={displaySize.w}
-              height={displaySize.h}
-              style={{
-                position: "absolute",
-                top: 0,
-                left: "50%",
-                transform: "translateX(-50%)",
-                cursor: "crosshair",
-              }}
-              onPointerDown={handlePointerDown}
-              onPointerMove={handlePointerMove}
-              onPointerUp={handlePointerUp}
-              onPointerCancel={handlePointerUp}
-            />
-          </>
-        ) : (
-          <button
-            type="button"
-            onClick={() => inputRef.current?.click()}
-            className="flex h-full min-h-[500px] w-full cursor-pointer flex-col items-center justify-center gap-3"
-          >
-            <motion.svg
-              className="size-10 text-[#a78bfa44]"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={1}
-              aria-hidden="true"
-              whileHover={{ y: -4 }}
-              transition={{ type: "spring", stiffness: 300 }}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
-              />
-            </motion.svg>
-            <p className="text-sm text-[#888]">
-              클릭하거나 드래그해서 이미지 업로드
-            </p>
-            <p className="text-xs text-[#888]">
-              자유롭게 크롭하고 비율을 조정하세요
-            </p>
-          </button>
-        )}
-      </div>
+      {/* 업로드 전: ImageUpload / 업로드 후: 크롭 캔버스 */}
+      {imageEl && dataUrl && displaySize ? (
+        <div
+          ref={containerRef}
+          className="relative min-h-[500px] overflow-hidden rounded-[14px] border border-[#ffffff15] bg-[#0c0c0c]"
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={dataUrl}
+            alt="크롭 대상"
+            width={displaySize.w}
+            height={displaySize.h}
+            style={{ display: "block", margin: "0 auto" }}
+          />
+          <canvas
+            ref={canvasRef}
+            width={displaySize.w}
+            height={displaySize.h}
+            style={{
+              position: "absolute",
+              top: 0,
+              left: "50%",
+              transform: "translateX(-50%)",
+              cursor: "crosshair",
+            }}
+            onPointerDown={handlePointerDown}
+            onPointerMove={handlePointerMove}
+            onPointerUp={handlePointerUp}
+            onPointerCancel={handlePointerUp}
+          />
+        </div>
+      ) : (
+        <div ref={containerRef}>
+          <ImageUpload
+            onFileLoad={handleFileLoad}
+            accept="image/png,image/jpeg,image/webp"
+            hint="PNG, JPG, WebP — 자유롭게 크롭하고 비율을 조정하세요"
+            size="xl"
+          />
+        </div>
+      )}
 
       {/* 하단: 미리보기 + 정보 */}
       {(previewUrl || cropInfo || previewSize !== null) && (

@@ -1,8 +1,8 @@
 "use client";
 import { useState, useRef } from "react";
-import { motion } from "motion/react";
 import { resizeImage } from "@/features/image-resize/lib/resizeImage";
 import { EXT_MAP, type OutputFormat } from "@/shared/config/image-formats";
+import { ImageUpload } from "@/features/image-upload/ui/ImageUpload";
 import { useResizePreview } from "./useResizePreview";
 import { ResizeControlBar } from "./ResizeControlBar";
 import { DownloadButton } from "@/shared/ui/DownloadButton";
@@ -24,7 +24,7 @@ export function ImageResizer() {
   const [error, setError] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const replaceInputRef = useRef<HTMLInputElement>(null);
 
   const { previewUrl, previewSize } = useResizePreview({
     imageEl,
@@ -34,22 +34,24 @@ export function ImageResizer() {
     quality,
   });
 
-  const handleFile = (file: File) => {
+  const handleFileLoad = (img: HTMLImageElement, _url: string, file: File) => {
     setFileName(file.name);
+    setImageEl(img);
+    const w = img.naturalWidth || 1;
+    const h = img.naturalHeight || 1;
+    setNaturalSize({ w, h });
+    setWidth(w);
+    setHeight(h);
+    setLocked(true);
+    setError(null);
+  };
+
+  const handleReplaceFile = (file: File) => {
     const reader = new FileReader();
     reader.onload = (e) => {
       const url = e.target?.result as string;
       const img = new Image();
-      img.onload = () => {
-        setImageEl(img);
-        const w = img.naturalWidth || 1;
-        const h = img.naturalHeight || 1;
-        setNaturalSize({ w, h });
-        setWidth(w);
-        setHeight(h);
-        setLocked(true);
-        setError(null);
-      };
+      img.onload = () => handleFileLoad(img, url, file);
       img.onerror = () => setError("이미지를 불러오는 데 실패했습니다.");
       img.src = url;
     };
@@ -100,15 +102,15 @@ export function ImageResizer() {
 
   return (
     <div className="space-y-5">
-      {/* 파일 input — 항상 존재 */}
+      {/* 파일 교체용 input */}
       <input
-        ref={inputRef}
+        ref={replaceInputRef}
         type="file"
         accept="image/png,image/jpeg,image/webp,image/svg+xml,image/avif"
         className="hidden"
         onChange={(e) => {
           const file = e.target.files?.[0];
-          if (file) handleFile(file);
+          if (file) handleReplaceFile(file);
         }}
       />
 
@@ -122,8 +124,8 @@ export function ImageResizer() {
           locked={locked}
           outputFormat={outputFormat}
           quality={quality}
-          onFileReplace={() => inputRef.current?.click()}
-          onFileDrop={handleFile}
+          onFileReplace={() => replaceInputRef.current?.click()}
+          onFileDrop={handleReplaceFile}
           onDragOver={() => setIsDragging(true)}
           onDragLeave={() => setIsDragging(false)}
           onWidthChange={handleWidthChange}
@@ -134,66 +136,27 @@ export function ImageResizer() {
         />
       )}
 
-      {/* 미리보기 영역 */}
-      <div
-        className="relative flex min-h-[500px] items-center justify-center overflow-hidden rounded-[14px] border border-[#ffffff15] bg-[#0c0c0c]"
-        style={
-          imageEl && previewUrl
-            ? { backgroundImage: CHECKER_BG, backgroundSize: "16px 16px" }
-            : undefined
-        }
-      >
-        {imageEl && previewUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element
+      {/* 업로드 전: ImageUpload / 업로드 후: 미리보기 */}
+      {imageEl && previewUrl ? (
+        <div
+          className="relative flex min-h-[500px] items-center justify-center overflow-hidden rounded-[14px] border border-[#ffffff15] bg-[#0c0c0c]"
+          style={{ backgroundImage: CHECKER_BG, backgroundSize: "16px 16px" }}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={previewUrl}
             alt="미리보기"
             className="max-h-[500px] max-w-full object-contain"
           />
-        ) : (
-          <button
-            type="button"
-            onClick={() => inputRef.current?.click()}
-            onDragOver={(e) => {
-              e.preventDefault();
-              setIsDragging(true);
-            }}
-            onDragLeave={() => setIsDragging(false)}
-            onDrop={(e) => {
-              e.preventDefault();
-              setIsDragging(false);
-              const file = e.dataTransfer.files[0];
-              if (file) handleFile(file);
-            }}
-            className={`flex h-full min-h-[500px] w-full cursor-pointer flex-col items-center justify-center gap-3 transition-colors ${
-              isDragging ? "bg-[#a78bfa08]" : ""
-            }`}
-          >
-            <motion.svg
-              className="size-10 text-[#a78bfa44]"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              strokeWidth={1}
-              aria-hidden="true"
-              whileHover={{ y: -4 }}
-              transition={{ type: "spring", stiffness: 300 }}
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"
-              />
-            </motion.svg>
-            <p className="text-sm text-[#888]">
-              클릭하거나 드래그해서 이미지 업로드
-            </p>
-            <p className="text-xs text-[#888]">
-              PNG, JPG, WebP, SVG, AVIF — 최대 8192px
-            </p>
-          </button>
-        )}
-      </div>
+        </div>
+      ) : (
+        <ImageUpload
+          onFileLoad={handleFileLoad}
+          accept="image/png,image/jpeg,image/webp,image/svg+xml,image/avif"
+          hint="PNG, JPG, WebP, SVG, AVIF — 최대 8192px"
+          size="xl"
+        />
+      )}
 
       {/* 하단 정보 바 — 이미지 로드된 경우에만 */}
       {imageEl && naturalSize && (
