@@ -4,14 +4,14 @@ import { motion } from "motion/react";
 import { cn } from "@/shared/lib/utils";
 
 interface Props {
-  onFileLoad?: (img: HTMLImageElement, dataUrl: string) => void;
+  onFileLoad?: (img: HTMLImageElement, dataUrl: string, file: File) => void;
   onFiles?: (files: File[]) => void;
   onError?: () => void;
   accept?: string;
   hint?: string;
   multiple?: boolean;
   variant?: "dashed" | "solid";
-  size?: "sm" | "lg";
+  size?: "sm" | "lg" | "xl";
 }
 
 export function ImageUpload({
@@ -40,7 +40,7 @@ export function ImageUpload({
     reader.onload = (e) => {
       const dataUrl = e.target?.result as string;
       const img = new Image();
-      img.onload = () => onFileLoad?.(img, dataUrl);
+      img.onload = () => onFileLoad?.(img, dataUrl, file);
       img.onerror = () => onError?.();
       img.src = dataUrl;
     };
@@ -66,7 +66,11 @@ export function ImageUpload({
       onDrop={handleDrop}
       className={cn(
         "group relative flex w-full overflow-hidden flex-col items-center justify-center cursor-pointer rounded-[14px] border px-6 text-center transition-all duration-300",
-        size === "sm" ? "h-[120px]" : "min-h-[300px]",
+        size === "sm"
+          ? "h-[120px]"
+          : size === "xl"
+            ? "min-h-[500px]"
+            : "min-h-[300px]",
         variant === "dashed" ? "border-dashed" : "border-solid",
         isDragging
           ? "border-[#a78bfa40] bg-[#a78bfa08]"
