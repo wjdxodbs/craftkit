@@ -9,6 +9,7 @@ import { EXT_MAP } from "@/shared/config/image-formats";
 import { labelCls } from "@/shared/ui/styles";
 import { DownloadButton } from "@/shared/ui/DownloadButton";
 import { ImageUpload } from "@/features/image-upload/ui/ImageUpload";
+import { loadImageFromFile } from "@/shared/lib/loadImageFromFile";
 import { useDragHandling, clamp, MIN_CROP } from "./useDragHandling";
 import { useCropPreview } from "./useCropPreview";
 import { CropControlBar } from "./CropControlBar";
@@ -73,14 +74,10 @@ export function ImageCropper() {
   };
 
   const handleReplaceFile = (file: File): void => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const url = e.target?.result as string;
-      const img = new Image();
-      img.onload = () => handleFileLoad(img, url, file);
-      img.src = url;
-    };
-    reader.readAsDataURL(file);
+    loadImageFromFile(file, {
+      onLoad: handleFileLoad,
+      onError: () => setError("이미지를 불러오는 데 실패했습니다."),
+    });
   };
 
   const handlePresetChange = (ratio: number | null): void => {
