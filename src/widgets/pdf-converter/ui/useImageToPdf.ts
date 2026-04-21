@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { convertImagesToPdf } from "@/features/image-to-pdf/lib/convertImagesToPdf";
+import { downloadBlob } from "@/shared/lib/downloadBlob";
 
 export interface ImageItem {
   id: string;
@@ -49,12 +50,7 @@ export function useImageToPdf() {
     setError(null);
     try {
       const blob = await convertImagesToPdf(items.map((i) => i.file));
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "converted.pdf";
-      a.click();
-      setTimeout(() => URL.revokeObjectURL(url), 100);
+      downloadBlob(blob, "converted.pdf");
     } catch {
       setError("PDF 변환에 실패했습니다. 다시 시도해 주세요.");
     } finally {

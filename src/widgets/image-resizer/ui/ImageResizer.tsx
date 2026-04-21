@@ -4,6 +4,7 @@ import { resizeImage } from "@/features/image-resize/lib/resizeImage";
 import { EXT_MAP, type OutputFormat } from "@/shared/config/image-formats";
 import { ImageUpload } from "@/features/image-upload/ui/ImageUpload";
 import { loadImageFromFile } from "@/shared/lib/loadImageFromFile";
+import { downloadBlob } from "@/shared/lib/downloadBlob";
 import { useResizePreview } from "./useResizePreview";
 import { ResizeControlBar } from "./ResizeControlBar";
 import { DownloadButton } from "@/shared/ui/DownloadButton";
@@ -82,12 +83,7 @@ export function ImageResizer() {
         outputFormat,
         quality / 100,
       );
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `resized.${EXT_MAP[outputFormat]}`;
-      a.click();
-      setTimeout(() => URL.revokeObjectURL(url), 100);
+      downloadBlob(blob, `resized.${EXT_MAP[outputFormat]}`);
     } catch {
       setError("변환에 실패했습니다. 다시 시도해 주세요.");
     } finally {

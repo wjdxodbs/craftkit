@@ -5,6 +5,8 @@ import {
   type WatermarkOptions,
 } from "@/features/pdf-watermark/lib/addWatermarkToPdf";
 import { renderPdfPageToDataUrl } from "@/features/pdf-to-image/lib/convertPdfToImages";
+import { downloadBlob } from "@/shared/lib/downloadBlob";
+import { buildOutputName } from "@/shared/lib/fileName";
 
 export function usePdfWatermark() {
   const [pdfData, setPdfData] = useState<ArrayBuffer | null>(null);
@@ -64,17 +66,7 @@ export function usePdfWatermark() {
         result.byteOffset + result.byteLength,
       ) as ArrayBuffer;
       const blob = new Blob([buffer], { type: "application/pdf" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      const rawName = fileName
-        ? fileName.replace(/\.pdf$/i, "_watermarked.pdf")
-        : "watermarked.pdf";
-      a.download = rawName.replace(/[/\\?%*:|"<>\x00]/g, "_");
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      setTimeout(() => URL.revokeObjectURL(url), 100);
+      downloadBlob(blob, buildOutputName(fileName, "watermarked", "pdf"));
     } catch (err) {
       if (err instanceof Error && err.message === "폰트 로드 실패") {
         setError(

@@ -4,6 +4,8 @@ import {
   decryptPdf,
   isPdfEncrypted,
 } from "@/features/pdf-encrypt/lib/encryptPdf";
+import { downloadBlob } from "@/shared/lib/downloadBlob";
+import { buildOutputName } from "@/shared/lib/fileName";
 
 export function usePdfDecrypt() {
   const [pdfData, setPdfData] = useState<ArrayBuffer | null>(null);
@@ -44,15 +46,7 @@ export function usePdfDecrypt() {
       const blob = new Blob([decrypted.buffer as ArrayBuffer], {
         type: "application/pdf",
       });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      const rawName = fileName
-        ? fileName.replace(/\.pdf$/i, "_decrypted.pdf")
-        : "decrypted.pdf";
-      a.download = rawName.replace(/[/\\?%*:|"<>\x00]/g, "_");
-      a.click();
-      setTimeout(() => URL.revokeObjectURL(url), 100);
+      downloadBlob(blob, buildOutputName(fileName, "decrypted", "pdf"));
     } catch {
       setError("비밀번호가 올바르지 않거나 암호화된 PDF가 아닙니다.");
     } finally {

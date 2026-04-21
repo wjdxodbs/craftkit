@@ -1,6 +1,8 @@
 "use client";
 import { useState } from "react";
 import { encryptPdf } from "@/features/pdf-encrypt/lib/encryptPdf";
+import { downloadBlob } from "@/shared/lib/downloadBlob";
+import { buildOutputName } from "@/shared/lib/fileName";
 
 export function usePdfEncrypt() {
   const [pdfData, setPdfData] = useState<ArrayBuffer | null>(null);
@@ -44,15 +46,7 @@ export function usePdfEncrypt() {
       const blob = new Blob([encrypted.buffer as ArrayBuffer], {
         type: "application/pdf",
       });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      const rawName = fileName
-        ? fileName.replace(/\.pdf$/i, "_encrypted.pdf")
-        : "encrypted.pdf";
-      a.download = rawName.replace(/[/\\?%*:|"<>\x00]/g, "_");
-      a.click();
-      setTimeout(() => URL.revokeObjectURL(url), 100);
+      downloadBlob(blob, buildOutputName(fileName, "encrypted", "pdf"));
     } catch {
       setError("PDF 암호 설정에 실패했습니다.");
     } finally {

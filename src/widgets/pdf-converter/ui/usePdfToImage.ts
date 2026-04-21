@@ -4,7 +4,8 @@ import {
   renderAllThumbnails,
   convertPdfPageToBlob,
 } from "@/features/pdf-to-image/lib/convertPdfToImages";
-import { createZip, downloadBlob } from "@/shared/lib/zip";
+import { createZip, downloadBytes } from "@/shared/lib/zip";
+import { downloadBlob } from "@/shared/lib/downloadBlob";
 import { EXT_MAP, type OutputFormat } from "@/shared/config/image-formats";
 import { usePageSelection } from "@/shared/lib/usePageSelection";
 
@@ -106,12 +107,7 @@ export function usePdfToImage() {
       const ext = EXT_MAP[outputFormat];
 
       if (blobs.length === 1) {
-        const url = URL.createObjectURL(blobs[0]);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `page-${sorted[0]}.${ext}`;
-        a.click();
-        URL.revokeObjectURL(url);
+        downloadBlob(blobs[0], `page-${sorted[0]}.${ext}`);
       } else {
         const entries: Record<string, Uint8Array> = {};
         for (let i = 0; i < blobs.length; i++) {
@@ -119,7 +115,7 @@ export function usePdfToImage() {
           entries[`page-${sorted[i]}.${ext}`] = new Uint8Array(buf);
         }
         const zip = createZip(entries);
-        downloadBlob("pages.zip", zip);
+        downloadBytes("pages.zip", zip);
       }
     } catch {
       setError("이미지 변환에 실패했습니다. 다시 시도해 주세요.");

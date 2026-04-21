@@ -4,7 +4,8 @@ import {
   getPdfPageCount,
   renderPdfPageToDataUrl,
 } from "@/features/pdf-to-image/lib/convertPdfToImages";
-import { downloadBlob } from "@/shared/lib/zip";
+import { downloadBytes } from "@/shared/lib/zip";
+import { sanitizeFilename } from "@/shared/lib/fileName";
 import { splitPdf } from "@/features/pdf-split/lib/splitPdf";
 import { usePageSelection } from "@/shared/lib/usePageSelection";
 
@@ -111,8 +112,8 @@ export function usePdfSplitter() {
       const sorted = [...selectedPages].sort((a, b) => a - b);
       const result = await splitPdf(data, sorted);
       const rawName = fileName?.replace(/\.pdf$/i, "") ?? "document";
-      const safeName = rawName.replace(/[/\\?%*:|"<>\x00]/g, "_");
-      downloadBlob(`${safeName}-split.pdf`, result, "application/pdf");
+      const safeName = sanitizeFilename(rawName);
+      downloadBytes(`${safeName}-split.pdf`, result, "application/pdf");
     } catch {
       setError("PDF 추출에 실패했습니다. 다시 시도해 주세요.");
     } finally {

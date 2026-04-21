@@ -11,6 +11,7 @@ import type {
 import { TemplateTabs } from "./TemplateTabs";
 import { segBtn } from "@/shared/ui/styles";
 import { DownloadButton } from "@/shared/ui/DownloadButton";
+import { downloadBlob } from "@/shared/lib/downloadBlob";
 
 const PRESET_COLORS = ["#0f172a", "#18181b", "#1e1b4b", "#ffffff"];
 const GRADIENT_COLORS = ["#0f172a", "#6366f1", "#ec4899", "#f97316"];
@@ -51,12 +52,7 @@ export function OgImageGenerator() {
     setDownloadError(null);
     try {
       const blob = await generateOgImage({ ...config, logoDataUrl });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "og-image.png";
-      a.click();
-      setTimeout(() => URL.revokeObjectURL(url), 100);
+      downloadBlob(blob, "og-image.png");
     } catch {
       setDownloadError("다운로드에 실패했습니다. 다시 시도해 주세요.");
     } finally {

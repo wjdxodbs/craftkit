@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { ImageUpload } from "@/features/image-upload/ui/ImageUpload";
 import { generateFavicons } from "@/features/favicon-export/lib/generateFavicons";
-import { downloadBlob } from "@/shared/lib/zip";
+import { downloadBytes } from "@/shared/lib/zip";
 import { FAVICON_SIZES } from "@/shared/config/favicon-sizes";
 import { DownloadButton } from "@/shared/ui/DownloadButton";
 
@@ -31,7 +31,7 @@ export function FaviconGenerator() {
     setError(null);
     try {
       const zip = await generateFavicons(imageEl);
-      downloadBlob("favicon-package.zip", zip);
+      downloadBytes("favicon-package.zip", zip);
     } catch {
       setError("생성에 실패했습니다. 다시 시도해 주세요.");
     } finally {

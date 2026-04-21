@@ -9,6 +9,7 @@ import {
 import { trimToContent } from "@/features/signature/lib/trimToContent";
 import { canvasToPngBlob } from "@/features/signature/lib/canvasToPngBlob";
 import { DownloadButton } from "@/shared/ui/DownloadButton";
+import { downloadBlob } from "@/shared/lib/downloadBlob";
 import { labelCls, segBtn } from "@/shared/ui/styles";
 
 const DEFAULT_W = 800;
@@ -203,14 +204,7 @@ export function SignatureMaker() {
         return;
       }
       const blob = await canvasToPngBlob(trimmed);
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "signature.png";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      setTimeout(() => URL.revokeObjectURL(url), 100);
+      downloadBlob(blob, "signature.png");
     } catch {
       setError("다운로드에 실패했습니다. 다시 시도해 주세요.");
     } finally {
