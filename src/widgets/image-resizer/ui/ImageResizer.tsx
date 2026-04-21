@@ -3,6 +3,7 @@ import { useState, useRef } from "react";
 import { resizeImage } from "@/features/image-resize/lib/resizeImage";
 import { EXT_MAP, type OutputFormat } from "@/shared/config/image-formats";
 import { ImageUpload } from "@/features/image-upload/ui/ImageUpload";
+import { loadImageFromFile } from "@/shared/lib/loadImageFromFile";
 import { useResizePreview } from "./useResizePreview";
 import { ResizeControlBar } from "./ResizeControlBar";
 import { DownloadButton } from "@/shared/ui/DownloadButton";
@@ -47,16 +48,10 @@ export function ImageResizer() {
   };
 
   const handleReplaceFile = (file: File) => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const url = e.target?.result as string;
-      const img = new Image();
-      img.onload = () => handleFileLoad(img, url, file);
-      img.onerror = () => setError("이미지를 불러오는 데 실패했습니다.");
-      img.src = url;
-    };
-    reader.onerror = () => setError("파일을 읽는 데 실패했습니다.");
-    reader.readAsDataURL(file);
+    loadImageFromFile(file, {
+      onLoad: handleFileLoad,
+      onError: () => setError("이미지를 불러오는 데 실패했습니다."),
+    });
   };
 
   const handleWidthChange = (val: number) => {

@@ -2,6 +2,7 @@
 import { useRef, useState } from "react";
 import { motion } from "motion/react";
 import { cn } from "@/shared/lib/utils";
+import { loadImageFromFile } from "@/shared/lib/loadImageFromFile";
 
 interface Props {
   onFileLoad?: (img: HTMLImageElement, dataUrl: string, file: File) => void;
@@ -36,16 +37,10 @@ export function ImageUpload({
     }
     const file = files[0];
     setFileName(file.name);
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const dataUrl = e.target?.result as string;
-      const img = new Image();
-      img.onload = () => onFileLoad?.(img, dataUrl, file);
-      img.onerror = () => onError?.();
-      img.src = dataUrl;
-    };
-    reader.onerror = () => onError?.();
-    reader.readAsDataURL(file);
+    loadImageFromFile(file, {
+      onLoad: (img, dataUrl, f) => onFileLoad?.(img, dataUrl, f),
+      onError,
+    });
   };
 
   const handleDrop = (e: React.DragEvent) => {

@@ -9,8 +9,10 @@ import { EXT_MAP } from "@/shared/config/image-formats";
 import { labelCls } from "@/shared/ui/styles";
 import { DownloadButton } from "@/shared/ui/DownloadButton";
 import { ImageUpload } from "@/features/image-upload/ui/ImageUpload";
+import { loadImageFromFile } from "@/shared/lib/loadImageFromFile";
 import { useDragHandling, clamp, MIN_CROP } from "./useDragHandling";
 import { useCropPreview } from "./useCropPreview";
+import { useFullImagePreview } from "./useFullImagePreview";
 import { CropControlBar } from "./CropControlBar";
 
 export function ImageCropper() {
@@ -41,10 +43,16 @@ export function ImageCropper() {
       setCropBox,
     });
 
-  const { previewUrl, previewSize } = useCropPreview({
+  const { previewSize } = useCropPreview({
     imageEl,
     cropBox,
     displaySize,
+    outputFormat,
+    quality,
+  });
+
+  const { fullPreviewUrl } = useFullImagePreview({
+    imageEl,
     outputFormat,
     quality,
   });
@@ -73,14 +81,10 @@ export function ImageCropper() {
   };
 
   const handleReplaceFile = (file: File): void => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const url = e.target?.result as string;
-      const img = new Image();
-      img.onload = () => handleFileLoad(img, url, file);
-      img.src = url;
-    };
-    reader.readAsDataURL(file);
+    loadImageFromFile(file, {
+      onLoad: handleFileLoad,
+      onError: () => setError("이미지를 불러오는 데 실패했습니다."),
+    });
   };
 
   const handlePresetChange = (ratio: number | null): void => {
@@ -196,7 +200,7 @@ export function ImageCropper() {
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={dataUrl}
+            src={fullPreviewUrl ?? dataUrl}
             alt="크롭 대상"
             width={displaySize.w}
             height={displaySize.h}
@@ -230,34 +234,22 @@ export function ImageCropper() {
         </div>
       )}
 
-      {/* 하단: 미리보기 + 정보 */}
-      {(previewUrl || cropInfo || previewSize !== null) && (
-        <div className="flex items-center gap-4 rounded-[14px] border border-[#ffffff15] bg-[#0c0c0c] p-4">
-          {previewUrl && (
-            <div className="h-16 w-24 shrink-0 overflow-hidden rounded-[10px] border border-[#ffffff15] bg-[#0a0a0a]">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={previewUrl}
-                alt="크롭 미리보기"
-                className="h-full w-full object-contain"
-              />
-            </div>
+      {/* 하단: 크기 · 용량 정보 */}
+      {(cropInfo || previewSize !== null) && (
+        <div className="flex items-center justify-between rounded-[14px] border border-[#ffffff15] bg-[#0c0c0c] p-4">
+          {cropInfo && (
+            <span className="font-mono text-xs text-[#a78bfa]">{cropInfo}</span>
           )}
-          <div className="min-w-0 flex-1 space-y-1">
-            {cropInfo && (
-              <p className="font-mono text-xs text-[#a78bfa]">{cropInfo}</p>
-            )}
-            {previewSize !== null && (
-              <p className="text-[11px] text-[#888]">
-                예상 크기{" "}
-                <span className="font-mono text-[#bbb]">
-                  {previewSize >= 1024 * 1024
-                    ? `${(previewSize / 1024 / 1024).toFixed(1)} MB`
-                    : `${Math.round(previewSize / 1024)} KB`}
-                </span>
-              </p>
-            )}
-          </div>
+          {previewSize !== null && (
+            <span className="text-[11px] text-[#888]">
+              예상 크기{" "}
+              <span className="font-mono text-[#bbb]">
+                {previewSize >= 1024 * 1024
+                  ? `${(previewSize / 1024 / 1024).toFixed(1)} MB`
+                  : `${Math.round(previewSize / 1024)} KB`}
+              </span>
+            </span>
+          )}
         </div>
       )}
 
