@@ -1,4 +1,5 @@
 import { zipSync } from "fflate";
+import { downloadBlob } from "./downloadBlob";
 
 const encoder = new TextEncoder();
 
@@ -15,7 +16,7 @@ export function createZip(
   return zipSync(entries);
 }
 
-export function downloadBlob(
+export function downloadBytes(
   filename: string,
   data: Uint8Array,
   mimeType = "application/zip",
@@ -24,11 +25,5 @@ export function downloadBlob(
     data.byteOffset,
     data.byteOffset + data.byteLength,
   ) as ArrayBuffer;
-  const blob = new Blob([buffer], { type: mimeType });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
-  a.click();
-  URL.revokeObjectURL(url);
+  downloadBlob(new Blob([buffer], { type: mimeType }), filename);
 }

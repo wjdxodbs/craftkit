@@ -10,6 +10,7 @@ import { labelCls } from "@/shared/ui/styles";
 import { DownloadButton } from "@/shared/ui/DownloadButton";
 import { ImageUpload } from "@/features/image-upload/ui/ImageUpload";
 import { loadImageFromFile } from "@/shared/lib/loadImageFromFile";
+import { downloadBlob } from "@/shared/lib/downloadBlob";
 import { useDragHandling, clamp, MIN_CROP } from "./useDragHandling";
 import { useCropPreview } from "./useCropPreview";
 import { useFullImagePreview } from "./useFullImagePreview";
@@ -126,14 +127,7 @@ export function ImageCropper() {
         outputFormat,
         quality / 100,
       );
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `cropped.${EXT_MAP[outputFormat]}`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      setTimeout(() => URL.revokeObjectURL(url), 100);
+      downloadBlob(blob, `cropped.${EXT_MAP[outputFormat]}`);
     } catch {
       setError("크롭에 실패했습니다. 다시 시도해 주세요.");
     } finally {
