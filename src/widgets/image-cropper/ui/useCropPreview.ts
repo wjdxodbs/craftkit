@@ -18,15 +18,12 @@ export function useCropPreview({
   outputFormat: OutputFormat;
   quality: number;
 }): {
-  previewUrl: string | null;
   previewSize: number | null;
 } {
-  const { url: previewUrl, size: previewSize } = useDebouncedBlobUrl(
-    async () => {
-      if (!imageEl || !cropBox || !displaySize) return null;
-      const scale = imageEl.naturalWidth / displaySize.w;
-      return cropImage(imageEl, cropBox, scale, outputFormat, quality / 100);
-    },
-  );
-  return { previewUrl, previewSize };
+  const { size: previewSize } = useDebouncedBlobUrl(async () => {
+    if (!imageEl || !cropBox || !displaySize) return null;
+    const scale = imageEl.naturalWidth / displaySize.w;
+    return cropImage(imageEl, cropBox, scale, outputFormat, quality / 100);
+  });
+  return { previewSize };
 }
