@@ -3,11 +3,10 @@ import {
   FONT_MAP,
   W,
   H,
-  isLightColor,
   loadLogo,
   drawAutoSizedText,
 } from "./renderOgImageToCanvas";
-import { hexToRgb } from "@/shared/lib/color";
+import { hexToRgb, rgbToHex, isLightColor } from "@/shared/lib/color";
 
 const GRADIENT_PRESETS: Record<string, [string, string]> = {
   sunset: ["#f97316", "#ec4899"],
@@ -15,22 +14,6 @@ const GRADIENT_PRESETS: Record<string, [string, string]> = {
   cyberpunk: ["#a855f7", "#ec4899"],
   forest: ["#10b981", "#06b6d4"],
 };
-
-/**
- * 숫자 채널 값을 16진수 색상 문자열로 변환한다.
- */
-function rgbToHex(r: number, g: number, b: number): string {
-  return (
-    "#" +
-    [r, g, b]
-      .map((v) =>
-        Math.min(255, Math.max(0, Math.round(v)))
-          .toString(16)
-          .padStart(2, "0"),
-      )
-      .join("")
-  );
-}
 
 /**
  * 색상을 약 80 단위 밝게 만들어 그라디언트 두 번째 색으로 사용한다.

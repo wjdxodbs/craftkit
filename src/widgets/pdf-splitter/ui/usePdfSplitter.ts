@@ -29,11 +29,9 @@ export function usePdfSplitter() {
     selectedPages,
     setSelectedPages,
     togglePage,
-    selectAll: _selectAll,
+    selectAll,
     deselectAll,
-  } = usePageSelection();
-
-  const selectAll = (): void => _selectAll(pages);
+  } = usePageSelection(pages);
 
   const handleFile = async (file: File): Promise<void> => {
     setError(null);

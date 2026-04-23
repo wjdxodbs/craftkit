@@ -5,6 +5,7 @@ import { EXT_MAP, type OutputFormat } from "@/shared/config/image-formats";
 import { ImageUpload } from "@/features/image-upload/ui/ImageUpload";
 import { loadImageFromFile } from "@/shared/lib/loadImageFromFile";
 import { downloadBlob } from "@/shared/lib/downloadBlob";
+import { formatByteSize } from "@/shared/lib/format";
 import { useResizePreview } from "./useResizePreview";
 import { ResizeControlBar } from "./ResizeControlBar";
 import { DownloadButton } from "@/shared/ui/DownloadButton";
@@ -138,9 +139,7 @@ export function ImageResizer() {
           </span>
           {previewSize !== null && (
             <span className="font-mono text-xs text-[#bbb]">
-              {previewSize >= 1024 * 1024
-                ? `${(previewSize / 1024 / 1024).toFixed(1)} MB`
-                : `${Math.round(previewSize / 1024)} KB`}
+              {formatByteSize(previewSize)}
             </span>
           )}
         </div>

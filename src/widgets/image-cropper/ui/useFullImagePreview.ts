@@ -1,4 +1,5 @@
 import { useDebouncedBlobUrl } from "@/shared/lib/useDebouncedBlobUrl";
+import { canvasToBlob } from "@/shared/lib/canvas";
 import type { OutputFormat } from "@/shared/config/image-formats";
 
 export function useFullImagePreview({
@@ -19,9 +20,7 @@ export function useFullImagePreview({
     const ctx = canvas.getContext("2d");
     if (!ctx) return null;
     ctx.drawImage(imageEl, 0, 0);
-    return new Promise<Blob | null>((resolve) =>
-      canvas.toBlob((blob) => resolve(blob), outputFormat, quality / 100),
-    );
+    return canvasToBlob(canvas, outputFormat, quality / 100);
   });
   return { fullPreviewUrl };
 }

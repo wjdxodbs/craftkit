@@ -25,14 +25,6 @@ export function usePdfEncrypt() {
     }
   };
 
-  const reset = (): void => {
-    setPdfData(null);
-    setFileName(null);
-    setUserPassword("");
-    setOwnerPassword("");
-    setError(null);
-  };
-
   const encrypt = async (): Promise<void> => {
     if (!pdfData || !userPassword) return;
     setIsProcessing(true);
@@ -61,7 +53,6 @@ export function usePdfEncrypt() {
     isProcessing,
     error,
     handleFile,
-    reset,
     setUserPassword,
     setOwnerPassword,
     encrypt,

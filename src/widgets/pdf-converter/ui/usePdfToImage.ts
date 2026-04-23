@@ -25,12 +25,8 @@ export function usePdfToImage() {
   const [error, setError] = useState<string | null>(null);
   const mountedRef = useRef(true);
 
-  const {
-    selectedPages,
-    deselectAll,
-    togglePage,
-    selectAll: _selectAll,
-  } = usePageSelection();
+  const { selectedPages, deselectAll, togglePage, selectAll } =
+    usePageSelection(pages);
 
   useEffect(() => {
     mountedRef.current = true;
@@ -38,8 +34,6 @@ export function usePdfToImage() {
       mountedRef.current = false;
     };
   }, []);
-
-  const selectAll = (): void => _selectAll(pages);
 
   const handleFile = async (file: File): Promise<void> => {
     setError(null);
@@ -84,8 +78,6 @@ export function usePdfToImage() {
       }
     }
   };
-
-  const deselectAllPages = (): void => deselectAll();
 
   const convert = async (): Promise<void> => {
     if (!pdfData || selectedPages.size === 0) return;
@@ -136,7 +128,7 @@ export function usePdfToImage() {
     handleFile,
     togglePage,
     selectAll,
-    deselectAll: deselectAllPages,
+    deselectAll,
     setOutputFormat,
     setQuality,
     convert,

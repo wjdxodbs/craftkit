@@ -12,6 +12,7 @@ import { Slider } from "@/shared/ui/slider";
 import { ImageUpload } from "@/features/image-upload/ui/ImageUpload";
 import { loadImageFromFile } from "@/shared/lib/loadImageFromFile";
 import { downloadBlob } from "@/shared/lib/downloadBlob";
+import { formatByteSize } from "@/shared/lib/format";
 import { useDragHandling, clamp, MIN_CROP } from "./useDragHandling";
 import { useCropPreview } from "./useCropPreview";
 import { useFullImagePreview } from "./useFullImagePreview";
@@ -219,9 +220,7 @@ export function ImageCropper() {
             <span className="text-[11px] text-[#888]">
               예상 크기{" "}
               <span className="font-mono text-[#bbb]">
-                {previewSize >= 1024 * 1024
-                  ? `${(previewSize / 1024 / 1024).toFixed(1)} MB`
-                  : `${Math.round(previewSize / 1024)} KB`}
+                {formatByteSize(previewSize)}
               </span>
             </span>
           )}
