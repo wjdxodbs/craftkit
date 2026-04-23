@@ -3,33 +3,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
-import {
-  Globe,
-  Share2,
-  Scaling,
-  Crop,
-  Palette,
-  FileText,
-  Lock,
-  Stamp,
-  Scissors,
-  Signature,
-} from "lucide-react";
 import { TOOLS } from "@/shared/config/tools";
 import { cn } from "@/shared/lib/utils";
-
-const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
-  Globe,
-  Share2,
-  Scaling,
-  Crop,
-  Palette,
-  FileText,
-  Lock,
-  Stamp,
-  Scissors,
-  Signature,
-};
 
 const EXPANDED_WIDTH = 220;
 const COLLAPSED_WIDTH = 56;
@@ -110,8 +85,8 @@ export function Sidebar() {
                 )}
                 <span className="flex w-10 shrink-0 items-center justify-center">
                   {(() => {
-                    const Icon = ICON_MAP[tool.icon];
-                    return Icon ? <Icon className="size-4 shrink-0" /> : null;
+                    const Icon = tool.icon;
+                    return <Icon className="size-4 shrink-0" />;
                   })()}
                 </span>
                 {!isExpanded && (

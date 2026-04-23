@@ -1,32 +1,7 @@
 "use client";
 import Link from "next/link";
 import { motion } from "motion/react";
-import {
-  Globe,
-  Share2,
-  Scaling,
-  Crop,
-  Palette,
-  FileText,
-  Lock,
-  Stamp,
-  Scissors,
-  Signature,
-} from "lucide-react";
 import { TOOLS } from "@/shared/config/tools";
-
-const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
-  Globe,
-  Share2,
-  Scaling,
-  Crop,
-  Palette,
-  FileText,
-  Lock,
-  Stamp,
-  Scissors,
-  Signature,
-};
 
 const MotionLink = motion.create(Link);
 
@@ -118,7 +93,7 @@ export function HomeView() {
         {/* Card grid */}
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
           {TOOLS.filter((tool) => tool.available).map((tool, i) => {
-            const Icon = ICON_MAP[tool.icon];
+            const Icon = tool.icon;
             return (
               <MotionLink
                 key={tool.id}
@@ -168,7 +143,7 @@ export function HomeView() {
                       "linear-gradient(135deg, #a78bfa15 0%, #7c3aed0a 100%)",
                   }}
                 >
-                  {Icon && <Icon className="size-4 text-[#a78bfa]" />}
+                  <Icon className="size-4 text-[#a78bfa]" />
                 </div>
 
                 {/* Text */}

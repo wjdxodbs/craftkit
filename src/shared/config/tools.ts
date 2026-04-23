@@ -1,3 +1,17 @@
+import type { ComponentType } from "react";
+import {
+  Globe,
+  Share2,
+  Scaling,
+  Crop,
+  Palette,
+  FileText,
+  Lock,
+  Stamp,
+  Scissors,
+  Signature,
+} from "lucide-react";
+
 export interface Tool {
   id: string;
   name: string;
@@ -5,10 +19,7 @@ export interface Tool {
   href: string;
   tags: string[];
   accentColor: string;
-  borderColor: string;
-  tagBg: string;
-  tagText: string;
-  icon: string;
+  icon: ComponentType<{ className?: string }>;
   available: boolean;
 }
 
@@ -20,10 +31,7 @@ export const TOOLS: Tool[] = [
     href: "/tools/favicon",
     tags: [".ico", ".png", ".zip"],
     accentColor: "#a78bfa",
-    borderColor: "#a78bfa22",
-    tagBg: "#a78bfa0c",
-    tagText: "#a78bfa88",
-    icon: "Globe",
+    icon: Globe,
     available: true,
   },
   {
@@ -33,10 +41,7 @@ export const TOOLS: Tool[] = [
     href: "/tools/og-image",
     tags: ["1200×630", ".png"],
     accentColor: "#a78bfa",
-    borderColor: "#a78bfa22",
-    tagBg: "#a78bfa0c",
-    tagText: "#a78bfa88",
-    icon: "Share2",
+    icon: Share2,
     available: true,
   },
   {
@@ -46,10 +51,7 @@ export const TOOLS: Tool[] = [
     href: "/tools/image-resizer",
     tags: ["px", ".png", ".jpg", ".webp"],
     accentColor: "#a78bfa",
-    borderColor: "#a78bfa22",
-    tagBg: "#a78bfa0c",
-    tagText: "#a78bfa88",
-    icon: "Scaling",
+    icon: Scaling,
     available: true,
   },
   {
@@ -59,10 +61,7 @@ export const TOOLS: Tool[] = [
     href: "/tools/image-cropper",
     tags: ["crop", ".png", ".jpg", ".webp"],
     accentColor: "#a78bfa",
-    borderColor: "#a78bfa22",
-    tagBg: "#a78bfa0c",
-    tagText: "#a78bfa88",
-    icon: "Crop",
+    icon: Crop,
     available: true,
   },
   {
@@ -72,10 +71,7 @@ export const TOOLS: Tool[] = [
     href: "/tools/color-converter",
     tags: ["HEX", "RGB", "HSL", "OKLCH"],
     accentColor: "#a78bfa",
-    borderColor: "#a78bfa22",
-    tagBg: "#a78bfa0c",
-    tagText: "#a78bfa88",
-    icon: "Palette",
+    icon: Palette,
     available: true,
   },
   {
@@ -85,10 +81,7 @@ export const TOOLS: Tool[] = [
     href: "/tools/pdf-converter",
     tags: [".pdf", ".png", ".jpg", ".webp"],
     accentColor: "#a78bfa",
-    borderColor: "#a78bfa22",
-    tagBg: "#a78bfa0c",
-    tagText: "#a78bfa88",
-    icon: "FileText",
+    icon: FileText,
     available: true,
   },
   {
@@ -98,10 +91,7 @@ export const TOOLS: Tool[] = [
     href: "/tools/pdf-password",
     tags: [".pdf", "암호화", "암호해제"],
     accentColor: "#a78bfa",
-    borderColor: "#a78bfa22",
-    tagBg: "#a78bfa0c",
-    tagText: "#a78bfa88",
-    icon: "Lock",
+    icon: Lock,
     available: true,
   },
   {
@@ -111,10 +101,7 @@ export const TOOLS: Tool[] = [
     href: "/tools/pdf-watermark",
     tags: [".pdf", "워터마크", "텍스트"],
     accentColor: "#a78bfa",
-    borderColor: "#a78bfa22",
-    tagBg: "#a78bfa0c",
-    tagText: "#a78bfa88",
-    icon: "Stamp",
+    icon: Stamp,
     available: true,
   },
   {
@@ -124,10 +111,7 @@ export const TOOLS: Tool[] = [
     href: "/tools/pdf-splitter",
     tags: [".pdf", "페이지 추출", "분할"],
     accentColor: "#a78bfa",
-    borderColor: "#a78bfa22",
-    tagBg: "#a78bfa0c",
-    tagText: "#a78bfa88",
-    icon: "Scissors",
+    icon: Scissors,
     available: true,
   },
   {
@@ -137,10 +121,7 @@ export const TOOLS: Tool[] = [
     href: "/tools/signature-maker",
     tags: ["signature", ".png", "transparent"],
     accentColor: "#a78bfa",
-    borderColor: "#a78bfa22",
-    tagBg: "#a78bfa0c",
-    tagText: "#a78bfa88",
-    icon: "Signature",
+    icon: Signature,
     available: true,
   },
 ];

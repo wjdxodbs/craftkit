@@ -1,18 +1,10 @@
 import { PdfSplitter } from "@/widgets/pdf-splitter/ui/PdfSplitter";
-import { ToolHeader } from "@/shared/ui/ToolHeader";
-import { TOOLS } from "@/shared/config/tools";
+import { ToolPageLayout } from "@/shared/ui/ToolPageLayout";
 
 export function PdfSplitterToolView() {
-  const tool = TOOLS.find((t) => t.id === "pdf-splitter")
-  if (!tool) return null
   return (
-    <div className="mx-auto w-full max-w-4xl px-6 py-10 sm:px-10 md:px-16">
-      <ToolHeader
-        name={tool.name}
-        description={tool.description}
-        accentColor={tool.accentColor}
-      />
+    <ToolPageLayout toolId="pdf-splitter">
       <PdfSplitter />
-    </div>
+    </ToolPageLayout>
   );
 }
