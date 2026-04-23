@@ -33,6 +33,7 @@ export function usePdfToImage() {
   } = usePageSelection();
 
   useEffect(() => {
+    mountedRef.current = true;
     return () => {
       mountedRef.current = false;
     };
