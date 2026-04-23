@@ -2,12 +2,15 @@
 import { useRef, useState, useEffect } from "react";
 import { usePdfWatermark } from "./usePdfWatermark";
 import { ImageUpload } from "@/features/image-upload/ui/ImageUpload";
-import { labelCls, segBtn } from "@/shared/ui/styles";
+import { labelCls } from "@/shared/ui/styles";
 import { DownloadButton } from "@/shared/ui/DownloadButton";
+import { FileReplaceHeader } from "@/shared/ui/FileReplaceHeader";
+import { Input } from "@/shared/ui/input";
+import { Label } from "@/shared/ui/label";
+import { Slider } from "@/shared/ui/slider";
+import { Alert, AlertDescription } from "@/shared/ui/alert";
+import { ToggleGroup, ToggleGroupItem } from "@/shared/ui/toggle-group";
 import type { WatermarkOptions } from "@/features/pdf-watermark/lib/addWatermarkToPdf";
-
-const inputCls =
-  "w-full rounded-[10px] border border-[#ffffff15] bg-[#131313] px-3 py-2 text-sm text-white placeholder-[#555] outline-none transition-colors focus:border-[#a78bfa40]";
 
 const POSITIONS = [
   { value: "center" as const, label: "중앙" },
@@ -18,9 +21,6 @@ const POSITIONS = [
 ];
 
 type DisplayedSize = { width: number; height: number; scale: number };
-
-// scale = offsetWidth / naturalWidth
-// scaleFactor(PDF pt → screen px) = scale * 0.7 (0.7 = render scale)
 
 function TileOverlay({
   text,
@@ -49,14 +49,12 @@ function TileOverlay({
     canvas.height = size.height;
     ctx.clearRect(0, 0, size.width, size.height);
 
-    // PDF pt → screen px 변환 배율
     const scaleFactor = size.scale * 0.7;
     const scaledFontPx = Math.max(6, fontSize * scaleFactor);
 
     ctx.font = `${scaledFontPx}px Helvetica, Arial, sans-serif`;
     const textWidthPx = ctx.measureText(text).width;
 
-    // PDF와 동일한 step 공식 (screen px 단위로 변환)
     const stepPx = Math.max(
       Math.max(textWidthPx * 0.7 + 50 * scaleFactor, 100 * scaleFactor) *
         spacing,
@@ -70,7 +68,6 @@ function TileOverlay({
       for (let y = -size.height; y < size.height * 2; y += stepPx) {
         ctx.save();
         ctx.translate(x, y);
-        // PDF degrees(45)는 screen에서 45° CW (y축 반전)
         ctx.rotate(-Math.PI / 4);
         ctx.fillText(text, 0, 0);
         ctx.restore();
@@ -143,7 +140,6 @@ function SingleOverlay({
 }
 
 export function PdfWatermark() {
-  const replaceInputRef = useRef<HTMLInputElement>(null);
   const [displayedSize, setDisplayedSize] = useState<DisplayedSize | null>(
     null,
   );
@@ -172,6 +168,11 @@ export function PdfWatermark() {
     apply,
   } = usePdfWatermark();
 
+  const handleReplace = (file: File) => {
+    setDisplayedSize(null);
+    handleFile(file);
+  };
+
   if (!fileName) {
     return (
       <ImageUpload
@@ -187,31 +188,11 @@ export function PdfWatermark() {
 
   return (
     <div className="space-y-4">
-      {/* 파일 정보 */}
-      <div className="flex items-center justify-between">
-        <h3 className="text-sm font-medium text-[#fff]">{fileName}</h3>
-        <button
-          type="button"
-          onClick={() => replaceInputRef.current?.click()}
-          className="text-xs text-[#a78bfa] hover:text-[#c9b0ff] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#a78bfa]"
-        >
-          파일 교체
-        </button>
-        <input
-          ref={replaceInputRef}
-          type="file"
-          accept="application/pdf"
-          className="sr-only"
-          onChange={(e) => {
-            const file = e.target.files?.[0];
-            if (file) {
-              setDisplayedSize(null);
-              handleFile(file);
-            }
-            e.target.value = "";
-          }}
-        />
-      </div>
+      <FileReplaceHeader
+        fileName={fileName}
+        accept="application/pdf"
+        onFile={handleReplace}
+      />
 
       {/* 미리보기 */}
       {(previewUrl || isRenderingPreview) && (
@@ -223,6 +204,7 @@ export function PdfWatermark() {
           ) : previewUrl ? (
             <div className="flex justify-center bg-[#080808] py-4">
               <div className="relative">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={previewUrl}
                   alt="PDF 미리보기"
@@ -275,54 +257,61 @@ export function PdfWatermark() {
       <div className="space-y-4 rounded-[14px] border border-[#ffffff15] bg-[#0c0c0c] p-4">
         {/* 텍스트 */}
         <div className="space-y-2">
-          <p className={labelCls}>워터마크 텍스트</p>
-          <input
+          <Label htmlFor="wm-text" className={labelCls}>
+            워터마크 텍스트
+          </Label>
+          <Input
+            id="wm-text"
             type="text"
             value={text}
             onChange={(e) => setText(e.target.value)}
             placeholder="예: CONFIDENTIAL"
-            aria-label="워터마크 텍스트"
-            className={inputCls}
           />
         </div>
 
         {/* 배치 모드 */}
         <div className="space-y-2">
           <p className={labelCls}>배치 모드</p>
-          <div className="flex gap-2">
-            <button
-              type="button"
-              className={`${segBtn(mode === "tile")} focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#a78bfa]`}
-              onClick={() => setMode("tile")}
-            >
+          <ToggleGroup
+            value={[mode]}
+            onValueChange={(v: string[]) => {
+              const next = v[0];
+              if (next === "tile" || next === "single") setMode(next);
+            }}
+            spacing={8}
+          >
+            <ToggleGroupItem value="tile" variant="segment" size="seg">
               대각 반복
-            </button>
-            <button
-              type="button"
-              className={`${segBtn(mode === "single")} focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#a78bfa]`}
-              onClick={() => setMode("single")}
-            >
+            </ToggleGroupItem>
+            <ToggleGroupItem value="single" variant="segment" size="seg">
               단일 위치
-            </button>
-          </div>
+            </ToggleGroupItem>
+          </ToggleGroup>
         </div>
 
         {/* 위치 (single 모드일 때만) */}
         {mode === "single" && (
           <div className="space-y-2">
             <p className={labelCls}>위치</p>
-            <div className="flex flex-wrap gap-2">
+            <ToggleGroup
+              value={[position]}
+              onValueChange={(v: string[]) => {
+                const next = v[0] as WatermarkOptions["position"] | undefined;
+                if (next) setPosition(next);
+              }}
+              spacing={8}
+            >
               {POSITIONS.map((p) => (
-                <button
+                <ToggleGroupItem
                   key={p.value}
-                  type="button"
-                  className={`${segBtn(position === p.value)} focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#a78bfa]`}
-                  onClick={() => setPosition(p.value)}
+                  value={p.value}
+                  variant="segment"
+                  size="seg"
                 >
                   {p.label}
-                </button>
+                </ToggleGroupItem>
               ))}
-            </div>
+            </ToggleGroup>
           </div>
         )}
 
@@ -332,15 +321,16 @@ export function PdfWatermark() {
             <p className={labelCls}>
               간격 <span className="text-[#aaa]">{spacing.toFixed(1)}x</span>
             </p>
-            <input
-              type="range"
+            <Slider
               min={50}
               max={200}
-              value={Math.round(spacing * 100)}
-              onChange={(e) => setSpacing(Number(e.target.value) / 100)}
+              value={[Math.round(spacing * 100)]}
+              onValueChange={(v) => {
+                const n = Array.isArray(v) ? v[0] : v;
+                setSpacing(n / 100);
+              }}
               aria-label="간격"
               aria-valuetext={`${spacing.toFixed(1)}x`}
-              className="w-full accent-[#a78bfa]"
             />
           </div>
         )}
@@ -350,15 +340,13 @@ export function PdfWatermark() {
           <p className={labelCls}>
             폰트 크기 <span className="text-[#aaa]">{fontSize}pt</span>
           </p>
-          <input
-            type="range"
+          <Slider
             min={16}
             max={72}
-            value={fontSize}
-            onChange={(e) => setFontSize(Number(e.target.value))}
+            value={[fontSize]}
+            onValueChange={(v) => setFontSize(Array.isArray(v) ? v[0] : v)}
             aria-label="폰트 크기"
             aria-valuetext={`${fontSize}pt`}
-            className="w-full accent-[#a78bfa]"
           />
         </div>
 
@@ -368,15 +356,16 @@ export function PdfWatermark() {
             불투명도{" "}
             <span className="text-[#aaa]">{Math.round(opacity * 100)}%</span>
           </p>
-          <input
-            type="range"
+          <Slider
             min={0}
             max={100}
-            value={Math.round(opacity * 100)}
-            onChange={(e) => setOpacity(Number(e.target.value) / 100)}
+            value={[Math.round(opacity * 100)]}
+            onValueChange={(v) => {
+              const n = Array.isArray(v) ? v[0] : v;
+              setOpacity(n / 100);
+            }}
             aria-label="불투명도"
             aria-valuetext={`${Math.round(opacity * 100)}%`}
-            className="w-full accent-[#a78bfa]"
           />
         </div>
 
@@ -398,14 +387,12 @@ export function PdfWatermark() {
         </div>
       </div>
 
-      {/* 에러 */}
       {error && (
-        <div className="rounded-[14px] border border-[#ef444415] bg-[#ef44440a] p-3 text-xs text-[#ff6b6b]">
-          {error}
-        </div>
+        <Alert variant="destructive">
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
       )}
 
-      {/* 실행 버튼 */}
       <DownloadButton
         onClick={apply}
         disabled={!text.trim() || isProcessing}

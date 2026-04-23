@@ -1,8 +1,6 @@
 "use client";
 import { motion } from "motion/react";
-
-const cls =
-  "flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-[#a78bfa40] bg-transparent px-4 py-3.5 text-[13px] font-semibold text-[#a78bfa] transition-all hover:border-[#a78bfa60] hover:bg-[#a78bfa10] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#a78bfa] disabled:cursor-not-allowed disabled:opacity-40";
+import { Button } from "@/shared/ui/button";
 
 interface Props {
   onClick: () => void;
@@ -21,9 +19,14 @@ export function DownloadButton({
 }: Props) {
   return (
     <motion.div whileTap={{ scale: 0.98 }}>
-      <button onClick={onClick} disabled={disabled} className={cls}>
+      <Button
+        variant="primary-outline"
+        size="full"
+        onClick={onClick}
+        disabled={disabled}
+      >
         {isProcessing ? processingText : children}
-      </button>
+      </Button>
     </motion.div>
   );
 }

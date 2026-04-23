@@ -8,6 +8,7 @@ import type {
 import { EXT_MAP } from "@/shared/config/image-formats";
 import { labelCls } from "@/shared/ui/styles";
 import { DownloadButton } from "@/shared/ui/DownloadButton";
+import { Slider } from "@/shared/ui/slider";
 import { ImageUpload } from "@/features/image-upload/ui/ImageUpload";
 import { loadImageFromFile } from "@/shared/lib/loadImageFromFile";
 import { downloadBlob } from "@/shared/lib/downloadBlob";
@@ -30,11 +31,9 @@ export function ImageCropper() {
   const [isConverting, setIsConverting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
-  const [isDragging, setIsDragging] = useState(false);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const replaceInputRef = useRef<HTMLInputElement>(null);
 
   const { handlePointerDown, handlePointerMove, handlePointerUp } =
     useDragHandling({
@@ -142,29 +141,12 @@ export function ImageCropper() {
 
   return (
     <div className="space-y-5">
-      {/* 파일 교체용 input */}
-      <input
-        ref={replaceInputRef}
-        type="file"
-        accept="image/png,image/jpeg,image/webp"
-        className="hidden"
-        onChange={(e) => {
-          const file = e.target.files?.[0];
-          if (file) handleReplaceFile(file);
-        }}
-      />
-
-      {/* 컨트롤 바 — 이미지 로드된 경우에만 표시 */}
       {imageEl && (
         <CropControlBar
           fileName={fileName}
-          isDragging={isDragging}
           aspectRatio={aspectRatio}
           outputFormat={outputFormat}
-          onFileReplace={() => replaceInputRef.current?.click()}
-          onFileDrop={handleReplaceFile}
-          onDragOver={() => setIsDragging(true)}
-          onDragLeave={() => setIsDragging(false)}
+          onFileReplace={handleReplaceFile}
           onPresetChange={handlePresetChange}
           onFormatChange={setOutputFormat}
         />
@@ -174,14 +156,13 @@ export function ImageCropper() {
       {outputFormat !== "image/png" && (
         <div className="flex items-center gap-3">
           <span className={`shrink-0 ${labelCls}`}>품질 {quality}%</span>
-          <input
-            type="range"
+          <Slider
             min={0}
             max={100}
-            value={quality}
-            onChange={(e) => setQuality(Number(e.target.value))}
+            value={[quality]}
+            onValueChange={(v) => setQuality(Array.isArray(v) ? v[0] : v)}
             aria-label={`품질 ${quality}%`}
-            className="flex-1 cursor-pointer accent-[#a78bfa]"
+            className="flex-1"
           />
         </div>
       )}

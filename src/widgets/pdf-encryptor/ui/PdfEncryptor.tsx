@@ -1,27 +1,32 @@
 "use client";
-import { useState } from "react";
 import { PdfEncryptTab } from "./PdfEncryptTab";
 import { PdfDecryptTab } from "./PdfDecryptTab";
-import { TabNav } from "@/shared/ui/TabNav";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/shared/ui/tabs";
 
-type Tab = "pdf-encrypt" | "pdf-decrypt";
+const tabListCls =
+  "h-auto w-full justify-start gap-2 rounded-none border-b border-[#ffffff15] bg-transparent p-0";
 
-const TABS: { id: Tab; label: string }[] = [
-  { id: "pdf-encrypt", label: "암호 설정" },
-  { id: "pdf-decrypt", label: "암호 해제" },
-];
+const tabTriggerCls =
+  "flex-none rounded-none border-transparent px-4 py-3 text-sm font-medium text-[#888] hover:text-[#aaa] data-active:text-[#a78bfa] data-active:shadow-none [&[data-active]]:after:bottom-[-1px] [&[data-active]]:after:h-[2px] [&[data-active]]:after:bg-[#a78bfa] [&[data-active]]:after:opacity-100 dark:data-active:border-transparent dark:data-active:bg-transparent dark:data-active:text-[#a78bfa]";
 
 export function PdfEncryptor() {
-  const [activeTab, setActiveTab] = useState<Tab>("pdf-encrypt");
-
   return (
-    <div className="space-y-5">
-      <TabNav tabs={TABS} active={activeTab} onChange={setActiveTab} />
+    <Tabs defaultValue="pdf-encrypt" className="space-y-5">
+      <TabsList variant="line" className={tabListCls}>
+        <TabsTrigger value="pdf-encrypt" className={tabTriggerCls}>
+          암호 설정
+        </TabsTrigger>
+        <TabsTrigger value="pdf-decrypt" className={tabTriggerCls}>
+          암호 해제
+        </TabsTrigger>
+      </TabsList>
 
-      <div>
-        {activeTab === "pdf-encrypt" && <PdfEncryptTab />}
-        {activeTab === "pdf-decrypt" && <PdfDecryptTab />}
-      </div>
-    </div>
+      <TabsContent value="pdf-encrypt">
+        <PdfEncryptTab />
+      </TabsContent>
+      <TabsContent value="pdf-decrypt">
+        <PdfDecryptTab />
+      </TabsContent>
+    </Tabs>
   );
 }

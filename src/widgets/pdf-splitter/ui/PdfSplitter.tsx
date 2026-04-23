@@ -2,8 +2,10 @@
 import { useEffect, useRef } from "react";
 import { usePdfSplitter } from "./usePdfSplitter";
 import { ImageUpload } from "@/features/image-upload/ui/ImageUpload";
-import { segBtn } from "@/shared/ui/styles";
 import { DownloadButton } from "@/shared/ui/DownloadButton";
+import { FileReplaceHeader } from "@/shared/ui/FileReplaceHeader";
+import { Button } from "@/shared/ui/button";
+import { Alert, AlertDescription } from "@/shared/ui/alert";
 
 export function PdfSplitter() {
   const {
@@ -20,7 +22,6 @@ export function PdfSplitter() {
     split,
   } = usePdfSplitter();
 
-  const replaceInputRef = useRef<HTMLInputElement>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
   const renderThumbnailRef = useRef(renderThumbnail);
 
@@ -62,70 +63,47 @@ export function PdfSplitter() {
             }}
           />
           {error && (
-            <div
-              role="alert"
-              className="rounded-[14px] border border-[#ef444415] bg-[#ef44440a] p-3 text-xs text-[#ff6b6b]"
-            >
-              {error}
-            </div>
+            <Alert variant="destructive">
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
           )}
         </div>
       ) : (
         <div className="space-y-4">
-          {/* 파일 정보 */}
-          <div className="flex items-center justify-between">
-            <h3 className="text-sm font-medium text-[#fff]">
-              {fileName} ({pages.length}페이지)
-            </h3>
-            <button
-              type="button"
-              onClick={() => replaceInputRef.current?.click()}
-              className="text-xs text-[#a78bfa] hover:text-[#c9b0ff] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#a78bfa]"
-            >
-              파일 교체
-            </button>
-            <input
-              ref={replaceInputRef}
-              type="file"
-              accept="application/pdf"
-              className="sr-only"
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (file) handleFile(file);
-                e.target.value = "";
-              }}
-            />
-          </div>
+          <FileReplaceHeader
+            fileName={fileName ?? ""}
+            suffix={`(${pages.length}페이지)`}
+            accept="application/pdf"
+            onFile={handleFile}
+          />
 
           {/* 선택 컨트롤 */}
           <div className="flex items-center gap-2">
-            <button
+            <Button
               type="button"
+              variant="segment"
+              size="seg"
               onClick={selectAll}
-              className={`${segBtn(false)} focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#a78bfa]`}
             >
               전체 선택
-            </button>
-            <button
+            </Button>
+            <Button
               type="button"
+              variant="segment"
+              size="seg"
               onClick={deselectAll}
-              className={`${segBtn(false)} focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#a78bfa]`}
             >
               전체 해제
-            </button>
+            </Button>
             <span className="text-xs text-[#999]">
               {selectedPages.size} / {pages.length} 선택됨
             </span>
           </div>
 
-          {/* 에러 */}
           {error && (
-            <div
-              role="alert"
-              className="rounded-[14px] border border-[#ef444415] bg-[#ef44440a] p-3 text-xs text-[#ff6b6b]"
-            >
-              {error}
-            </div>
+            <Alert variant="destructive">
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
           )}
 
           {/* 썸네일 그리드 */}

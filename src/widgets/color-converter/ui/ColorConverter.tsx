@@ -3,6 +3,9 @@ import { useState, useRef } from "react";
 import { convertColor } from "@/features/color-convert/lib/convertColor";
 import type { ColorResult } from "@/features/color-convert/lib/convertColor";
 import { labelCls } from "@/shared/ui/styles";
+import { Input } from "@/shared/ui/input";
+import { Label } from "@/shared/ui/label";
+import { Button } from "@/shared/ui/button";
 
 const FORMAT_LABELS = ["HEX", "RGB", "HSL", "OKLCH"] as const;
 type FormatLabel = (typeof FORMAT_LABELS)[number];
@@ -56,6 +59,7 @@ export function ColorConverter() {
   };
 
   const swatchColor = result?.hex ?? "#a78bfa";
+  const hasError = !isValid && input.trim() !== "";
 
   return (
     <div className="rounded-[14px] border border-[#ffffff15] bg-[#0c0c0c] p-5">
@@ -78,20 +82,16 @@ export function ColorConverter() {
         />
 
         <div className="flex-1 space-y-2">
-          <label htmlFor="color-input" className={labelCls}>
+          <Label htmlFor="color-input" className={labelCls}>
             색상 입력
-          </label>
-          <input
+          </Label>
+          <Input
             id="color-input"
             type="text"
             value={input}
             onChange={(e) => handleInput(e.target.value)}
             placeholder="#a78bfa"
-            className={`w-full rounded-[10px] border bg-[#0a0a0a] px-3 py-2.5 text-sm text-[#ddd] placeholder:text-[#666] outline-none transition-colors ${
-              !isValid && input.trim() !== ""
-                ? "border-red-500/60 focus:border-red-400"
-                : "border-[#ffffff15] focus:border-[#a78bfa55]"
-            }`}
+            aria-invalid={hasError || undefined}
           />
           <p className="text-[11px] text-[#888]">
             #hex · rgb() · hsl() · oklch()
@@ -120,14 +120,16 @@ export function ColorConverter() {
               <span className="flex-1 truncate font-mono text-sm text-[#ddd]">
                 {value}
               </span>
-              <button
+              <Button
                 type="button"
+                variant="ghost"
+                size="xs"
                 onClick={() => result && handleCopy(value, label)}
                 disabled={!result}
-                className="shrink-0 cursor-pointer rounded-md px-2.5 py-1 text-[11px] font-medium text-[#888] transition-colors hover:bg-[#a78bfa10] hover:text-[#a78bfa] disabled:cursor-not-allowed disabled:opacity-30"
+                className="text-[11px] text-[#888] hover:bg-[#a78bfa10] hover:text-[#a78bfa] disabled:opacity-30"
               >
                 {isCopied ? "복사됨" : "복사"}
-              </button>
+              </Button>
             </div>
           );
         })}

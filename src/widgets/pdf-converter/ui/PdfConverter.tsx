@@ -1,27 +1,32 @@
 "use client";
-import { useState } from "react";
 import { ImageToPdfTab } from "./ImageToPdfTab";
 import { PdfToImageTab } from "./PdfToImageTab";
-import { TabNav } from "@/shared/ui/TabNav";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/shared/ui/tabs";
 
-type Tab = "image-to-pdf" | "pdf-to-image";
+const tabListCls =
+  "h-auto w-full justify-start gap-2 rounded-none border-b border-[#ffffff15] bg-transparent p-0";
 
-const TABS: { id: Tab; label: string }[] = [
-  { id: "image-to-pdf", label: "이미지 → PDF" },
-  { id: "pdf-to-image", label: "PDF → 이미지" },
-];
+const tabTriggerCls =
+  "flex-none rounded-none border-transparent px-4 py-3 text-sm font-medium text-[#888] hover:text-[#aaa] data-active:text-[#a78bfa] data-active:shadow-none [&[data-active]]:after:bottom-[-1px] [&[data-active]]:after:h-[2px] [&[data-active]]:after:bg-[#a78bfa] [&[data-active]]:after:opacity-100 dark:data-active:border-transparent dark:data-active:bg-transparent dark:data-active:text-[#a78bfa]";
 
 export function PdfConverter() {
-  const [activeTab, setActiveTab] = useState<Tab>("image-to-pdf");
-
   return (
-    <div className="space-y-5">
-      <TabNav tabs={TABS} active={activeTab} onChange={setActiveTab} />
+    <Tabs defaultValue="image-to-pdf" className="space-y-5">
+      <TabsList variant="line" className={tabListCls}>
+        <TabsTrigger value="image-to-pdf" className={tabTriggerCls}>
+          이미지 → PDF
+        </TabsTrigger>
+        <TabsTrigger value="pdf-to-image" className={tabTriggerCls}>
+          PDF → 이미지
+        </TabsTrigger>
+      </TabsList>
 
-      <div>
-        {activeTab === "image-to-pdf" && <ImageToPdfTab />}
-        {activeTab === "pdf-to-image" && <PdfToImageTab />}
-      </div>
-    </div>
+      <TabsContent value="image-to-pdf">
+        <ImageToPdfTab />
+      </TabsContent>
+      <TabsContent value="pdf-to-image">
+        <PdfToImageTab />
+      </TabsContent>
+    </Tabs>
   );
 }

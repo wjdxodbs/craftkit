@@ -10,7 +10,9 @@ import { trimToContent } from "@/features/signature/lib/trimToContent";
 import { canvasToPngBlob } from "@/features/signature/lib/canvasToPngBlob";
 import { DownloadButton } from "@/shared/ui/DownloadButton";
 import { downloadBlob } from "@/shared/lib/downloadBlob";
-import { labelCls, segBtn } from "@/shared/ui/styles";
+import { labelCls } from "@/shared/ui/styles";
+import { Button } from "@/shared/ui/button";
+import { ToggleGroup, ToggleGroupItem } from "@/shared/ui/toggle-group";
 
 const DEFAULT_W = 800;
 const DEFAULT_H = 400;
@@ -220,34 +222,48 @@ export function SignatureMaker() {
       <div className="flex shrink-0 flex-wrap items-center gap-x-4 gap-y-3">
         <div className="flex items-center gap-2">
           <span className={labelCls}>굵기</span>
-          <div className="flex gap-1.5">
+          <ToggleGroup
+            value={[String(thickness)]}
+            onValueChange={(v: string[]) => {
+              const next = Number(v[0]);
+              if (next) setThickness(next as Thickness);
+            }}
+            spacing={6}
+          >
             {THICKNESS_OPTIONS.map(({ label, value }) => (
-              <button
+              <ToggleGroupItem
                 key={value}
-                onClick={() => setThickness(value)}
-                className={segBtn(thickness === value)}
+                value={String(value)}
+                variant="segment"
+                size="seg"
               >
                 {label}
-              </button>
+              </ToggleGroupItem>
             ))}
-          </div>
+          </ToggleGroup>
         </div>
 
         <div className="ml-auto flex gap-1.5">
-          <button
+          <Button
+            type="button"
+            variant="segment"
+            size="seg"
             onClick={handleUndo}
             disabled={!hasStrokes}
-            className={`${segBtn(false)} disabled:cursor-not-allowed disabled:opacity-40`}
+            className="disabled:opacity-40"
           >
             Undo
-          </button>
-          <button
+          </Button>
+          <Button
+            type="button"
+            variant="segment"
+            size="seg"
             onClick={handleClear}
             disabled={!hasStrokes}
-            className={`${segBtn(false)} disabled:cursor-not-allowed disabled:opacity-40`}
+            className="disabled:opacity-40"
           >
             Clear
-          </button>
+          </Button>
         </div>
       </div>
 

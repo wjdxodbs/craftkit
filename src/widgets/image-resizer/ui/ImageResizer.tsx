@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { resizeImage } from "@/features/image-resize/lib/resizeImage";
 import { EXT_MAP, type OutputFormat } from "@/shared/config/image-formats";
 import { ImageUpload } from "@/features/image-upload/ui/ImageUpload";
@@ -25,8 +25,6 @@ export function ImageResizer() {
   const [isConverting, setIsConverting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
-  const [isDragging, setIsDragging] = useState(false);
-  const replaceInputRef = useRef<HTMLInputElement>(null);
 
   const { previewUrl, previewSize } = useResizePreview({
     imageEl,
@@ -93,32 +91,15 @@ export function ImageResizer() {
 
   return (
     <div className="space-y-5">
-      {/* 파일 교체용 input */}
-      <input
-        ref={replaceInputRef}
-        type="file"
-        accept="image/png,image/jpeg,image/webp,image/svg+xml,image/avif"
-        className="hidden"
-        onChange={(e) => {
-          const file = e.target.files?.[0];
-          if (file) handleReplaceFile(file);
-        }}
-      />
-
-      {/* 컨트롤 바 — 이미지 로드된 경우에만 */}
       {imageEl && (
         <ResizeControlBar
           fileName={fileName}
-          isDragging={isDragging}
           width={width}
           height={height}
           locked={locked}
           outputFormat={outputFormat}
           quality={quality}
-          onFileReplace={() => replaceInputRef.current?.click()}
-          onFileDrop={handleReplaceFile}
-          onDragOver={() => setIsDragging(true)}
-          onDragLeave={() => setIsDragging(false)}
+          onFileReplace={handleReplaceFile}
           onWidthChange={handleWidthChange}
           onHeightChange={handleHeightChange}
           onLockToggle={() => setLocked((v) => !v)}
@@ -127,7 +108,6 @@ export function ImageResizer() {
         />
       )}
 
-      {/* 업로드 전: ImageUpload / 업로드 후: 미리보기 */}
       {imageEl && previewUrl ? (
         <div
           className="relative flex min-h-[500px] items-center justify-center overflow-hidden rounded-[14px] border border-[#ffffff15] bg-[#0c0c0c]"
@@ -149,7 +129,6 @@ export function ImageResizer() {
         />
       )}
 
-      {/* 하단 정보 바 — 이미지 로드된 경우에만 */}
       {imageEl && naturalSize && (
         <div className="flex items-center justify-between rounded-[14px] border border-[#ffffff15] bg-[#0c0c0c] p-4">
           <span className="font-mono text-xs text-[#a78bfa]">
@@ -167,10 +146,8 @@ export function ImageResizer() {
         </div>
       )}
 
-      {/* 에러 */}
       {error && <p className="text-xs text-red-400">{error}</p>}
 
-      {/* 다운로드 */}
       <DownloadButton
         onClick={handleDownload}
         disabled={!imageEl || isConverting}

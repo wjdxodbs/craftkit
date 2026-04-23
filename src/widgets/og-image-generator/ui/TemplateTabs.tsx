@@ -1,4 +1,5 @@
 import type { TemplateName } from "@/features/og-image-export/lib/renderOgImageToCanvas";
+import { ToggleGroup, ToggleGroupItem } from "@/shared/ui/toggle-group";
 
 const TEMPLATES: { id: TemplateName; label: string }[] = [
   { id: "classic", label: "Classic" },
@@ -13,20 +14,25 @@ interface Props {
 
 export function TemplateTabs({ value, onChange }: Props) {
   return (
-    <div className="flex gap-2">
+    <ToggleGroup
+      value={[value]}
+      onValueChange={(v: string[]) => {
+        const next = v[0] as TemplateName | undefined;
+        if (next) onChange(next);
+      }}
+      spacing={8}
+    >
       {TEMPLATES.map((t) => (
-        <button
+        <ToggleGroupItem
           key={t.id}
-          onClick={() => onChange(t.id)}
-          className={`cursor-pointer rounded-[10px] px-3.5 py-1.5 text-xs font-medium transition-colors ${
-            value === t.id
-              ? "border border-[#a78bfa40] bg-[#a78bfa10] text-[#a78bfa]"
-              : "border border-[#ffffff15] text-[#888] hover:border-[#ffffff25] hover:text-[#bbb]"
-          }`}
+          value={t.id}
+          variant="segment"
+          size="seg"
+          className="px-3.5"
         >
           {t.label}
-        </button>
+        </ToggleGroupItem>
       ))}
-    </div>
+    </ToggleGroup>
   );
 }

@@ -1,10 +1,17 @@
 "use client";
-import { useRef } from "react";
 import { usePdfToImage } from "./usePdfToImage";
 import { ImageUpload } from "@/features/image-upload/ui/ImageUpload";
-import { OUTPUT_FORMATS } from "@/shared/config/image-formats";
-import { labelCls, segBtn } from "@/shared/ui/styles";
+import {
+  OUTPUT_FORMATS,
+  type OutputFormat,
+} from "@/shared/config/image-formats";
+import { labelCls } from "@/shared/ui/styles";
 import { DownloadButton } from "@/shared/ui/DownloadButton";
+import { FileReplaceHeader } from "@/shared/ui/FileReplaceHeader";
+import { Button } from "@/shared/ui/button";
+import { Slider } from "@/shared/ui/slider";
+import { Alert, AlertDescription } from "@/shared/ui/alert";
+import { ToggleGroup, ToggleGroupItem } from "@/shared/ui/toggle-group";
 
 export function PdfToImageTab() {
   const {
@@ -24,11 +31,8 @@ export function PdfToImageTab() {
     convert,
   } = usePdfToImage();
 
-  const replaceInputRef = useRef<HTMLInputElement>(null);
-
   return (
     <div className="space-y-5">
-      {/* 업로드 영역 — PDF 로드 전 */}
       {pages.length === 0 ? (
         <div className="flex flex-col gap-4">
           <ImageUpload
@@ -40,58 +44,40 @@ export function PdfToImageTab() {
             }}
           />
 
-          {/* 에러 메시지 */}
           {error && (
-            <div className="rounded-[14px] border border-[#ef444415] bg-[#ef44440a] p-3 text-xs text-[#ff6b6b]">
-              {error}
-            </div>
+            <Alert variant="destructive">
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
           )}
         </div>
       ) : (
-        // PDF 로드된 후의 UI
         <div className="space-y-4">
-          {/* 파일 정보 및 컨트롤 */}
           <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <h3 className="text-sm font-medium text-[#fff]">
-                {fileName} ({pages.length}페이지)
-              </h3>
-              <button
-                type="button"
-                onClick={() => replaceInputRef.current?.click()}
-                className="text-xs text-[#a78bfa] hover:text-[#c9b0ff]"
-              >
-                파일 교체
-              </button>
-              <input
-                ref={replaceInputRef}
-                type="file"
-                accept="application/pdf"
-                className="sr-only"
-                onChange={(e) => {
-                  const files = Array.from(e.target.files ?? []);
-                  if (files[0]) handleFile(files[0]);
-                  e.target.value = "";
-                }}
-              />
-            </div>
+            <FileReplaceHeader
+              fileName={fileName ?? ""}
+              suffix={`(${pages.length}페이지)`}
+              accept="application/pdf"
+              onFile={handleFile}
+            />
 
             {/* 페이지 선택 컨트롤 */}
             <div className="flex items-center gap-2">
-              <button
+              <Button
                 type="button"
+                variant="segment"
+                size="seg"
                 onClick={selectAll}
-                className={segBtn(false)}
               >
                 전체 선택
-              </button>
-              <button
+              </Button>
+              <Button
                 type="button"
+                variant="segment"
+                size="seg"
                 onClick={deselectAll}
-                className={segBtn(false)}
               >
                 전체 해제
-              </button>
+              </Button>
               <span className="text-xs text-[#888]">
                 {selectedPages.size} / {pages.length} 선택됨
               </span>
@@ -102,41 +88,45 @@ export function PdfToImageTab() {
           <div className="space-y-3 rounded-[14px] border border-[#ffffff15] bg-[#0c0c0c] p-4">
             <div className="space-y-2">
               <p className={labelCls}>출력 포맷</p>
-              <div className="flex gap-2">
+              <ToggleGroup
+                value={[outputFormat]}
+                onValueChange={(v: string[]) => {
+                  const next = v[0] as OutputFormat | undefined;
+                  if (next) setOutputFormat(next);
+                }}
+                spacing={8}
+              >
                 {OUTPUT_FORMATS.map((f) => (
-                  <button
+                  <ToggleGroupItem
                     key={f.value}
-                    type="button"
-                    className={segBtn(outputFormat === f.value)}
-                    onClick={() => setOutputFormat(f.value)}
+                    value={f.value}
+                    variant="segment"
+                    size="seg"
                   >
                     {f.label}
-                  </button>
+                  </ToggleGroupItem>
                 ))}
-              </div>
+              </ToggleGroup>
             </div>
 
             {outputFormat !== "image/png" && (
               <div className="space-y-2">
                 <p className={labelCls}>품질 {quality}%</p>
-                <input
-                  type="range"
+                <Slider
                   min={10}
                   max={100}
-                  value={quality}
-                  onChange={(e) => setQuality(Number(e.target.value))}
+                  value={[quality]}
+                  onValueChange={(v) => setQuality(Array.isArray(v) ? v[0] : v)}
                   aria-label={`품질 ${quality}%`}
-                  className="w-full accent-[#a78bfa]"
                 />
               </div>
             )}
           </div>
 
-          {/* 에러 메시지 */}
           {error && (
-            <div className="rounded-[14px] border border-[#ef444415] bg-[#ef44440a] p-3 text-xs text-[#ff6b6b]">
-              {error}
-            </div>
+            <Alert variant="destructive">
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
           )}
 
           {/* 페이지 썸네일 그리드 */}
@@ -176,7 +166,6 @@ export function PdfToImageTab() {
             </div>
           </div>
 
-          {/* 다운로드 버튼 */}
           <DownloadButton
             onClick={convert}
             disabled={selectedPages.size === 0 || isConverting}
