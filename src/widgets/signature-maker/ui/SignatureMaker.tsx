@@ -228,7 +228,7 @@ export function SignatureMaker() {
               const next = Number(v[0]);
               if (next) setThickness(next as Thickness);
             }}
-            spacing={6}
+            spacing={4}
           >
             {THICKNESS_OPTIONS.map(({ label, value }) => (
               <ToggleGroupItem

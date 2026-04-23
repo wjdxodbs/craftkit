@@ -278,7 +278,7 @@ export function PdfWatermark() {
               const next = v[0];
               if (next === "tile" || next === "single") setMode(next);
             }}
-            spacing={8}
+            spacing={4}
           >
             <ToggleGroupItem value="tile" variant="segment" size="seg">
               대각 반복
@@ -299,7 +299,7 @@ export function PdfWatermark() {
                 const next = v[0] as WatermarkOptions["position"] | undefined;
                 if (next) setPosition(next);
               }}
-              spacing={8}
+              spacing={4}
             >
               {POSITIONS.map((p) => (
                 <ToggleGroupItem

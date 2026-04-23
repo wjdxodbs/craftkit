@@ -20,7 +20,7 @@ export function TemplateTabs({ value, onChange }: Props) {
         const next = v[0] as TemplateName | undefined;
         if (next) onChange(next);
       }}
-      spacing={8}
+      spacing={4}
     >
       {TEMPLATES.map((t) => (
         <ToggleGroupItem

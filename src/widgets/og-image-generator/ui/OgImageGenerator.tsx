@@ -173,7 +173,7 @@ export function OgImageGenerator() {
                   const next = v[0] as FontFamily | undefined;
                   if (next) setConfig((c) => ({ ...c, fontFamily: next }));
                 }}
-                spacing={8}
+                spacing={4}
               >
                 {FONTS.map((font) => (
                   <ToggleGroupItem
@@ -248,7 +248,7 @@ export function OgImageGenerator() {
                   if (next === "dark" || next === "light")
                     setConfig((c) => ({ ...c, codeTheme: next }));
                 }}
-                spacing={8}
+                spacing={4}
               >
                 <ToggleGroupItem value="dark" variant="segment" size="seg">
                   Dark

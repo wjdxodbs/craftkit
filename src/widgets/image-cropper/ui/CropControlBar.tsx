@@ -62,7 +62,7 @@ export function CropControlBar({
             const opt = ASPECT_OPTIONS.find((o) => o.id === id);
             if (opt) onPresetChange(opt.ratio);
           }}
-          spacing={6}
+          spacing={4}
         >
           {ASPECT_OPTIONS.map(({ id, label }) => (
             <ToggleGroupItem key={id} value={id} variant="segment" size="seg">
@@ -83,7 +83,7 @@ export function CropControlBar({
             const next = v[0] as OutputFormat | undefined;
             if (next) onFormatChange(next);
           }}
-          spacing={6}
+          spacing={4}
         >
           {OUTPUT_FORMATS.map(({ label, value }) => (
             <ToggleGroupItem
