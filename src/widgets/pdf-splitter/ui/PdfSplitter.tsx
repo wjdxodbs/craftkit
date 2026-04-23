@@ -6,6 +6,7 @@ import { DownloadButton } from "@/shared/ui/DownloadButton";
 import { FileReplaceHeader } from "@/shared/ui/FileReplaceHeader";
 import { Button } from "@/shared/ui/button";
 import { Alert, AlertDescription } from "@/shared/ui/alert";
+import { PageThumbnailButton } from "@/shared/ui/PageThumbnailButton";
 
 export function PdfSplitter() {
   const {
@@ -109,43 +110,17 @@ export function PdfSplitter() {
           {/* 썸네일 그리드 */}
           <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-5">
             {pages.map((page) => (
-              <button
+              <PageThumbnailButton
                 key={page.pageNumber}
-                type="button"
-                data-page-number={page.pageNumber}
-                ref={(el) => {
+                pageNumber={page.pageNumber}
+                thumbnailUrl={page.thumbnailUrl}
+                isLoading={page.isLoading}
+                isSelected={selectedPages.has(page.pageNumber)}
+                onToggle={() => togglePage(page.pageNumber)}
+                buttonRef={(el) => {
                   if (el) observerRef.current?.observe(el);
                 }}
-                onClick={() => togglePage(page.pageNumber)}
-                aria-label={`페이지 ${page.pageNumber}${selectedPages.has(page.pageNumber) ? " 선택됨" : ""}`}
-                aria-pressed={selectedPages.has(page.pageNumber)}
-                className={`relative overflow-hidden rounded-lg border-2 transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#a78bfa] ${
-                  selectedPages.has(page.pageNumber)
-                    ? "border-[#a78bfa] bg-[#a78bfa10]"
-                    : "border-[#ffffff15] bg-[#0c0c0c] hover:border-[#ffffff25]"
-                }`}
-              >
-                {page.isLoading ? (
-                  <div
-                    className="aspect-[210/297] animate-shimmer"
-                    aria-label={`페이지 ${page.pageNumber} 로드 중`}
-                  />
-                ) : (
-                  <>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={page.thumbnailUrl}
-                      alt={`페이지 ${page.pageNumber}`}
-                      className="aspect-[210/297] w-full object-cover"
-                    />
-                    <div className="absolute inset-0 flex items-center justify-center bg-[#00000040]">
-                      <span className="text-xs font-semibold text-[#fff]">
-                        {page.pageNumber}
-                      </span>
-                    </div>
-                  </>
-                )}
-              </button>
+              />
             ))}
           </div>
 

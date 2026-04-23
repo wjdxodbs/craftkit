@@ -11,6 +11,7 @@ import { FileReplaceHeader } from "@/shared/ui/FileReplaceHeader";
 import { Button } from "@/shared/ui/button";
 import { Slider } from "@/shared/ui/slider";
 import { Alert, AlertDescription } from "@/shared/ui/alert";
+import { PageThumbnailButton } from "@/shared/ui/PageThumbnailButton";
 import { ToggleGroup, ToggleGroupItem } from "@/shared/ui/toggle-group";
 
 export function PdfToImageTab() {
@@ -94,7 +95,7 @@ export function PdfToImageTab() {
                   const next = v[0] as OutputFormat | undefined;
                   if (next) setOutputFormat(next);
                 }}
-                spacing={8}
+                spacing={4}
               >
                 {OUTPUT_FORMATS.map((f) => (
                   <ToggleGroupItem
@@ -134,34 +135,14 @@ export function PdfToImageTab() {
             <p className="text-xs text-[#888]">페이지 선택</p>
             <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6">
               {pages.map((page) => (
-                <button
+                <PageThumbnailButton
                   key={page.pageNumber}
-                  type="button"
-                  onClick={() => togglePage(page.pageNumber)}
-                  className={`relative overflow-hidden rounded-lg border-2 transition-all ${
-                    selectedPages.has(page.pageNumber)
-                      ? "border-[#a78bfa] bg-[#a78bfa10]"
-                      : "border-[#ffffff15] bg-[#0c0c0c] hover:border-[#ffffff25]"
-                  }`}
-                >
-                  {page.isLoading ? (
-                    <div className="aspect-[210/297] animate-shimmer" />
-                  ) : (
-                    <>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={page.thumbnailUrl}
-                        alt={`페이지 ${page.pageNumber}`}
-                        className="aspect-[210/297] w-full object-cover"
-                      />
-                      <div className="absolute inset-0 flex items-center justify-center bg-[#00000040]">
-                        <span className="text-xs font-semibold text-[#fff]">
-                          {page.pageNumber}
-                        </span>
-                      </div>
-                    </>
-                  )}
-                </button>
+                  pageNumber={page.pageNumber}
+                  thumbnailUrl={page.thumbnailUrl}
+                  isLoading={page.isLoading}
+                  isSelected={selectedPages.has(page.pageNumber)}
+                  onToggle={() => togglePage(page.pageNumber)}
+                />
               ))}
             </div>
           </div>
