@@ -20,6 +20,8 @@ const POSITIONS = [
   { value: "bottom-right" as const, label: "우하" },
 ];
 
+const WATERMARK_TEXT_MAX_LENGTH = 30;
+
 type DisplayedSize = { width: number; height: number; scale: number };
 
 function TileOverlay({
@@ -260,13 +262,26 @@ export function PdfWatermark() {
           <Label htmlFor="wm-text" className={labelCls}>
             워터마크 텍스트
           </Label>
-          <Input
-            id="wm-text"
-            type="text"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            placeholder="예: CONFIDENTIAL"
-          />
+          <div className="relative">
+            <Input
+              id="wm-text"
+              type="text"
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              maxLength={WATERMARK_TEXT_MAX_LENGTH}
+              placeholder="예: CONFIDENTIAL"
+              className="pr-14"
+            />
+            <span
+              className={`pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 text-[10px] ${
+                text.length >= WATERMARK_TEXT_MAX_LENGTH * 0.9
+                  ? "text-[#a78bfa]"
+                  : "text-[#888]"
+              }`}
+            >
+              {text.length} / {WATERMARK_TEXT_MAX_LENGTH}
+            </span>
+          </div>
         </div>
 
         {/* 배치 모드 */}
