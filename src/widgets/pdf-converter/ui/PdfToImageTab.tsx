@@ -8,10 +8,9 @@ import {
 import { labelCls } from "@/shared/ui/styles";
 import { DownloadButton } from "@/shared/ui/DownloadButton";
 import { FileReplaceHeader } from "@/shared/ui/FileReplaceHeader";
-import { Button } from "@/shared/ui/button";
 import { Slider } from "@/shared/ui/slider";
 import { Alert, AlertDescription } from "@/shared/ui/alert";
-import { PageThumbnailButton } from "@/shared/ui/PageThumbnailButton";
+import { PdfPageSelector } from "@/shared/ui/PdfPageSelector";
 import { ToggleGroup, ToggleGroupItem } from "@/shared/ui/toggle-group";
 
 export function PdfToImageTab() {
@@ -53,37 +52,12 @@ export function PdfToImageTab() {
         </div>
       ) : (
         <div className="space-y-4">
-          <div className="space-y-3">
-            <FileReplaceHeader
-              fileName={fileName ?? ""}
-              suffix={`(${pages.length}페이지)`}
-              accept="application/pdf"
-              onFile={handleFile}
-            />
-
-            {/* 페이지 선택 컨트롤 */}
-            <div className="flex items-center gap-2">
-              <Button
-                type="button"
-                variant="segment"
-                size="seg"
-                onClick={selectAll}
-              >
-                전체 선택
-              </Button>
-              <Button
-                type="button"
-                variant="segment"
-                size="seg"
-                onClick={deselectAll}
-              >
-                전체 해제
-              </Button>
-              <span className="text-xs text-[#888]">
-                {selectedPages.size} / {pages.length} 선택됨
-              </span>
-            </div>
-          </div>
+          <FileReplaceHeader
+            fileName={fileName ?? ""}
+            suffix={`(${pages.length}페이지)`}
+            accept="application/pdf"
+            onFile={handleFile}
+          />
 
           {/* 포맷 및 품질 설정 */}
           <div className="space-y-3 rounded-[14px] border border-[#ffffff15] bg-[#0c0c0c] p-4">
@@ -130,22 +104,13 @@ export function PdfToImageTab() {
             </Alert>
           )}
 
-          {/* 페이지 썸네일 그리드 */}
-          <div className="space-y-2">
-            <p className="text-xs text-[#888]">페이지 선택</p>
-            <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6">
-              {pages.map((page) => (
-                <PageThumbnailButton
-                  key={page.pageNumber}
-                  pageNumber={page.pageNumber}
-                  thumbnailUrl={page.thumbnailUrl}
-                  isLoading={page.isLoading}
-                  isSelected={selectedPages.has(page.pageNumber)}
-                  onToggle={() => togglePage(page.pageNumber)}
-                />
-              ))}
-            </div>
-          </div>
+          <PdfPageSelector
+            pages={pages}
+            selectedPages={selectedPages}
+            onToggle={togglePage}
+            onSelectAll={selectAll}
+            onDeselectAll={deselectAll}
+          />
 
           <DownloadButton
             onClick={convert}

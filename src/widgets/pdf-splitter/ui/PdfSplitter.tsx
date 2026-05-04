@@ -4,9 +4,8 @@ import { usePdfSplitter } from "./usePdfSplitter";
 import { ImageUpload } from "@/features/image-upload/ui/ImageUpload";
 import { DownloadButton } from "@/shared/ui/DownloadButton";
 import { FileReplaceHeader } from "@/shared/ui/FileReplaceHeader";
-import { Button } from "@/shared/ui/button";
 import { Alert, AlertDescription } from "@/shared/ui/alert";
-import { PageThumbnailButton } from "@/shared/ui/PageThumbnailButton";
+import { PdfPageSelector } from "@/shared/ui/PdfPageSelector";
 
 export function PdfSplitter() {
   const {
@@ -78,51 +77,22 @@ export function PdfSplitter() {
             onFile={handleFile}
           />
 
-          {/* 선택 컨트롤 */}
-          <div className="flex items-center gap-2">
-            <Button
-              type="button"
-              variant="segment"
-              size="seg"
-              onClick={selectAll}
-            >
-              전체 선택
-            </Button>
-            <Button
-              type="button"
-              variant="segment"
-              size="seg"
-              onClick={deselectAll}
-            >
-              전체 해제
-            </Button>
-            <span className="text-xs text-[#999]">
-              {selectedPages.size} / {pages.length} 선택됨
-            </span>
-          </div>
-
           {error && (
             <Alert variant="destructive">
               <AlertDescription>{error}</AlertDescription>
             </Alert>
           )}
 
-          {/* 썸네일 그리드 */}
-          <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 md:grid-cols-5">
-            {pages.map((page) => (
-              <PageThumbnailButton
-                key={page.pageNumber}
-                pageNumber={page.pageNumber}
-                thumbnailUrl={page.thumbnailUrl}
-                isLoading={page.isLoading}
-                isSelected={selectedPages.has(page.pageNumber)}
-                onToggle={() => togglePage(page.pageNumber)}
-                buttonRef={(el) => {
-                  if (el) observerRef.current?.observe(el);
-                }}
-              />
-            ))}
-          </div>
+          <PdfPageSelector
+            pages={pages}
+            selectedPages={selectedPages}
+            onToggle={togglePage}
+            onSelectAll={selectAll}
+            onDeselectAll={deselectAll}
+            onObserveButton={(el) => {
+              if (el) observerRef.current?.observe(el);
+            }}
+          />
 
           {/* 다운로드 버튼 */}
           <DownloadButton
