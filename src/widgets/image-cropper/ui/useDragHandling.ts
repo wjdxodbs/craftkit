@@ -20,6 +20,22 @@ function drawOverlay(canvas: HTMLCanvasElement, box: CropBox): void {
   ctx.strokeStyle = "rgba(255,255,255,0.8)";
   ctx.lineWidth = 1;
   ctx.strokeRect(box.x, box.y, box.w, box.h);
+
+  // 3x3 정렬 그리드 (rule of thirds)
+  ctx.strokeStyle = "rgba(255,255,255,0.3)";
+  const thirdW = box.w / 3;
+  const thirdH = box.h / 3;
+  ctx.beginPath();
+  ctx.moveTo(box.x + thirdW, box.y);
+  ctx.lineTo(box.x + thirdW, box.y + box.h);
+  ctx.moveTo(box.x + thirdW * 2, box.y);
+  ctx.lineTo(box.x + thirdW * 2, box.y + box.h);
+  ctx.moveTo(box.x, box.y + thirdH);
+  ctx.lineTo(box.x + box.w, box.y + thirdH);
+  ctx.moveTo(box.x, box.y + thirdH * 2);
+  ctx.lineTo(box.x + box.w, box.y + thirdH * 2);
+  ctx.stroke();
+
   ctx.fillStyle = "white";
   const corners: [number, number][] = [
     [box.x, box.y],
