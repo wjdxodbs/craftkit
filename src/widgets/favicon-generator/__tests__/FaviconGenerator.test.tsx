@@ -20,7 +20,6 @@ describe("FaviconGenerator", () => {
     render(<FaviconGenerator />);
     expect(screen.getByText("favicon.ico")).toBeInTheDocument();
     expect(screen.getByText("apple-touch-icon.png")).toBeInTheDocument();
-    expect(screen.getByText("manifest.json")).toBeInTheDocument();
   });
 
   it("업로드 전 Download 버튼이 비활성화된다", () => {

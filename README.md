@@ -4,18 +4,18 @@
 
 ## 도구
 
-| 도구                       | 설명                                                                                |
-| -------------------------- | ----------------------------------------------------------------------------------- |
-| **Favicon Generator**      | 이미지 업로드 → favicon.ico, Apple/Android 아이콘, manifest.json을 ZIP으로 다운로드 |
-| **OG Image Generator**     | 3가지 템플릿(Classic · Gradient · Code Snippet)으로 1200×630 OG 이미지 생성         |
-| **Image Resizer**          | 이미지 크기 조절 + PNG/JPG/WebP 포맷 변환                                           |
-| **Image Cropper**          | 이미지 크롭 + 비율 프리셋(Free · 1:1 · 16:9 · 4:3) + PNG/JPG/WebP 포맷 변환         |
-| **Color Format Converter** | HEX · RGB · HSL · OKLCH 색상 포맷 상호 변환                                         |
-| **PDF Converter**          | 이미지 → PDF 변환 및 PDF → 이미지 추출                                              |
-| **PDF Password**           | PDF 암호 설정 및 해제 — 브라우저에서 처리, 업로드 없음                              |
-| **PDF Watermark**          | PDF에 텍스트 워터마크 추가 (대각 반복 / 단일 위치, 폰트 크기·불투명도·색상 조절)    |
-| **PDF Splitter**           | PDF 페이지 썸네일에서 원하는 페이지만 선택해 추출                                   |
-| **Signature Maker**        | 캔버스에 서명을 그려 투명 PNG로 다운로드                                            |
+| 도구                       | 설명                                                                             |
+| -------------------------- | -------------------------------------------------------------------------------- |
+| **Favicon Generator**      | 이미지 업로드 → favicon.ico, Apple/Android 아이콘을 ZIP으로 다운로드             |
+| **OG Image Generator**     | 3가지 템플릿(Classic · Gradient · Code Snippet)으로 1200×630 OG 이미지 생성      |
+| **Image Resizer**          | 이미지 크기 조절 + PNG/JPG/WebP 포맷 변환                                        |
+| **Image Cropper**          | 이미지 크롭 + 비율 프리셋(Free · 1:1 · 16:9 · 4:3) + PNG/JPG/WebP 포맷 변환      |
+| **Color Format Converter** | HEX · RGB · HSL · OKLCH 색상 포맷 상호 변환                                      |
+| **PDF Converter**          | 이미지 → PDF 변환 및 PDF → 이미지 추출                                           |
+| **PDF Password**           | PDF 암호 설정 및 해제 — 브라우저에서 처리, 업로드 없음                           |
+| **PDF Watermark**          | PDF에 텍스트 워터마크 추가 (대각 반복 / 단일 위치, 폰트 크기·불투명도·색상 조절) |
+| **PDF Splitter**           | PDF 페이지 썸네일에서 원하는 페이지만 선택해 추출                                |
+| **Signature Maker**        | 캔버스에 서명을 그려 투명 PNG로 다운로드                                         |
 
 ## 특징
 

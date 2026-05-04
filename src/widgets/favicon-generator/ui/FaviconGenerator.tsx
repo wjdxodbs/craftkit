@@ -83,17 +83,19 @@ export function FaviconGenerator() {
         <div className="mb-3 flex items-center justify-between">
           <span className="text-[11px] font-medium text-[#888]">생성 파일</span>
           <span className="rounded-md border border-[#a78bfa14] bg-[#a78bfa0c] px-2 py-0.5 text-[10px] font-medium text-[#a78bfa]">
-            {FAVICON_SIZES.length + 2}개
+            {FAVICON_SIZES.length + 1}개
           </span>
         </div>
         <div className="flex items-center justify-between border-b border-[#ffffff08] py-[7px]">
           <span className="font-mono text-xs text-[#ccc]">favicon.ico</span>
           <span className="text-[10px] text-[#888]">16, 32, 48px</span>
         </div>
-        {FAVICON_SIZES.map(({ filename, size }) => (
+        {FAVICON_SIZES.map(({ filename, size }, i) => (
           <div
             key={filename}
-            className="flex items-center justify-between border-b border-[#ffffff08] py-[7px] last:border-b-0"
+            className={`flex items-center justify-between py-[7px] ${
+              i < FAVICON_SIZES.length - 1 ? "border-b border-[#ffffff08]" : ""
+            }`}
           >
             <span className="font-mono text-xs text-[#ccc]">{filename}</span>
             <span className="text-[10px] text-[#888]">
@@ -101,10 +103,6 @@ export function FaviconGenerator() {
             </span>
           </div>
         ))}
-        <div className="flex items-center justify-between pt-[7px]">
-          <span className="font-mono text-xs text-[#ccc]">manifest.json</span>
-          <span className="text-[10px] text-[#888]">PWA</span>
-        </div>
       </div>
 
       {/* 에러 */}
