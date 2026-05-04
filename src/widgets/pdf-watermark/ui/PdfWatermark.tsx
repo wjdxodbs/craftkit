@@ -21,6 +21,10 @@ const POSITIONS = [
 ];
 
 const WATERMARK_TEXT_MAX_LENGTH = 30;
+// 실제 PDF 렌더링과 동일한 폰트(NanumGothic)를 미리보기 캔버스에서 쓰기 위해
+// FontFace API로 동적 등록한다
+const WATERMARK_FONT_FAMILY = "NanumGothicWatermark";
+const WATERMARK_FONT_STACK = `"${WATERMARK_FONT_FAMILY}", Helvetica, Arial, sans-serif`;
 
 type DisplayedSize = { width: number; height: number; scale: number };
 
@@ -31,6 +35,7 @@ function TileOverlay({
   color,
   size,
   spacing,
+  fontReady,
 }: {
   text: string;
   fontSize: number;
@@ -38,6 +43,7 @@ function TileOverlay({
   color: string;
   size: DisplayedSize;
   spacing: number;
+  fontReady: boolean;
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -54,7 +60,7 @@ function TileOverlay({
     const scaleFactor = size.scale * 0.7;
     const scaledFontPx = Math.max(6, fontSize * scaleFactor);
 
-    ctx.font = `${scaledFontPx}px Helvetica, Arial, sans-serif`;
+    ctx.font = `${scaledFontPx}px ${WATERMARK_FONT_STACK}`;
     const textWidthPx = ctx.measureText(text).width;
 
     const stepPx = Math.max(
@@ -75,7 +81,7 @@ function TileOverlay({
         ctx.restore();
       }
     }
-  }, [text, fontSize, opacity, color, size, spacing]);
+  }, [text, fontSize, opacity, color, size, spacing, fontReady]);
 
   return (
     <canvas
@@ -130,7 +136,7 @@ function SingleOverlay({
           color,
           fontSize: scaledFontPx,
           opacity,
-          fontFamily: "Helvetica, Arial, sans-serif",
+          fontFamily: WATERMARK_FONT_STACK,
           userSelect: "none",
           whiteSpace: "nowrap",
         }}
@@ -145,6 +151,35 @@ export function PdfWatermark() {
   const [displayedSize, setDisplayedSize] = useState<DisplayedSize | null>(
     null,
   );
+  const [fontReady, setFontReady] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    let cancelled = false;
+    const load = async () => {
+      if (document.fonts.check(`16px "${WATERMARK_FONT_FAMILY}"`)) {
+        if (!cancelled) setFontReady(true);
+        return;
+      }
+      try {
+        const font = new FontFace(
+          WATERMARK_FONT_FAMILY,
+          "url(/fonts/NanumGothic.ttf)",
+        );
+        const loaded = await font.load();
+        if (cancelled) return;
+        document.fonts.add(loaded);
+        setFontReady(true);
+      } catch {
+        // 로드 실패 시 시스템 폴백 사용
+        if (!cancelled) setFontReady(true);
+      }
+    };
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const {
     fileName,
@@ -235,6 +270,7 @@ export function PdfWatermark() {
                       color={color}
                       size={displayedSize}
                       spacing={spacing}
+                      fontReady={fontReady}
                     />
                   ) : (
                     <SingleOverlay
