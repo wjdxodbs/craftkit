@@ -73,7 +73,6 @@ export function ImageCropper() {
     const scale = Math.min(
       containerW / img.naturalWidth,
       maxH / img.naturalHeight,
-      1,
     );
     const displayW = Math.round(img.naturalWidth * scale);
     const displayH = Math.round(img.naturalHeight * scale);
@@ -178,32 +177,32 @@ export function ImageCropper() {
       {imageEl && dataUrl && displaySize ? (
         <div
           ref={containerRef}
-          className="relative min-h-[500px] overflow-hidden rounded-[14px] border border-[#ffffff15] bg-[#0c0c0c]"
+          className="flex h-[560px] items-center justify-center overflow-hidden rounded-[14px] border border-[#ffffff15] bg-[#0c0c0c]"
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={fullPreviewUrl ?? dataUrl}
-            alt="크롭 대상"
-            width={displaySize.w}
-            height={displaySize.h}
-            style={{ display: "block", margin: "0 auto" }}
-          />
-          <canvas
-            ref={canvasRef}
-            width={displaySize.w}
-            height={displaySize.h}
-            style={{
-              position: "absolute",
-              top: 0,
-              left: "50%",
-              transform: "translateX(-50%)",
-              cursor: "crosshair",
-            }}
-            onPointerDown={handlePointerDown}
-            onPointerMove={handlePointerMove}
-            onPointerUp={handlePointerUp}
-            onPointerCancel={handlePointerUp}
-          />
+          <div
+            className="relative"
+            style={{ width: displaySize.w, height: displaySize.h }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={fullPreviewUrl ?? dataUrl}
+              alt="크롭 대상"
+              width={displaySize.w}
+              height={displaySize.h}
+              className="block"
+            />
+            <canvas
+              ref={canvasRef}
+              width={displaySize.w}
+              height={displaySize.h}
+              className="absolute inset-0"
+              style={{ cursor: "crosshair" }}
+              onPointerDown={handlePointerDown}
+              onPointerMove={handlePointerMove}
+              onPointerUp={handlePointerUp}
+              onPointerCancel={handlePointerUp}
+            />
+          </div>
         </div>
       ) : (
         <div ref={containerRef}>
