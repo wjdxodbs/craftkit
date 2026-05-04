@@ -22,6 +22,8 @@ const PRESET_COLORS = ["#0f172a", "#18181b", "#1e1b4b", "#ffffff"] as const;
 const GRADIENT_BASE_COLORS = ["#0f172a", "#1e1b4b", "#134e4a"] as const;
 const GRADIENT_ACCENT_COLORS = ["#6366f1", "#ec4899", "#f97316"] as const;
 const FONTS: FontFamily[] = ["Inter", "Serif", "Mono"];
+const TITLE_MAX_LENGTH = 30;
+const SUBTITLE_MAX_LENGTH = 50;
 
 export function OgImageGenerator() {
   const [config, setConfig] = useState<OgImageConfig>({
@@ -121,14 +123,27 @@ export function OgImageGenerator() {
             <Label htmlFor="og-title" className={labelCls}>
               제목
             </Label>
-            <Input
-              id="og-title"
-              value={config.title}
-              onChange={(e) =>
-                setConfig((c) => ({ ...c, title: e.target.value }))
-              }
-              placeholder="제목을 입력해주세요…"
-            />
+            <div className="relative">
+              <Input
+                id="og-title"
+                value={config.title}
+                onChange={(e) =>
+                  setConfig((c) => ({ ...c, title: e.target.value }))
+                }
+                maxLength={TITLE_MAX_LENGTH}
+                placeholder="제목을 입력해주세요…"
+                className="pr-14"
+              />
+              <span
+                className={`pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 text-[10px] ${
+                  config.title.length >= TITLE_MAX_LENGTH * 0.9
+                    ? "text-[#a78bfa]"
+                    : "text-[#888]"
+                }`}
+              >
+                {config.title.length} / {TITLE_MAX_LENGTH}
+              </span>
+            </div>
           </div>
 
           {/* 부제목 */}
@@ -136,14 +151,27 @@ export function OgImageGenerator() {
             <Label htmlFor="og-subtitle" className={labelCls}>
               부제목
             </Label>
-            <Input
-              id="og-subtitle"
-              value={config.subtitle}
-              onChange={(e) =>
-                setConfig((c) => ({ ...c, subtitle: e.target.value }))
-              }
-              placeholder="부제목 입력…"
-            />
+            <div className="relative">
+              <Input
+                id="og-subtitle"
+                value={config.subtitle}
+                onChange={(e) =>
+                  setConfig((c) => ({ ...c, subtitle: e.target.value }))
+                }
+                maxLength={SUBTITLE_MAX_LENGTH}
+                placeholder="부제목 입력…"
+                className="pr-14"
+              />
+              <span
+                className={`pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 text-[10px] ${
+                  config.subtitle.length >= SUBTITLE_MAX_LENGTH * 0.9
+                    ? "text-[#a78bfa]"
+                    : "text-[#888]"
+                }`}
+              >
+                {config.subtitle.length} / {SUBTITLE_MAX_LENGTH}
+              </span>
+            </div>
           </div>
 
           {/* 배경색 — classic 전용 */}
