@@ -28,6 +28,8 @@ export interface TextWatermarkOptions {
   mode: "tile" | "single";
   position: WatermarkPosition;
   spacing: number;
+  /** 회전 각도(도). -45 ~ 45. CSS 컨벤션(시계 양수): -45=`/`, 0=수평, 45=`\` */
+  rotation: number;
 }
 
 /**
@@ -63,7 +65,8 @@ async function applyTextWatermark(
   pdfDoc: PDFDocument,
   options: TextWatermarkOptions,
 ): Promise<void> {
-  const { text, fontSize, opacity, color, mode, position, spacing } = options;
+  const { text, fontSize, opacity, color, mode, position, spacing, rotation } =
+    options;
   const [r255, g255, b255] = hexToRgb(color);
   const r = r255 / 255;
   const g = g255 / 255;
@@ -90,7 +93,7 @@ async function applyTextWatermark(
             font,
             color: rgb(r, g, b),
             opacity,
-            rotate: degrees(45),
+            rotate: degrees(-rotation),
           });
         }
       }
@@ -109,6 +112,7 @@ async function applyTextWatermark(
         font,
         color: rgb(r, g, b),
         opacity,
+        rotate: degrees(-rotation),
       });
     }
   }

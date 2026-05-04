@@ -38,6 +38,7 @@ export function usePdfWatermark() {
   const [mode, setMode] = useState<"tile" | "single">("tile");
   const [position, setPosition] = useState<WatermarkPosition>("center");
   const [spacing, setSpacing] = useState(1.0);
+  const [rotation, setRotation] = useState(-45);
 
   const setImage = async (file: File): Promise<void> => {
     if (file.type !== "image/png" && file.type !== "image/jpeg") {
@@ -110,6 +111,7 @@ export function usePdfWatermark() {
               mode,
               position,
               spacing,
+              rotation,
             });
       const buffer = result.buffer.slice(
         result.byteOffset,
@@ -159,6 +161,8 @@ export function usePdfWatermark() {
     setPosition,
     spacing,
     setSpacing,
+    rotation,
+    setRotation,
     handleFile,
     apply,
   };

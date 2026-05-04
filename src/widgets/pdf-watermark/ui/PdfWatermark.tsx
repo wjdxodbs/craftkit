@@ -68,6 +68,7 @@ function TileOverlay({
   color,
   size,
   spacing,
+  rotation,
   fontReady,
 }: {
   text: string;
@@ -76,6 +77,7 @@ function TileOverlay({
   color: string;
   size: DisplayedSize;
   spacing: number;
+  rotation: number;
   fontReady: boolean;
 }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -105,16 +107,19 @@ function TileOverlay({
     ctx.fillStyle = color;
     ctx.globalAlpha = opacity;
 
+    // 사용자 회전은 CSS 컨벤션(시계 양수). 캔버스도 Y-down 시계 양수라 그대로 사용
+    const radians = (rotation * Math.PI) / 180;
+
     for (let x = -size.width; x < size.width * 2; x += stepPx) {
       for (let y = -size.height; y < size.height * 2; y += stepPx) {
         ctx.save();
         ctx.translate(x, y);
-        ctx.rotate(-Math.PI / 4);
+        ctx.rotate(radians);
         ctx.fillText(text, 0, 0);
         ctx.restore();
       }
     }
-  }, [text, fontSize, opacity, color, size, spacing, fontReady]);
+  }, [text, fontSize, opacity, color, size, spacing, rotation, fontReady]);
 
   return (
     <canvas
@@ -151,6 +156,7 @@ function SingleOverlay({
   color,
   position,
   size,
+  rotation,
 }: {
   text: string;
   fontSize: number;
@@ -158,14 +164,22 @@ function SingleOverlay({
   color: string;
   position: WatermarkOptions["position"];
   size: DisplayedSize;
+  rotation: number;
 }) {
   const scaledFontPx = Math.max(6, Math.round(fontSize * size.scale * 0.7));
+  // POSITION_STYLES.center는 transform: translate(-50%, -50%)을 이미 갖고 있음
+  // 회전을 추가할 때 기존 transform과 결합 필요. CSS 컨벤션 그대로 사용.
+  const baseTransform = POSITION_STYLES[position].transform ?? "";
+  const transform = baseTransform
+    ? `${baseTransform} rotate(${rotation}deg)`
+    : `rotate(${rotation}deg)`;
   return (
     <div className="pointer-events-none absolute inset-0">
       <span
         style={{
           position: "absolute",
           ...POSITION_STYLES[position],
+          transform,
           color,
           fontSize: scaledFontPx,
           opacity,
@@ -241,6 +255,8 @@ export function PdfWatermark() {
     setPosition,
     spacing,
     setSpacing,
+    rotation,
+    setRotation,
     handleFile,
     apply,
   } = usePdfWatermark();
@@ -311,6 +327,7 @@ export function PdfWatermark() {
                       color={color}
                       size={displayedSize}
                       spacing={spacing}
+                      rotation={rotation}
                       fontReady={fontReady}
                     />
                   ) : (
@@ -321,6 +338,7 @@ export function PdfWatermark() {
                       color={color}
                       position={position}
                       size={displayedSize}
+                      rotation={rotation}
                     />
                   ))}
                 {watermarkType === "image" && imageDataUrl && displayedSize && (
@@ -488,6 +506,23 @@ export function PdfWatermark() {
               onValueChange={(v) => setFontSize(Array.isArray(v) ? v[0] : v)}
               aria-label="폰트 크기"
               aria-valuetext={`${fontSize}pt`}
+            />
+          </div>
+        )}
+
+        {/* 회전 — text 모드 */}
+        {watermarkType === "text" && (
+          <div className="space-y-2">
+            <p className={labelCls}>
+              회전 <span className="text-[#aaa]">{rotation}°</span>
+            </p>
+            <Slider
+              min={-45}
+              max={45}
+              value={[rotation]}
+              onValueChange={(v) => setRotation(Array.isArray(v) ? v[0] : v)}
+              aria-label="회전 각도"
+              aria-valuetext={`${rotation}도`}
             />
           </div>
         )}
