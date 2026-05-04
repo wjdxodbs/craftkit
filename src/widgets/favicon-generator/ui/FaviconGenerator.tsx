@@ -90,7 +90,7 @@ export function FaviconGenerator() {
           <span className="font-mono text-xs text-[#ccc]">favicon.ico</span>
           <span className="text-[10px] text-[#888]">16, 32, 48px</span>
         </div>
-        {FAVICON_SIZES.map(({ filename, size }, i) => (
+        {FAVICON_SIZES.map(({ filename, description }, i) => (
           <div
             key={filename}
             className={`flex items-center justify-between py-[7px] ${
@@ -98,9 +98,7 @@ export function FaviconGenerator() {
             }`}
           >
             <span className="font-mono text-xs text-[#ccc]">{filename}</span>
-            <span className="text-[10px] text-[#888]">
-              {size} x {size}
-            </span>
+            <span className="text-[10px] text-[#888]">{description}</span>
           </div>
         ))}
       </div>
