@@ -28,6 +28,39 @@ const WATERMARK_FONT_STACK = `"${WATERMARK_FONT_FAMILY}", Helvetica, Arial, sans
 
 type DisplayedSize = { width: number; height: number; scale: number };
 
+function SingleImageOverlay({
+  imageDataUrl,
+  imageWidth,
+  opacity,
+  position,
+  size,
+}: {
+  imageDataUrl: string;
+  imageWidth: number;
+  opacity: number;
+  position: WatermarkOptions["position"];
+  size: DisplayedSize;
+}) {
+  const scaledWidthPx = Math.max(8, Math.round(imageWidth * size.scale * 0.7));
+  return (
+    <div className="pointer-events-none absolute inset-0">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={imageDataUrl}
+        alt="워터마크"
+        style={{
+          position: "absolute",
+          ...POSITION_STYLES[position],
+          width: scaledWidthPx,
+          height: "auto",
+          opacity,
+          userSelect: "none",
+        }}
+      />
+    </div>
+  );
+}
+
 function TileOverlay({
   text,
   fontSize,
@@ -187,14 +220,21 @@ export function PdfWatermark() {
     error,
     previewUrl,
     isRenderingPreview,
+    watermarkType,
+    setWatermarkType,
     text,
     setText,
     fontSize,
     setFontSize,
-    opacity,
-    setOpacity,
     color,
     setColor,
+    imageDataUrl,
+    imageWidth,
+    setImageWidth,
+    setImage,
+    hasImage,
+    opacity,
+    setOpacity,
     mode,
     setMode,
     position,
@@ -260,7 +300,8 @@ export function PdfWatermark() {
                   }}
                   onError={() => setDisplayedSize(null)}
                 />
-                {text.trim() &&
+                {watermarkType === "text" &&
+                  text.trim() &&
                   displayedSize &&
                   (mode === "tile" ? (
                     <TileOverlay
@@ -282,6 +323,15 @@ export function PdfWatermark() {
                       size={displayedSize}
                     />
                   ))}
+                {watermarkType === "image" && imageDataUrl && displayedSize && (
+                  <SingleImageOverlay
+                    imageDataUrl={imageDataUrl}
+                    imageWidth={imageWidth}
+                    opacity={opacity}
+                    position={position}
+                    size={displayedSize}
+                  />
+                )}
               </div>
             </div>
           ) : null}
@@ -293,55 +343,94 @@ export function PdfWatermark() {
 
       {/* 옵션 패널 */}
       <div className="space-y-4 rounded-[14px] border border-[#ffffff15] bg-[#0c0c0c] p-4">
-        {/* 텍스트 */}
+        {/* 타입 토글 */}
         <div className="space-y-2">
-          <Label htmlFor="wm-text" className={labelCls}>
-            워터마크 텍스트
-          </Label>
-          <div className="relative">
-            <Input
-              id="wm-text"
-              type="text"
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-              maxLength={WATERMARK_TEXT_MAX_LENGTH}
-              placeholder="예: CONFIDENTIAL"
-              className="pr-14"
-            />
-            <span
-              className={`pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 text-[10px] ${
-                text.length >= WATERMARK_TEXT_MAX_LENGTH * 0.9
-                  ? "text-[#a78bfa]"
-                  : "text-[#888]"
-              }`}
-            >
-              {text.length} / {WATERMARK_TEXT_MAX_LENGTH}
-            </span>
-          </div>
-        </div>
-
-        {/* 배치 모드 */}
-        <div className="space-y-2">
-          <p className={labelCls}>배치 모드</p>
+          <p className={labelCls}>워터마크 타입</p>
           <ToggleGroup
-            value={[mode]}
+            value={[watermarkType]}
             onValueChange={(v: string[]) => {
               const next = v[0];
-              if (next === "tile" || next === "single") setMode(next);
+              if (next === "text" || next === "image") setWatermarkType(next);
             }}
             spacing={4}
           >
-            <ToggleGroupItem value="tile" variant="segment" size="seg">
-              대각 반복
+            <ToggleGroupItem value="text" variant="segment" size="seg">
+              텍스트
             </ToggleGroupItem>
-            <ToggleGroupItem value="single" variant="segment" size="seg">
-              단일 위치
+            <ToggleGroupItem value="image" variant="segment" size="seg">
+              이미지
             </ToggleGroupItem>
           </ToggleGroup>
         </div>
 
-        {/* 위치 (single 모드일 때만) */}
-        {mode === "single" && (
+        {/* 텍스트 입력 — text 모드 전용 */}
+        {watermarkType === "text" && (
+          <div className="space-y-2">
+            <Label htmlFor="wm-text" className={labelCls}>
+              워터마크 텍스트
+            </Label>
+            <div className="relative">
+              <Input
+                id="wm-text"
+                type="text"
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                maxLength={WATERMARK_TEXT_MAX_LENGTH}
+                placeholder="예: CONFIDENTIAL"
+                className="pr-14"
+              />
+              <span
+                className={`pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 text-[10px] ${
+                  text.length >= WATERMARK_TEXT_MAX_LENGTH * 0.9
+                    ? "text-[#a78bfa]"
+                    : "text-[#888]"
+                }`}
+              >
+                {text.length} / {WATERMARK_TEXT_MAX_LENGTH}
+              </span>
+            </div>
+          </div>
+        )}
+
+        {/* 이미지 업로드 — image 모드 전용 */}
+        {watermarkType === "image" && (
+          <div className="space-y-2">
+            <p className={labelCls}>워터마크 이미지</p>
+            <ImageUpload
+              accept="image/png,image/jpeg"
+              hint="PNG, JPG — 투명 배경 PNG 권장"
+              size="sm"
+              onFiles={(files) => {
+                if (files[0]) setImage(files[0]);
+              }}
+            />
+          </div>
+        )}
+
+        {/* 배치 모드 — 텍스트 전용 (이미지는 항상 단일 위치) */}
+        {watermarkType === "text" && (
+          <div className="space-y-2">
+            <p className={labelCls}>배치 모드</p>
+            <ToggleGroup
+              value={[mode]}
+              onValueChange={(v: string[]) => {
+                const next = v[0];
+                if (next === "tile" || next === "single") setMode(next);
+              }}
+              spacing={4}
+            >
+              <ToggleGroupItem value="tile" variant="segment" size="seg">
+                대각 반복
+              </ToggleGroupItem>
+              <ToggleGroupItem value="single" variant="segment" size="seg">
+                단일 위치
+              </ToggleGroupItem>
+            </ToggleGroup>
+          </div>
+        )}
+
+        {/* 위치 — 이미지는 항상, 텍스트는 single 모드에서만 */}
+        {(watermarkType === "image" || mode === "single") && (
           <div className="space-y-2">
             <p className={labelCls}>위치</p>
             <ToggleGroup
@@ -366,8 +455,8 @@ export function PdfWatermark() {
           </div>
         )}
 
-        {/* 간격 (tile 모드일 때만) */}
-        {mode === "tile" && (
+        {/* 간격 — 텍스트 tile 모드 전용 */}
+        {watermarkType === "text" && mode === "tile" && (
           <div className="space-y-2">
             <p className={labelCls}>
               간격 <span className="text-[#aaa]">{spacing.toFixed(1)}x</span>
@@ -386,20 +475,39 @@ export function PdfWatermark() {
           </div>
         )}
 
-        {/* 폰트 크기 */}
-        <div className="space-y-2">
-          <p className={labelCls}>
-            폰트 크기 <span className="text-[#aaa]">{fontSize}pt</span>
-          </p>
-          <Slider
-            min={16}
-            max={72}
-            value={[fontSize]}
-            onValueChange={(v) => setFontSize(Array.isArray(v) ? v[0] : v)}
-            aria-label="폰트 크기"
-            aria-valuetext={`${fontSize}pt`}
-          />
-        </div>
+        {/* 폰트 크기 — text 모드 */}
+        {watermarkType === "text" && (
+          <div className="space-y-2">
+            <p className={labelCls}>
+              폰트 크기 <span className="text-[#aaa]">{fontSize}pt</span>
+            </p>
+            <Slider
+              min={16}
+              max={72}
+              value={[fontSize]}
+              onValueChange={(v) => setFontSize(Array.isArray(v) ? v[0] : v)}
+              aria-label="폰트 크기"
+              aria-valuetext={`${fontSize}pt`}
+            />
+          </div>
+        )}
+
+        {/* 이미지 너비 — image 모드 */}
+        {watermarkType === "image" && (
+          <div className="space-y-2">
+            <p className={labelCls}>
+              이미지 너비 <span className="text-[#aaa]">{imageWidth}pt</span>
+            </p>
+            <Slider
+              min={50}
+              max={500}
+              value={[imageWidth]}
+              onValueChange={(v) => setImageWidth(Array.isArray(v) ? v[0] : v)}
+              aria-label="이미지 너비"
+              aria-valuetext={`${imageWidth}pt`}
+            />
+          </div>
+        )}
 
         {/* 불투명도 */}
         <div className="space-y-2">
@@ -420,22 +528,24 @@ export function PdfWatermark() {
           />
         </div>
 
-        {/* 색상 */}
-        <div className="space-y-2">
-          <p className={labelCls}>색상</p>
-          <div className="flex items-center gap-3">
-            <input
-              type="color"
-              value={color}
-              onChange={(e) => setColor(e.target.value)}
-              aria-label="워터마크 색상"
-              className="h-8 w-12 cursor-pointer rounded-[6px] border border-[#ffffff15] bg-transparent"
-            />
-            <span className="font-mono text-xs text-[#888]">
-              {color.toUpperCase()}
-            </span>
+        {/* 색상 — text 모드 전용 */}
+        {watermarkType === "text" && (
+          <div className="space-y-2">
+            <p className={labelCls}>색상</p>
+            <div className="flex items-center gap-3">
+              <input
+                type="color"
+                value={color}
+                onChange={(e) => setColor(e.target.value)}
+                aria-label="워터마크 색상"
+                className="h-8 w-12 cursor-pointer rounded-[6px] border border-[#ffffff15] bg-transparent"
+              />
+              <span className="font-mono text-xs text-[#888]">
+                {color.toUpperCase()}
+              </span>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {error && (
@@ -446,7 +556,11 @@ export function PdfWatermark() {
 
       <DownloadButton
         onClick={apply}
-        disabled={!text.trim() || isProcessing}
+        disabled={
+          isProcessing ||
+          (watermarkType === "text" && !text.trim()) ||
+          (watermarkType === "image" && !hasImage)
+        }
         isProcessing={isProcessing}
       >
         워터마크 적용 · 다운로드

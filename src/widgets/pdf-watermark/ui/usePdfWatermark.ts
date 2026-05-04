@@ -2,11 +2,13 @@
 import { useState } from "react";
 import {
   addWatermarkToPdf,
-  type WatermarkOptions,
+  type WatermarkPosition,
 } from "@/features/pdf-watermark/lib/addWatermarkToPdf";
 import { renderPdfPageToDataUrl } from "@/features/pdf-to-image/lib/convertPdfToImages";
 import { downloadBlob } from "@/shared/lib/downloadBlob";
 import { buildOutputName } from "@/shared/lib/fileName";
+
+export type WatermarkType = "text" | "image";
 
 export function usePdfWatermark() {
   const [pdfData, setPdfData] = useState<ArrayBuffer | null>(null);
@@ -16,14 +18,48 @@ export function usePdfWatermark() {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isRenderingPreview, setIsRenderingPreview] = useState(false);
 
+  const [watermarkType, setWatermarkType] = useState<WatermarkType>("text");
+
+  // 텍스트 워터마크
   const [text, setText] = useState("CONFIDENTIAL");
   const [fontSize, setFontSize] = useState(36);
-  const [opacity, setOpacity] = useState(0.3);
   const [color, setColor] = useState("#808080");
+
+  // 이미지 워터마크
+  const [imageBytes, setImageBytes] = useState<ArrayBuffer | null>(null);
+  const [imageMimeType, setImageMimeType] = useState<
+    "image/png" | "image/jpeg" | null
+  >(null);
+  const [imageDataUrl, setImageDataUrl] = useState<string | null>(null);
+  const [imageWidth, setImageWidth] = useState(200);
+
+  // 공통 옵션
+  const [opacity, setOpacity] = useState(0.3);
   const [mode, setMode] = useState<"tile" | "single">("tile");
-  const [position, setPosition] =
-    useState<WatermarkOptions["position"]>("center");
+  const [position, setPosition] = useState<WatermarkPosition>("center");
   const [spacing, setSpacing] = useState(1.0);
+
+  const setImage = async (file: File): Promise<void> => {
+    if (file.type !== "image/png" && file.type !== "image/jpeg") {
+      setError("PNG 또는 JPG 이미지만 지원합니다");
+      return;
+    }
+    try {
+      const bytes = await file.arrayBuffer();
+      const dataUrl = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = () => reject(reader.error);
+        reader.readAsDataURL(file);
+      });
+      setImageBytes(bytes);
+      setImageMimeType(file.type);
+      setImageDataUrl(dataUrl);
+      setError(null);
+    } catch {
+      setError("이미지를 불러오지 못했습니다");
+    }
+  };
 
   const handleFile = async (file: File): Promise<void> => {
     try {
@@ -48,19 +84,33 @@ export function usePdfWatermark() {
   };
 
   const apply = async (): Promise<void> => {
-    if (!pdfData || !text.trim()) return;
+    if (!pdfData) return;
+    if (watermarkType === "text" && !text.trim()) return;
+    if (watermarkType === "image" && (!imageBytes || !imageMimeType)) return;
+
     setIsProcessing(true);
     setError(null);
     try {
-      const result = await addWatermarkToPdf(pdfData, {
-        text: text.trim(),
-        fontSize,
-        opacity,
-        color,
-        mode,
-        position,
-        spacing,
-      });
+      const result =
+        watermarkType === "image" && imageBytes && imageMimeType
+          ? await addWatermarkToPdf(pdfData, {
+              type: "image",
+              imageBytes,
+              imageMimeType,
+              imageWidth,
+              opacity,
+              position,
+            })
+          : await addWatermarkToPdf(pdfData, {
+              type: "text",
+              text: text.trim(),
+              fontSize,
+              opacity,
+              color,
+              mode,
+              position,
+              spacing,
+            });
       const buffer = result.buffer.slice(
         result.byteOffset,
         result.byteOffset + result.byteLength,
@@ -88,14 +138,21 @@ export function usePdfWatermark() {
     error,
     previewUrl,
     isRenderingPreview,
+    watermarkType,
+    setWatermarkType,
     text,
     setText,
     fontSize,
     setFontSize,
-    opacity,
-    setOpacity,
     color,
     setColor,
+    imageDataUrl,
+    imageWidth,
+    setImageWidth,
+    setImage,
+    hasImage: imageBytes !== null,
+    opacity,
+    setOpacity,
     mode,
     setMode,
     position,
