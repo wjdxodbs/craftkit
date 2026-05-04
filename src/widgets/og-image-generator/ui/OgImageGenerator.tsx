@@ -19,7 +19,8 @@ import { ToggleGroup, ToggleGroupItem } from "@/shared/ui/toggle-group";
 import { downloadBlob } from "@/shared/lib/downloadBlob";
 
 const PRESET_COLORS = ["#0f172a", "#18181b", "#1e1b4b", "#ffffff"] as const;
-const GRADIENT_COLORS = ["#0f172a", "#6366f1", "#ec4899", "#f97316"] as const;
+const GRADIENT_BASE_COLORS = ["#0f172a", "#1e1b4b", "#134e4a"] as const;
+const GRADIENT_ACCENT_COLORS = ["#6366f1", "#ec4899", "#f97316"] as const;
 const FONTS: FontFamily[] = ["Inter", "Serif", "Mono"];
 
 export function OgImageGenerator() {
@@ -194,7 +195,7 @@ export function OgImageGenerator() {
             <div className="space-y-2">
               <p className={labelCls}>첫 번째 색상</p>
               <ColorSwatchPicker
-                colors={GRADIENT_COLORS}
+                colors={GRADIENT_BASE_COLORS}
                 value={config.backgroundColor}
                 onChange={(color) =>
                   setConfig((c) => ({ ...c, backgroundColor: color }))
@@ -210,7 +211,7 @@ export function OgImageGenerator() {
             <div className="space-y-2">
               <p className={labelCls}>두 번째 색상</p>
               <ColorSwatchPicker
-                colors={GRADIENT_COLORS}
+                colors={GRADIENT_ACCENT_COLORS}
                 value={config.gradientColor2 ?? "#ec4899"}
                 onChange={(color) =>
                   setConfig((c) => ({ ...c, gradientColor2: color }))
