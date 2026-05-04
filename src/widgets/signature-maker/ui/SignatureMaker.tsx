@@ -16,12 +16,16 @@ import { ToggleGroup, ToggleGroupItem } from "@/shared/ui/toggle-group";
 
 const DEFAULT_W = 800;
 const DEFAULT_H = 400;
-const COLOR = "#111";
 const PADDING = 8;
 const THICKNESS_OPTIONS = [
   { label: "Thin", value: 2 },
   { label: "Medium", value: 3 },
   { label: "Thick", value: 5 },
+] as const;
+const COLOR_OPTIONS = [
+  { label: "검정", value: "#111" },
+  { label: "파랑", value: "#1e3a8a" },
+  { label: "빨강", value: "#b91c1c" },
 ] as const;
 
 type Thickness = (typeof THICKNESS_OPTIONS)[number]["value"];
@@ -29,6 +33,7 @@ type Thickness = (typeof THICKNESS_OPTIONS)[number]["value"];
 export function SignatureMaker() {
   const [strokes, setStrokes] = useState<Stroke[]>([]);
   const [thickness, setThickness] = useState<Thickness>(3);
+  const [color, setColor] = useState<string>(COLOR_OPTIONS[0].value);
   const [isDrawing, setIsDrawing] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -106,7 +111,7 @@ export function SignatureMaker() {
     const stroke: Stroke = {
       points: [pos],
       thickness,
-      color: COLOR,
+      color,
     };
     activeStrokeRef.current = stroke;
     setIsDrawing(true);
@@ -241,6 +246,27 @@ export function SignatureMaker() {
               </ToggleGroupItem>
             ))}
           </ToggleGroup>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <span className={labelCls}>색상</span>
+          <div className="flex gap-1.5">
+            {COLOR_OPTIONS.map((c) => (
+              <button
+                key={c.value}
+                type="button"
+                onClick={() => setColor(c.value)}
+                aria-label={c.label}
+                aria-pressed={color === c.value}
+                className={`size-7 cursor-pointer rounded-[8px] border border-[#ffffff15] transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#a78bfa] ${
+                  color === c.value
+                    ? "ring-2 ring-[#a78bfa] ring-offset-2 ring-offset-[#0c0c0c]"
+                    : ""
+                }`}
+                style={{ background: c.value }}
+              />
+            ))}
+          </div>
         </div>
 
         <div className="ml-auto flex gap-1.5">
