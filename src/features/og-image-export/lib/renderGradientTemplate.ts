@@ -8,13 +8,6 @@ import {
 } from "./renderOgImageToCanvas";
 import { hexToRgb, rgbToHex, isLightColor } from "@/shared/lib/color";
 
-const GRADIENT_PRESETS: Record<string, [string, string]> = {
-  sunset: ["#f97316", "#ec4899"],
-  ocean: ["#06b6d4", "#6366f1"],
-  cyberpunk: ["#a855f7", "#ec4899"],
-  forest: ["#10b981", "#06b6d4"],
-};
-
 /**
  * 색상을 약 80 단위 밝게 만들어 그라디언트 두 번째 색으로 사용한다.
  * backgroundColor가 어두운 경우 밝아지고, 밝은 경우는 약간 다른 톤이 나온다.
@@ -61,17 +54,9 @@ export async function renderGradientTemplate(
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
 
-  // 그라디언트 색상 결정: preset > 직접 지정 > 자동 밝기 보정
-  let color1 = config.backgroundColor;
-  let color2: string;
-
-  if (config.gradientPreset && GRADIENT_PRESETS[config.gradientPreset]) {
-    [color1, color2] = GRADIENT_PRESETS[config.gradientPreset];
-  } else if (config.gradientColor2) {
-    color2 = config.gradientColor2;
-  } else {
-    color2 = lightenColor(config.backgroundColor);
-  }
+  // 그라디언트 색상 결정: 직접 지정 > 자동 밝기 보정
+  const color1 = config.backgroundColor;
+  const color2 = config.gradientColor2 ?? lightenColor(config.backgroundColor);
 
   // 그라디언트 배경
   const angle = config.gradientAngle ?? 135;

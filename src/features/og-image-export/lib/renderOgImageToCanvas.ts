@@ -13,7 +13,6 @@ export interface OgImageConfig {
   // gradient 템플릿 전용
   gradientColor2?: string;
   gradientAngle?: number;
-  gradientPreset?: string;
 }
 
 export const FONT_MAP: Record<FontFamily, string> = {
