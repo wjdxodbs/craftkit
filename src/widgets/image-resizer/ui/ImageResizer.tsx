@@ -5,6 +5,7 @@ import { EXT_MAP, type OutputFormat } from "@/shared/config/image-formats";
 import { ImageUpload } from "@/features/image-upload/ui/ImageUpload";
 import { loadImageFromFile } from "@/shared/lib/loadImageFromFile";
 import { downloadBlob } from "@/shared/lib/downloadBlob";
+import { buildOutputName } from "@/shared/lib/fileName";
 import { formatByteSize } from "@/shared/lib/format";
 import { useResizePreview } from "./useResizePreview";
 import { ResizeControlBar } from "./ResizeControlBar";
@@ -26,6 +27,7 @@ export function ImageResizer() {
   const [isConverting, setIsConverting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
+  const [originalFileSize, setOriginalFileSize] = useState<number | null>(null);
 
   const { previewUrl, previewSize } = useResizePreview({
     imageEl,
@@ -37,6 +39,7 @@ export function ImageResizer() {
 
   const handleFileLoad = (img: HTMLImageElement, _url: string, file: File) => {
     setFileName(file.name);
+    setOriginalFileSize(file.size);
     setImageEl(img);
     const w = img.naturalWidth || 1;
     const h = img.naturalHeight || 1;
@@ -89,7 +92,10 @@ export function ImageResizer() {
         outputFormat,
         quality / 100,
       );
-      downloadBlob(blob, `resized.${EXT_MAP[outputFormat]}`);
+      downloadBlob(
+        blob,
+        buildOutputName(fileName, `${width}x${height}`, EXT_MAP[outputFormat]),
+      );
     } catch {
       setError("변환에 실패했습니다. 다시 시도해 주세요.");
     } finally {
@@ -145,9 +151,32 @@ export function ImageResizer() {
               ? `${naturalSize.w} × ${naturalSize.h} (원본 유지)`
               : `${naturalSize.w} × ${naturalSize.h} → ${width} × ${height}`}
           </span>
-          {previewSize !== null && (
+          {originalFileSize !== null && (
             <span className="font-mono text-xs text-[#bbb]">
-              {formatByteSize(previewSize)}
+              {formatByteSize(originalFileSize)}
+              {previewSize !== null && (
+                <>
+                  {" → "}
+                  {formatByteSize(previewSize)}
+                  {(() => {
+                    const delta = Math.round(
+                      (100 * (previewSize - originalFileSize)) /
+                        originalFileSize,
+                    );
+                    if (delta === 0) return null;
+                    return (
+                      <span
+                        className={`ml-1.5 ${
+                          delta < 0 ? "text-emerald-400" : "text-amber-400"
+                        }`}
+                      >
+                        ({delta > 0 ? "+" : ""}
+                        {delta}%)
+                      </span>
+                    );
+                  })()}
+                </>
+              )}
             </span>
           )}
         </div>
