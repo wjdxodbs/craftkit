@@ -8,6 +8,8 @@ import { Slider } from "@/shared/ui/slider";
 import { FileReplaceDropzone } from "@/shared/ui/FileReplaceDropzone";
 import { ToggleGroup, ToggleGroupItem } from "@/shared/ui/toggle-group";
 
+const SCALE_PRESETS = [25, 50, 75, 100] as const;
+
 interface ResizeControlBarProps {
   fileName: string | null;
   width: number;
@@ -21,6 +23,7 @@ interface ResizeControlBarProps {
   onLockToggle: () => void;
   onFormatChange: (format: OutputFormat) => void;
   onQualityChange: (quality: number) => void;
+  onScalePercent: (percent: number) => void;
 }
 
 export function ResizeControlBar({
@@ -36,6 +39,7 @@ export function ResizeControlBar({
   onLockToggle,
   onFormatChange,
   onQualityChange,
+  onScalePercent,
 }: ResizeControlBarProps) {
   return (
     <>
@@ -121,7 +125,27 @@ export function ResizeControlBar({
 
         <div className="hidden h-4 w-px bg-[#ffffff15] sm:block" />
 
-        {/* 출력 포맷 */}
+        {/* 스케일 프리셋 */}
+        <div className="flex items-center gap-2">
+          <span className={labelCls}>스케일</span>
+          <ToggleGroup value={[]} spacing={4}>
+            {SCALE_PRESETS.map((p) => (
+              <ToggleGroupItem
+                key={p}
+                value={String(p)}
+                variant="segment"
+                size="seg"
+                onClick={() => onScalePercent(p)}
+              >
+                {p}%
+              </ToggleGroupItem>
+            ))}
+          </ToggleGroup>
+        </div>
+      </div>
+
+      {/* Row 2 — 출력 (포맷 + 품질) */}
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-3">
         <div className="flex items-center gap-2">
           <span className={labelCls}>포맷</span>
           <ToggleGroup
@@ -144,22 +168,26 @@ export function ResizeControlBar({
             ))}
           </ToggleGroup>
         </div>
-      </div>
 
-      {/* 품질 슬라이더 */}
-      {outputFormat !== "image/png" && (
-        <div className="flex items-center gap-3">
-          <span className={`shrink-0 ${labelCls}`}>품질 {quality}%</span>
-          <Slider
-            min={0}
-            max={100}
-            value={[quality]}
-            onValueChange={(v) => onQualityChange(Array.isArray(v) ? v[0] : v)}
-            aria-label={`품질 ${quality}%`}
-            className="flex-1"
-          />
-        </div>
-      )}
+        {outputFormat !== "image/png" && (
+          <>
+            <div className="hidden h-4 w-px bg-[#ffffff15] sm:block" />
+            <div className="flex flex-1 items-center gap-3">
+              <span className={`shrink-0 ${labelCls}`}>품질 {quality}%</span>
+              <Slider
+                min={0}
+                max={100}
+                value={[quality]}
+                onValueChange={(v) =>
+                  onQualityChange(Array.isArray(v) ? v[0] : v)
+                }
+                aria-label={`품질 ${quality}%`}
+                className="flex-1"
+              />
+            </div>
+          </>
+        )}
+      </div>
     </>
   );
 }

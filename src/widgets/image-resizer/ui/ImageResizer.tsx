@@ -70,6 +70,13 @@ export function ImageResizer() {
     }
   };
 
+  const handleScalePercent = (percent: number) => {
+    if (!naturalSize) return;
+    const factor = percent / 100;
+    setWidth(Math.max(1, Math.min(8192, Math.round(naturalSize.w * factor))));
+    setHeight(Math.max(1, Math.min(8192, Math.round(naturalSize.h * factor))));
+  };
+
   const handleDownload = async () => {
     if (!imageEl) return;
     setIsConverting(true);
@@ -106,6 +113,7 @@ export function ImageResizer() {
           onLockToggle={() => setLocked((v) => !v)}
           onFormatChange={setOutputFormat}
           onQualityChange={setQuality}
+          onScalePercent={handleScalePercent}
         />
       )}
 
