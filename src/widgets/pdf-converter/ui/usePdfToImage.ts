@@ -25,8 +25,13 @@ export function usePdfToImage() {
   const [error, setError] = useState<string | null>(null);
   const mountedRef = useRef(true);
 
-  const { selectedPages, deselectAll, togglePage, selectAll } =
-    usePageSelection(pages);
+  const {
+    selectedPages,
+    setSelectedPages,
+    deselectAll,
+    togglePage,
+    selectAll,
+  } = usePageSelection(pages);
 
   useEffect(() => {
     mountedRef.current = true;
@@ -57,6 +62,9 @@ export function usePdfToImage() {
               thumbnailUrl: "",
               isLoading: true,
             })),
+          );
+          setSelectedPages(
+            new Set(Array.from({ length: count }, (_, i) => i + 1)),
           );
         },
         (pageNumber, thumbnailUrl) => {
