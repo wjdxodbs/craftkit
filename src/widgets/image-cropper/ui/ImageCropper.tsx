@@ -6,9 +6,7 @@ import type {
   OutputFormat,
 } from "@/features/image-crop/lib/cropImage";
 import { EXT_MAP } from "@/shared/config/image-formats";
-import { labelCls } from "@/shared/ui/styles";
 import { DownloadButton } from "@/shared/ui/DownloadButton";
-import { Slider } from "@/shared/ui/slider";
 import { ImageUpload } from "@/features/image-upload/ui/ImageUpload";
 import { loadImageFromFile } from "@/shared/lib/loadImageFromFile";
 import { downloadBlob } from "@/shared/lib/downloadBlob";
@@ -162,26 +160,13 @@ export function ImageCropper() {
           aspectRatio={aspectRatio}
           orientation={orientation}
           outputFormat={outputFormat}
+          quality={quality}
           onFileReplace={handleReplaceFile}
           onPresetChange={handlePresetChange}
           onOrientationChange={handleOrientationChange}
           onFormatChange={setOutputFormat}
+          onQualityChange={setQuality}
         />
-      )}
-
-      {/* 품질 슬라이더 */}
-      {outputFormat !== "image/png" && (
-        <div className="flex items-center gap-3">
-          <span className={`shrink-0 ${labelCls}`}>품질 {quality}%</span>
-          <Slider
-            min={0}
-            max={100}
-            value={[quality]}
-            onValueChange={(v) => setQuality(Array.isArray(v) ? v[0] : v)}
-            aria-label={`품질 ${quality}%`}
-            className="flex-1"
-          />
-        </div>
       )}
 
       {/* 업로드 전: ImageUpload / 업로드 후: 크롭 캔버스 */}

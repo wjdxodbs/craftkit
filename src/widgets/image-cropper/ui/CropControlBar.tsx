@@ -6,6 +6,7 @@ import {
 } from "@/shared/config/image-formats";
 import { labelCls } from "@/shared/ui/styles";
 import { FileReplaceDropzone } from "@/shared/ui/FileReplaceDropzone";
+import { Slider } from "@/shared/ui/slider";
 import { ToggleGroup, ToggleGroupItem } from "@/shared/ui/toggle-group";
 
 export type Orientation = "landscape" | "portrait";
@@ -39,10 +40,12 @@ interface CropControlBarProps {
   aspectRatio: number | null;
   orientation: Orientation;
   outputFormat: OutputFormat;
+  quality: number;
   onFileReplace: (file: File) => void;
   onPresetChange: (ratio: number | null) => void;
   onOrientationChange: (orientation: Orientation) => void;
   onFormatChange: (format: OutputFormat) => void;
+  onQualityChange: (quality: number) => void;
 }
 
 export function CropControlBar({
@@ -50,97 +53,120 @@ export function CropControlBar({
   aspectRatio,
   orientation,
   outputFormat,
+  quality,
   onFileReplace,
   onPresetChange,
   onOrientationChange,
   onFormatChange,
+  onQualityChange,
 }: CropControlBarProps) {
   const aspects =
     orientation === "landscape" ? LANDSCAPE_ASPECTS : PORTRAIT_ASPECTS;
   const activeAspectId = ratioToId(aspectRatio, orientation);
 
   return (
-    <div className="flex flex-wrap items-center gap-x-4 gap-y-3">
-      <FileReplaceDropzone
-        fileName={fileName}
-        accept="image/png,image/jpeg,image/webp"
-        onFile={onFileReplace}
-      />
+    <>
+      {/* Row 1 — 입력 (파일 + 비율) */}
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-3">
+        <FileReplaceDropzone
+          fileName={fileName}
+          accept="image/png,image/jpeg,image/webp"
+          onFile={onFileReplace}
+        />
 
-      <div className="hidden h-4 w-px bg-[#ffffff15] sm:block" />
+        <div className="hidden h-4 w-px bg-[#ffffff15] sm:block" />
 
-      {/* 비율 */}
-      <div className="flex items-center gap-2">
-        <span className={labelCls}>비율</span>
-        <ToggleGroup
-          value={[orientation]}
-          onValueChange={(v: string[]) => {
-            const next = v[0];
-            if (next === "landscape" || next === "portrait")
-              onOrientationChange(next);
-          }}
-          spacing={4}
-        >
-          <ToggleGroupItem
-            value="landscape"
-            variant="segment"
-            size="seg"
-            aria-label="가로 비율"
+        <div className="flex items-center gap-2">
+          <span className={labelCls}>비율</span>
+          <ToggleGroup
+            value={[orientation]}
+            onValueChange={(v: string[]) => {
+              const next = v[0];
+              if (next === "landscape" || next === "portrait")
+                onOrientationChange(next);
+            }}
+            spacing={4}
           >
-            <RectangleHorizontal className="size-4" />
-          </ToggleGroupItem>
-          <ToggleGroupItem
-            value="portrait"
-            variant="segment"
-            size="seg"
-            aria-label="세로 비율"
-          >
-            <RectangleVertical className="size-4" />
-          </ToggleGroupItem>
-        </ToggleGroup>
-        <ToggleGroup
-          value={[activeAspectId]}
-          onValueChange={(v: string[]) => {
-            const id = v[0];
-            if (!id) return;
-            const opt = aspects.find((o) => o.id === id);
-            if (opt) onPresetChange(opt.ratio);
-          }}
-          spacing={4}
-        >
-          {aspects.map(({ id, label }) => (
-            <ToggleGroupItem key={id} value={id} variant="segment" size="seg">
-              {label}
-            </ToggleGroupItem>
-          ))}
-        </ToggleGroup>
-      </div>
-
-      <div className="hidden h-4 w-px bg-[#ffffff15] sm:block" />
-
-      {/* 출력 포맷 */}
-      <div className="flex items-center gap-2">
-        <span className={labelCls}>포맷</span>
-        <ToggleGroup
-          value={[outputFormat]}
-          onValueChange={(v: string[]) => {
-            const next = v[0] as OutputFormat | undefined;
-            if (next) onFormatChange(next);
-          }}
-          spacing={4}
-        >
-          {OUTPUT_FORMATS.map(({ label, value }) => (
             <ToggleGroupItem
-              key={value}
-              value={value}
+              value="landscape"
               variant="segment"
               size="seg"
+              aria-label="가로 비율"
             >
-              {label}
+              <RectangleHorizontal className="size-4" />
             </ToggleGroupItem>
-          ))}
-        </ToggleGroup>
+            <ToggleGroupItem
+              value="portrait"
+              variant="segment"
+              size="seg"
+              aria-label="세로 비율"
+            >
+              <RectangleVertical className="size-4" />
+            </ToggleGroupItem>
+          </ToggleGroup>
+          <ToggleGroup
+            value={[activeAspectId]}
+            onValueChange={(v: string[]) => {
+              const id = v[0];
+              if (!id) return;
+              const opt = aspects.find((o) => o.id === id);
+              if (opt) onPresetChange(opt.ratio);
+            }}
+            spacing={4}
+          >
+            {aspects.map(({ id, label }) => (
+              <ToggleGroupItem key={id} value={id} variant="segment" size="seg">
+                {label}
+              </ToggleGroupItem>
+            ))}
+          </ToggleGroup>
+        </div>
       </div>
-    </div>
+
+      {/* Row 2 — 출력 (포맷 + 품질) */}
+      <div className="flex flex-wrap items-center gap-x-4 gap-y-3">
+        <div className="flex items-center gap-2">
+          <span className={labelCls}>포맷</span>
+          <ToggleGroup
+            value={[outputFormat]}
+            onValueChange={(v: string[]) => {
+              const next = v[0] as OutputFormat | undefined;
+              if (next) onFormatChange(next);
+            }}
+            spacing={4}
+          >
+            {OUTPUT_FORMATS.map(({ label, value }) => (
+              <ToggleGroupItem
+                key={value}
+                value={value}
+                variant="segment"
+                size="seg"
+              >
+                {label}
+              </ToggleGroupItem>
+            ))}
+          </ToggleGroup>
+        </div>
+
+        {outputFormat !== "image/png" && (
+          <>
+            <div className="hidden h-4 w-px bg-[#ffffff15] sm:block" />
+            <div className="flex flex-1 items-center gap-3">
+              <span className={`shrink-0 ${labelCls}`}>품질 {quality}%</span>
+              <Slider
+                min={0}
+                max={100}
+                value={[quality]}
+                onValueChange={(v) =>
+                  onQualityChange(Array.isArray(v) ? v[0] : v)
+                }
+                aria-label={`품질 ${quality}%`}
+                className="flex-1"
+              />
+            </div>
+          </>
+        )}
+      </div>
+    </>
   );
 }
