@@ -12,6 +12,7 @@ import { Slider } from "@/shared/ui/slider";
 import { ImageUpload } from "@/features/image-upload/ui/ImageUpload";
 import { loadImageFromFile } from "@/shared/lib/loadImageFromFile";
 import { downloadBlob } from "@/shared/lib/downloadBlob";
+import { buildOutputName } from "@/shared/lib/fileName";
 import { formatByteSize } from "@/shared/lib/format";
 import { useDragHandling, clamp, MIN_CROP } from "./useDragHandling";
 import { useCropPreview } from "./useCropPreview";
@@ -127,7 +128,12 @@ export function ImageCropper() {
         outputFormat,
         quality / 100,
       );
-      downloadBlob(blob, `cropped.${EXT_MAP[outputFormat]}`);
+      const cropW = Math.round(cropBox.w * scale);
+      const cropH = Math.round(cropBox.h * scale);
+      downloadBlob(
+        blob,
+        buildOutputName(fileName, `${cropW}x${cropH}`, EXT_MAP[outputFormat]),
+      );
     } catch {
       setError("크롭에 실패했습니다. 다시 시도해 주세요.");
     } finally {
