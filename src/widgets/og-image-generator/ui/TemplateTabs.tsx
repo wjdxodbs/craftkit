@@ -4,7 +4,6 @@ import { ToggleGroup, ToggleGroupItem } from "@/shared/ui/toggle-group";
 const TEMPLATES: { id: TemplateName; label: string }[] = [
   { id: "classic", label: "Classic" },
   { id: "gradient", label: "Gradient" },
-  { id: "code-snippet", label: "Code" },
 ];
 
 interface Props {

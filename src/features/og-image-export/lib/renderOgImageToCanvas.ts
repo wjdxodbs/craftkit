@@ -1,6 +1,6 @@
 export type FontFamily = "Inter" | "Serif" | "Mono";
 
-export type TemplateName = "classic" | "gradient" | "code-snippet";
+export type TemplateName = "classic" | "gradient";
 
 export interface OgImageConfig {
   backgroundColor: string;
@@ -14,9 +14,6 @@ export interface OgImageConfig {
   gradientColor2?: string;
   gradientAngle?: number;
   gradientPreset?: string;
-
-  // code-snippet 템플릿 전용
-  codeTheme?: "dark" | "light";
 }
 
 export const FONT_MAP: Record<FontFamily, string> = {
@@ -144,12 +141,6 @@ export async function renderOgImageToCanvas(
       const { renderGradientTemplate } =
         await import("./renderGradientTemplate");
       await renderGradientTemplate(canvas, config);
-      break;
-    }
-    case "code-snippet": {
-      const { renderCodeSnippetTemplate } =
-        await import("./renderCodeSnippetTemplate");
-      await renderCodeSnippetTemplate(canvas, config);
       break;
     }
     case "classic":

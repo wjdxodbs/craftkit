@@ -32,7 +32,6 @@ export function OgImageGenerator() {
     fontFamily: "Inter",
     gradientColor2: "#ec4899",
     gradientAngle: 135,
-    codeTheme: "dark",
   });
   const [logoDataUrl, setLogoDataUrl] = useState<string | undefined>();
   const [isDownloading, setIsDownloading] = useState(false);
@@ -61,8 +60,6 @@ export function OgImageGenerator() {
   const handleTemplateChange = (template: TemplateName) => {
     setConfig((c) => ({ ...c, template }));
   };
-
-  const showFont = config.template !== "code-snippet";
 
   return (
     <div className="space-y-5">
@@ -164,31 +161,29 @@ export function OgImageGenerator() {
             </div>
           )}
 
-          {/* 폰트 — classic, gradient 전용 */}
-          {showFont && (
-            <div className="space-y-2">
-              <p className={labelCls}>폰트</p>
-              <ToggleGroup
-                value={[config.fontFamily]}
-                onValueChange={(v: string[]) => {
-                  const next = v[0] as FontFamily | undefined;
-                  if (next) setConfig((c) => ({ ...c, fontFamily: next }));
-                }}
-                spacing={4}
-              >
-                {FONTS.map((font) => (
-                  <ToggleGroupItem
-                    key={font}
-                    value={font}
-                    variant="segment"
-                    size="seg"
-                  >
-                    {font}
-                  </ToggleGroupItem>
-                ))}
-              </ToggleGroup>
-            </div>
-          )}
+          {/* 폰트 */}
+          <div className="space-y-2">
+            <p className={labelCls}>폰트</p>
+            <ToggleGroup
+              value={[config.fontFamily]}
+              onValueChange={(v: string[]) => {
+                const next = v[0] as FontFamily | undefined;
+                if (next) setConfig((c) => ({ ...c, fontFamily: next }));
+              }}
+              spacing={4}
+            >
+              {FONTS.map((font) => (
+                <ToggleGroupItem
+                  key={font}
+                  value={font}
+                  variant="segment"
+                  size="seg"
+                >
+                  {font}
+                </ToggleGroupItem>
+              ))}
+            </ToggleGroup>
+          </div>
 
           {/* 첫 번째 색상 — gradient 전용 */}
           {config.template === "gradient" && (
@@ -235,29 +230,6 @@ export function OgImageGenerator() {
                   setConfig((c) => ({ ...c, gradientAngle: n }));
                 }}
               />
-            </div>
-          )}
-
-          {/* 테마 — code-snippet 전용 */}
-          {config.template === "code-snippet" && (
-            <div className="space-y-2">
-              <p className={labelCls}>테마</p>
-              <ToggleGroup
-                value={[config.codeTheme ?? "dark"]}
-                onValueChange={(v: string[]) => {
-                  const next = v[0];
-                  if (next === "dark" || next === "light")
-                    setConfig((c) => ({ ...c, codeTheme: next }));
-                }}
-                spacing={4}
-              >
-                <ToggleGroupItem value="dark" variant="segment" size="seg">
-                  Dark
-                </ToggleGroupItem>
-                <ToggleGroupItem value="light" variant="segment" size="seg">
-                  Light
-                </ToggleGroupItem>
-              </ToggleGroup>
             </div>
           )}
         </div>
