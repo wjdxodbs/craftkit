@@ -17,7 +17,7 @@ import { formatByteSize } from "@/shared/lib/format";
 import { useDragHandling, clamp, MIN_CROP } from "./useDragHandling";
 import { useCropPreview } from "./useCropPreview";
 import { useFullImagePreview } from "./useFullImagePreview";
-import { CropControlBar } from "./CropControlBar";
+import { CropControlBar, type Orientation } from "./CropControlBar";
 
 export function ImageCropper() {
   const [imageEl, setImageEl] = useState<HTMLImageElement | null>(null);
@@ -28,6 +28,7 @@ export function ImageCropper() {
   } | null>(null);
   const [cropBox, setCropBox] = useState<CropBox | null>(null);
   const [aspectRatio, setAspectRatio] = useState<number | null>(null);
+  const [orientation, setOrientation] = useState<Orientation>("landscape");
   const [outputFormat, setOutputFormat] = useState<OutputFormat>("image/png");
   const [quality, setQuality] = useState(90);
   const [isConverting, setIsConverting] = useState(false);
@@ -86,6 +87,14 @@ export function ImageCropper() {
       onLoad: handleFileLoad,
       onError: () => setError("이미지를 불러오는 데 실패했습니다."),
     });
+  };
+
+  const handleOrientationChange = (next: Orientation): void => {
+    setOrientation(next);
+    // 1:1·Free 외에는 활성 비율을 자동으로 뒤집어 같은 의미의 가로↔세로로 이동
+    if (aspectRatio !== null && aspectRatio !== 1) {
+      handlePresetChange(1 / aspectRatio);
+    }
   };
 
   const handlePresetChange = (ratio: number | null): void => {
@@ -151,9 +160,11 @@ export function ImageCropper() {
         <CropControlBar
           fileName={fileName}
           aspectRatio={aspectRatio}
+          orientation={orientation}
           outputFormat={outputFormat}
           onFileReplace={handleReplaceFile}
           onPresetChange={handlePresetChange}
+          onOrientationChange={handleOrientationChange}
           onFormatChange={setOutputFormat}
         />
       )}
