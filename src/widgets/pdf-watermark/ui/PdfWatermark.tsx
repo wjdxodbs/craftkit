@@ -11,8 +11,7 @@ import { ImageUpload } from "@/features/image-upload/ui/ImageUpload";
 import { labelCls } from "@/shared/ui/styles";
 import { DownloadButton } from "@/shared/ui/DownloadButton";
 import { FileReplaceHeader } from "@/shared/ui/FileReplaceHeader";
-import { Input } from "@/shared/ui/input";
-import { Label } from "@/shared/ui/label";
+import { InputWithCounter } from "@/shared/ui/InputWithCounter";
 import { Slider } from "@/shared/ui/slider";
 import { Alert, AlertDescription } from "@/shared/ui/alert";
 import { ToggleGroup, ToggleGroupItem } from "@/shared/ui/toggle-group";
@@ -218,31 +217,15 @@ export function PdfWatermark() {
 
         {/* 텍스트 입력 — text 모드 전용 */}
         {watermarkType === "text" && (
-          <div className="space-y-2">
-            <Label htmlFor="wm-text" className={labelCls}>
-              워터마크 텍스트
-            </Label>
-            <div className="relative">
-              <Input
-                id="wm-text"
-                type="text"
-                value={text}
-                onChange={(e) => setText(e.target.value)}
-                maxLength={WATERMARK_TEXT_MAX_LENGTH}
-                placeholder="예: CONFIDENTIAL"
-                className="pr-14"
-              />
-              <span
-                className={`pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 text-[10px] ${
-                  text.length >= WATERMARK_TEXT_MAX_LENGTH * 0.9
-                    ? "text-[#a78bfa]"
-                    : "text-[#888]"
-                }`}
-              >
-                {text.length} / {WATERMARK_TEXT_MAX_LENGTH}
-              </span>
-            </div>
-          </div>
+          <InputWithCounter
+            id="wm-text"
+            label="워터마크 텍스트"
+            type="text"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            maxLength={WATERMARK_TEXT_MAX_LENGTH}
+            placeholder="예: CONFIDENTIAL"
+          />
         )}
 
         {/* 이미지 업로드 — image 모드 전용 */}

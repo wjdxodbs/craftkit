@@ -12,8 +12,7 @@ import { TemplateTabs } from "./TemplateTabs";
 import { labelCls } from "@/shared/ui/styles";
 import { DownloadButton } from "@/shared/ui/DownloadButton";
 import { ColorSwatchPicker } from "@/shared/ui/ColorSwatchPicker";
-import { Input } from "@/shared/ui/input";
-import { Label } from "@/shared/ui/label";
+import { InputWithCounter } from "@/shared/ui/InputWithCounter";
 import { Slider } from "@/shared/ui/slider";
 import { ToggleGroup, ToggleGroupItem } from "@/shared/ui/toggle-group";
 import { downloadBlob } from "@/shared/lib/downloadBlob";
@@ -118,61 +117,27 @@ export function OgImageGenerator() {
             config.template === "gradient" ? "lg:grid-cols-3" : "lg:grid-cols-2"
           }`}
         >
-          {/* 제목 */}
-          <div className="space-y-2">
-            <Label htmlFor="og-title" className={labelCls}>
-              제목
-            </Label>
-            <div className="relative">
-              <Input
-                id="og-title"
-                value={config.title}
-                onChange={(e) =>
-                  setConfig((c) => ({ ...c, title: e.target.value }))
-                }
-                maxLength={TITLE_MAX_LENGTH}
-                placeholder="제목을 입력해주세요…"
-                className="pr-14"
-              />
-              <span
-                className={`pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 text-[10px] ${
-                  config.title.length >= TITLE_MAX_LENGTH * 0.9
-                    ? "text-[#a78bfa]"
-                    : "text-[#888]"
-                }`}
-              >
-                {config.title.length} / {TITLE_MAX_LENGTH}
-              </span>
-            </div>
-          </div>
+          <InputWithCounter
+            id="og-title"
+            label="제목"
+            value={config.title}
+            onChange={(e) =>
+              setConfig((c) => ({ ...c, title: e.target.value }))
+            }
+            maxLength={TITLE_MAX_LENGTH}
+            placeholder="제목을 입력해주세요…"
+          />
 
-          {/* 부제목 */}
-          <div className="space-y-2">
-            <Label htmlFor="og-subtitle" className={labelCls}>
-              부제목
-            </Label>
-            <div className="relative">
-              <Input
-                id="og-subtitle"
-                value={config.subtitle}
-                onChange={(e) =>
-                  setConfig((c) => ({ ...c, subtitle: e.target.value }))
-                }
-                maxLength={SUBTITLE_MAX_LENGTH}
-                placeholder="부제목 입력…"
-                className="pr-14"
-              />
-              <span
-                className={`pointer-events-none absolute top-1/2 right-3 -translate-y-1/2 text-[10px] ${
-                  config.subtitle.length >= SUBTITLE_MAX_LENGTH * 0.9
-                    ? "text-[#a78bfa]"
-                    : "text-[#888]"
-                }`}
-              >
-                {config.subtitle.length} / {SUBTITLE_MAX_LENGTH}
-              </span>
-            </div>
-          </div>
+          <InputWithCounter
+            id="og-subtitle"
+            label="부제목"
+            value={config.subtitle}
+            onChange={(e) =>
+              setConfig((c) => ({ ...c, subtitle: e.target.value }))
+            }
+            maxLength={SUBTITLE_MAX_LENGTH}
+            placeholder="부제목 입력…"
+          />
 
           {/* 배경색 — classic 전용 */}
           {config.template === "classic" && (
